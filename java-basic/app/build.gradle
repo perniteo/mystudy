@@ -11,7 +11,10 @@ plugins {
     // 실행할 수 있는 자바 애플리케이션을 생성하는 플러그인
     // 이 플러그인을 추가하면 ''java' 플러그인이 자동으로 추가된다.
     // 따라서 따로 'java' 플러그인을 추가할 필요가 없다.
-    id 'application'
+    //id 'application'
+    id 'java'
+
+    id 'eclipse'
 }
 
 // 이 프로젝트에서 사용할 외부 라이브러리를 제공하는 서버를 설정한다.
@@ -49,11 +52,12 @@ java {
     }
 }
 // 'application' 플러그인과 관련된 설정이다.
-application {
+/* application {
     // Define the main class for the application.
     // 'run'' 명령을 수행할 때 실행시킬 자바 클래스 이름을 지정'
     mainClass = 'Hello'
 }
+*/
 // 단위 테스트를 수행할 때 사용할 설정
 tasks.named('test') {
     // Use JUnit Platform for unit tests.
@@ -69,4 +73,16 @@ tasks.withType(JavaCompile).configureEach {
 }
 javadoc {
     options.encoding = 'UTF-8'
+}
+
+// eclipse 프로젝트 이름을 설정하기
+eclipse {
+    project {
+        name = "java-basic"
+    }
+    jdt {
+      sourceCompatibility = 21
+      targetCompatibility = 21
+      javaRuntimeName = "JavaSE-21"
+    }
 }
