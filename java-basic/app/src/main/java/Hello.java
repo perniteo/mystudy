@@ -9,5 +9,6 @@ public class Hello {
       double x = 1;
       byte y = 2;
       System.out.println(x/y);
+      System.out.println((char)65);
     }
 }
