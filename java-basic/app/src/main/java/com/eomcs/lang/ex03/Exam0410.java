@@ -27,7 +27,7 @@ public class Exam0410 {
     // 자바는 '유니코드(UTF-16BE; UCS2)' 라는 문자집합을 사용한다.
     // \ u 뒤에 문자에 부여된 코드 값을 16진수로 적는다.
     // u는 소문자로 적어야 한다.
-    System.out.println('\u0041');  // A
+    System.out.println('\u7e8');  // A
     System.out.println('\uac00');  // 가
     System.out.println('\uAC00');  // 가 (16진수는 대소문자를 구분하지 않는다)
 
