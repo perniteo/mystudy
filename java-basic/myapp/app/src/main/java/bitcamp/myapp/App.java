@@ -6,6 +6,17 @@ package bitcamp.myapp;
 public class App {
 
   public static void main(String[] args) {
+    // 주사위 2개를 굴려 합이 5일 때 멈추기
+    while (true) {
+      int dice1 = (int) (Math.random() * 6) + 1;
+      int dice2 = (int) (Math.random() * 6) + 1;
+      System.out.println("(" + dice1 + ", " + dice2 + ")");
+      if (dice1 + dice2 == 5) {
+//        System.out.println("(" + dice1 + ", " + dice2 + ")");
+        break;
+      }
+    }
+
 //    Integer a = null;
 //    int b = (a == null) ? 0 : a.intValue();
 //    int result = 0;
@@ -54,7 +65,15 @@ public class App {
 //    }
 //
 //    System.out.println(score1);
-
+    // 4x + 5y = 60 (단 x와 y는 10이하의 자연수) 일 때,
+    // 2중 for 문으로 모든 해를 구하기
+    for (int x = 0; x <= 10; x++) {
+      for (int y = 0; y <= 10; y++) {
+        if (x * 4 + y * 5 == 60) {
+          System.out.println("(" + x + ", " + y + ")");
+        }
+      }
+    }
   }
 
 }
