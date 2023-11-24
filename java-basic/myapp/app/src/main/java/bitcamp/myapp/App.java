@@ -4,11 +4,57 @@
 package bitcamp.myapp;
 
 public class App {
-    public String getGreeting() {
-        return "Hello World!";
-    }
 
-    public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
-    }
+  public static void main(String[] args) {
+//    Integer a = null;
+//    int b = (a == null) ? 0 : a.intValue();
+//    int result = 0;
+//    for (int i = 1; i <= 100; ++i) {
+//      if (i % 3 == 0) {
+//        result += i;
+//      }
+//    }
+//    System.out.println("1부터 100까지의 정수 중에서 3의 배수의 합 : " + result);
+    String ANSI_CLEAR = "\033[0m";
+    String ANSI_RED = "\033[0;31m";
+    String ANSI_BOLD_RED = "\033[1;31m";
+    String appTitle = "[과제관리 시스템]";
+    /*System.out.println("""
+        \033[1;31m
+        --------------------------------
+        [과제관리 시스템]
+                
+        1. 과제
+        2. 게시글
+        3. 도움말
+        4. 종료
+        --------------------------------
+        \033[0m"""
+    );*/
+    String menu1 = "1. 과제", menu2 = "2. 게시글", menu3 = "3. 도움말",
+        menu4 = "4. 종료";
+    System.out.println(ANSI_BOLD_RED + appTitle + ANSI_CLEAR + "\n");
+//    System.out.println("1. 과제");
+//    System.out.printf("%1$d. 게시글\n", 2);
+    System.out.println(menu1);
+    System.out.println(menu2);
+    System.out.println(menu3);
+    System.out.println(ANSI_RED + menu4 + ANSI_CLEAR);
+
+//    String grade = "B";
+//
+//    int score1 = 0;
+//    switch (grade) {
+//      case "A" -> score1 = 100;
+//      case "B" -> {
+//        int result = 100 - 20;
+//        score1 = result;
+//      }
+//      default -> score1 = 60;
+//    }
+//
+//    System.out.println(score1);
+
+  }
+
 }

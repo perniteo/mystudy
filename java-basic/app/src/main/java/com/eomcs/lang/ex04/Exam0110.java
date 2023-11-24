@@ -19,6 +19,7 @@ public class Exam0110 {
     // - 데이터타입 변수
     //
     int i;
+    System.out.println(211111111.1f);
 
     // 문법
     // - int : 값을 저장할 메모리의 종류. '데이터 타입(data type; 자료형)'이라 부른다.
