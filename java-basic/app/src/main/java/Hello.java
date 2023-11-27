@@ -10,5 +10,7 @@ public class Hello {
       byte y = 2;
       System.out.println(x/y);
       System.out.println((char)65);
+      char charValue = 'A';
+      short shortValue = charValue;
     }
 }
