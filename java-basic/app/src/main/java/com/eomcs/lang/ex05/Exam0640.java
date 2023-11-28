@@ -1,6 +1,6 @@
 package com.eomcs.lang.ex05;
 
-//# 증감 연산자 : 후위(post-fix) 증감 연산자 응용 II
+// # 증감 연산자 : 후위(post-fix) 증감 연산자 응용 II
 //
 public class Exam0640 {
   public static void main(String[] args) {
@@ -18,6 +18,8 @@ public class Exam0640 {
     // int result = 2 + 12;
     // int result = 14;
     System.out.printf("%d, %d\n", i, result);
+    int num = 10;
+    28  104 38  30  27.5    22
 
   }
 }

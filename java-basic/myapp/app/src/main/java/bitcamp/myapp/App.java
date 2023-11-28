@@ -6,6 +6,7 @@ package bitcamp.myapp;
 public class App {
 
   public static void main(String[] args) {
+    System.out.println(197 ^ 197);
     double[] arr5 = {0.1};
     System.out.println(arr5[0]);
     // 주사위 2개를 굴려 합이 5일 때 멈추기
