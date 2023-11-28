@@ -1,6 +1,6 @@
 package com.eomcs.lang.ex05;
 
-//# 증감 연산자 : 전위(pre-fix) 증감 연산자 응용 II
+// # 증감 연산자 : 전위(pre-fix) 증감 연산자 응용 II
 //
 public class Exam0682 {
   public static void main(String[] args) {
@@ -15,5 +15,8 @@ public class Exam0682 {
     // ++y++; // 컴파일 오류!
     // (++y)++; // 컴파일 오류!
     // ++(y++); // 컴파일 오류!
+    int x = y++;
+    System.out.printf("x : %d, y : %d\n", x, y);
+    System.out.println(args.length);
   }
 }
