@@ -3,6 +3,35 @@
  */
 package bitcamp.myapp;
 
+class Account {
+
+  final static int MIN_BALANCE = 0;
+  final static int MAX_BALANCE = 1_000_000;
+  private int balance;
+
+  public int getBalance() {
+    return balance;
+  }
+
+  public void setBalance(int balance) {
+    if (MIN_BALANCE <= balance && MAX_BALANCE >= balance) {
+      this.balance = balance;
+    }
+  }
+}
+
+class ShopService {
+
+  private static ShopService singleton = new ShopService();
+
+  private ShopService() {
+  }
+
+  public static ShopService getInstance() {
+    return singleton;
+  }
+}
+
 class Printer {
 
   static void println(int a) {
@@ -86,6 +115,20 @@ public class App {
   }
 
   public static void main(String[] args) throws Exception {
+    Account account = new Account();
+    account.setBalance(10000);
+    System.out.println(account.getBalance());
+    account.setBalance(-100);
+    System.out.println(account.getBalance());
+    account.setBalance(1000001);
+    System.out.println(account.getBalance());
+    ShopService obj1 = ShopService.getInstance();
+    ShopService obj2 = ShopService.getInstance();
+    if (obj1 == obj2) {
+      System.out.println("같은 ShopService 객체입니다.");
+    } else {
+      System.out.println("다른 ShopSerivce 객체입니다.");
+    }
 //    Printer printer = new Printer();
 //    printer.println(10);
 //    printer.println(true);
