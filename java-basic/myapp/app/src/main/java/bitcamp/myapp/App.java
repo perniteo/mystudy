@@ -3,9 +3,157 @@
  */
 package bitcamp.myapp;
 
+class Printer {
+
+  static void println(int a) {
+    System.out.println(a);
+  }
+
+  static void println(boolean a) {
+    System.out.println(a);
+  }
+
+  static void println(double a) {
+    System.out.println(a);
+  }
+
+  static void println(String a) {
+    System.out.println(a);
+  }
+}
+
+class Car {
+
+  String color; // 인스턴스 변수
+  String gearType;
+  int door;
+
+  Car() {
+    this("white", "auto", 4); // Car(String color, string gearType, int door)를 호출
+  }
+
+  Car(String color) {
+    this(color, "auto", 4);
+  }
+
+  Car(String color, String gearType, int door) {
+    this.color = color;
+    this.gearType = gearType;
+    this.door = door;
+  }
+}
+
+class Member {
+
+  String name;
+  String id;
+  String password;
+  int age;
+
+  Member(String name, String id) {
+    this.name = name;
+    this.id = id;
+  }
+}
+
+class MemberService {
+
+  boolean login(String id, String password) {
+    return id.equals("hong") && password.equals("12345");
+  }
+
+  void logout(String id) {
+    System.out.println(id + "님이 로그아웃 되었습니다.");
+  }
+}
+
 public class App {
 
-  public static void main(String[] args) {
+  static String company = "MyCompany";
+  static String model = "LCD";
+  static String info = company + "-" + model;
+
+  static {
+    info = company + company;
+  }
+
+  final String nation = "대한민국";
+  final String ssn;
+  int speed;
+
+  public App(String ssn) {
+    this.ssn = ssn;
+  }
+
+  public static void main(String[] args) throws Exception {
+//    Printer printer = new Printer();
+//    printer.println(10);
+//    printer.println(true);
+//    printer.println(5.7);
+//    printer.println("홍길동");
+    Printer.println(10);
+    Printer.println(true);
+    Printer.println(5.7);
+    Printer.println("홍길동");
+    MemberService memberService = new MemberService();
+    boolean result = memberService.login("hong", "12345");
+    if (result) {
+      System.out.println("로그인 되었습니다");
+      memberService.logout("hong");
+    } else {
+      System.out.println("접근이 거부 되었습니다.");
+    }
+    Member user1 = new Member("홍길동", "hong");
+    Car car = new Car();
+    System.out.println(car.color);
+
+    App app = new App("3");
+    App myCar = new App("1");
+    myCar.speed = 30;
+    myCar.run();
+    System.out.println(App.info);
+//    Scanner sc = new Scanner(System.in);
+//    boolean run = true;
+//    int students = 0;
+//    int[] scores = null;
+//    while (run) {
+//      System.out.print("""
+//          ------------------------------------------------------
+//          1. 학생수 | 2. 점수입력 | 3. 점수리스트 | 4. 분석 | 5. 종료
+//          ------------------------------------------------------
+//          선택 > """);
+//      int inputInt = sc.nextInt();
+//      if (inputInt == 1) {
+//        System.out.print("학생 수 > ");
+//        students = sc.nextInt();
+//        scores = new int[students];
+//      } else if (inputInt == 2) {
+//        for (int i = 0; i < students; i++) {
+//          System.out.printf("scores[%d] > ", i);
+//          scores[i] = sc.nextInt();
+//        }
+//      } else if (inputInt == 3) {
+//        for (int i = 0; i < students; i++) {
+//          System.out.printf("scores[%d]: ", i);
+//          System.out.println(scores[i]);
+//        }
+//      } else if (inputInt == 4) {
+//        int best = 0;
+//        float sumScores = 0;
+//        for (int score : scores) {
+//          sumScores += score;
+//          if (score > best) {
+//            best = score;
+//          }
+//        }
+//        System.out.printf("최고 점수: %d\n", best);
+//        System.out.printf("평균 점수: %f\n", sumScores / students);
+//      } else if (inputInt == 5) {
+//        System.out.println("프로그램 종료");
+//        run = false;
+//      }
+//    }
+
     System.out.println(197 ^ 197);
     double[] arr5 = {0.1};
     System.out.println(arr5[0]);
@@ -37,7 +185,7 @@ public class App {
         \033[1;31m
         --------------------------------
         [과제관리 시스템]
-                
+
         1. 과제
         2. 게시글
         3. 도움말
@@ -83,6 +231,11 @@ public class App {
       }
       System.out.println();
     }
+
+  }
+
+  void run() {
+    System.out.println(speed + " 속도로 주행합니다.");
   }
 
 }
