@@ -1,6 +1,6 @@
 package com.eomcs.lang.ex07;
 
-//# 메서드 : 스택 메모리 응용 I
+// # 메서드 : 스택 메모리 응용 I
 //
 public class Exam0440 {
 

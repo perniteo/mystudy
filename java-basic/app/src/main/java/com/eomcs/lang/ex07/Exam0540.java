@@ -10,11 +10,10 @@ public class Exam0540 {
     // 이름: 홍길동
     // 총점: 290
     // 평균: 96.9
-    //
 
     if (args.length < 4) {
-      System.out.println(
-          "실행 형식: java -cp ./bin/main com.eomcs.lang.ex07.Exam0540 이름 국어점수 영어점수 수학점수");
+      System.out
+          .println("실행 형식: java -cp ./bin/main com.eomcs.lang.ex07.Exam0540 이름 국어점수 영어점수 수학점수");
       return;
     }
 

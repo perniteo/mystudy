@@ -5,8 +5,8 @@ package bitcamp.myapp;
 
 class Account {
 
-  final static int MIN_BALANCE = 0;
-  final static int MAX_BALANCE = 1_000_000;
+  static final int MIN_BALANCE = 0;
+  static final int MAX_BALANCE = 1_000_000;
   private int balance;
 
   public int getBalance() {
@@ -115,6 +115,12 @@ public class App {
   }
 
   public static void main(String[] args) throws Exception {
+    String str = "S5X!!";
+    StringBuilder sb = new StringBuilder();
+    sb.append("sssss").append("aaaaa");
+    System.out.println(sb.charAt(1));
+    sb.replace(1, 2, "sex");
+    System.out.println(sb);
     Account account = new Account();
     account.setBalance(10000);
     System.out.println(account.getBalance());
