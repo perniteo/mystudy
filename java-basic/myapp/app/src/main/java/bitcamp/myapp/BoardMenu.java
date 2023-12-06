@@ -19,7 +19,6 @@ public class BoardMenu {
       Board[] newArr = new Board[length + (length / 2)];
       System.arraycopy(arr, 0, newArr, 0, length);
       arr = newArr;
-      return;
     }
     System.out.println("게시글 등록:");
 
@@ -28,8 +27,7 @@ public class BoardMenu {
     board.content = Prompt.input("내용: ");
     board.writer = Prompt.input("작성자: ");
     board.createDate = Prompt.input("작성일: ");
-    arr[length] = board;
-    length++;
+    arr[length++] = board;
   }
 
   static void view() {
@@ -71,8 +69,7 @@ public class BoardMenu {
     for (int i = index; i < (length - 1); i++) {
       arr[i] = arr[i + 1];
     }
-    length--;
-    arr[length] = null;
+    arr[--length] = null;
   }
 
   static void list() {

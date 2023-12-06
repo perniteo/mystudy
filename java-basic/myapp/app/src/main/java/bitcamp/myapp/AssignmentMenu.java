@@ -61,7 +61,6 @@ public class AssignmentMenu {
 //        arr[i] = assignments[i];
 //      }
       assignments = arr;
-      return;
     }
 
     Assignment assignment = new Assignment();
@@ -69,8 +68,7 @@ public class AssignmentMenu {
     assignment.content = Prompt.input("내용? ");
     assignment.deadline = Prompt.input("제출 마감일? ");
 
-    assignments[length] = assignment;
-    length++;
+    assignments[length++] = assignment;
 
   }
 
@@ -113,8 +111,7 @@ public class AssignmentMenu {
     for (int i = index; i < (length - 1); i++) {
       assignments[i] = assignments[i + 1];
     }
-    length--;
-    assignments[length] = null;
+    assignments[--length] = null;
 //    assignment.title = "";
 //    assignment.content = "";
 //    assignment.deadline = "";
