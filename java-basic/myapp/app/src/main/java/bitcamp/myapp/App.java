@@ -2,7 +2,7 @@ package bitcamp.myapp;
 
 public class App {
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws Exception {
     MainMenu.execute();
     Prompt.close();
 //    int[] intArray = new int[5];

@@ -15,7 +15,7 @@ public class MemberMenu {
     System.out.println("0. 이전");
   }
 
-  static void execute() {
+  static void execute() throws Exception {
     printMenu();
 
     while (true) {
@@ -49,7 +49,7 @@ public class MemberMenu {
 
   }
 
-  static void add() {
+  static void add() throws Exception {
     if (length == arr.length) {
       Member[] newArr = new Member[length + (length >> 1)];
       System.arraycopy(arr, 0, newArr, 0, length);
@@ -67,9 +67,9 @@ public class MemberMenu {
     arr[length++] = member;
   }
 
-  static void view() {
+  static void view() throws Exception {
     System.out.println("회원 정보 조회");
-    int index = Integer.parseInt(Prompt.input("몇 번을 조회?(0~) "));
+    int index = Integer.parseInt(Prompt.input(String.format("몇 번을 조회?(0~%d) ", length - 1)));
     if (index < 0 || index >= length) {
       System.out.println("잘못된 입력입니다.");
       return;
@@ -81,7 +81,7 @@ public class MemberMenu {
     System.out.printf("가입일: %s\n", member.joinDate);
   }
 
-  static void modify() {
+  static void modify() throws Exception {
     System.out.println("회원 정보 수정");
     int index = Integer.parseInt(Prompt.input("몇 번을 수정?(0~) "));
     if (index < 0 || index >= length) {
@@ -95,7 +95,7 @@ public class MemberMenu {
     member.joinDate = Prompt.input(String.format("가입일(%s)? ", member.joinDate));
   }
 
-  static void delete() {
+  static void delete() throws Exception {
     System.out.println("회원 정보 삭제");
     int index = Integer.parseInt(Prompt.input("몇 번을 삭제?(0~) "));
     if (index < 0 || index >= length) {

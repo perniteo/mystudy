@@ -15,7 +15,7 @@ public class AssignmentMenu {
     System.out.println("0. 이전");
   }
 
-  static void execute() {
+  static void execute() throws Exception {
     printMenu();
 
     while (true) {
@@ -48,7 +48,7 @@ public class AssignmentMenu {
     }
   }
 
-  static void add() {
+  static void add() throws Exception {
     System.out.println("과제 등록:");
 
     if (length == assignments.length) {
@@ -72,7 +72,7 @@ public class AssignmentMenu {
 
   }
 
-  static void view() {
+  static void view() throws Exception {
     System.out.println("과제 조회:");
     int index = Integer.parseInt(Prompt.input("번호? "));
     if (index < 0 || index >= length) {
@@ -87,7 +87,7 @@ public class AssignmentMenu {
   }
 
 
-  static void modify() {
+  static void modify() throws Exception {
     System.out.println("과제 변경:");
     int index = Integer.parseInt(Prompt.input("번호? "));
     if (index < 0 || index >= length) {
@@ -101,7 +101,7 @@ public class AssignmentMenu {
 
   }
 
-  static void delete() {
+  static void delete() throws Exception {
     System.out.println("과제 삭제");
 
     int index = Integer.parseInt(Prompt.input("번호? "));

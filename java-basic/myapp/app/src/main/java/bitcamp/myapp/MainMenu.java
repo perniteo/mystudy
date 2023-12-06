@@ -22,7 +22,7 @@ public class MainMenu {
     }
   }
 
-  static void execute() {
+  static void execute() throws Exception {
     printMenu();
 
     while (true) {

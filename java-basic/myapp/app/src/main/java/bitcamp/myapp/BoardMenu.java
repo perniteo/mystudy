@@ -14,7 +14,7 @@ public class BoardMenu {
     System.out.println("0. 이전");
   }
 
-  static void add() {
+  static void add() throws Exception {
     if (length == arr.length) {
       Board[] newArr = new Board[length + (length / 2)];
       System.arraycopy(arr, 0, newArr, 0, length);
@@ -30,7 +30,7 @@ public class BoardMenu {
     arr[length++] = board;
   }
 
-  static void view() {
+  static void view() throws Exception {
     System.out.println("게시글 조회");
     int index = Integer.parseInt(Prompt.input("몇 번을 조회?(0 ~)"));
     if (index < 0 || index >= length) {
@@ -44,7 +44,7 @@ public class BoardMenu {
     System.out.printf("작성일: %s\n", board.createDate);
   }
 
-  static void modify() {
+  static void modify() throws Exception {
     System.out.println("게시글 변경");
     int index = Integer.parseInt(Prompt.input("몇 번을 변경?(0 ~"));
     if (index < 0 || index >= length) {
@@ -58,7 +58,7 @@ public class BoardMenu {
     board.createDate = Prompt.input(String.format("작성일(%s) :", board.createDate));
   }
 
-  static void delete() {
+  static void delete() throws Exception {
     System.out.println("과제 삭제");
 
     int index = Integer.parseInt(Prompt.input("몇 번을 삭제?(0 ~)"));
@@ -81,7 +81,7 @@ public class BoardMenu {
     }
   }
 
-  static void execute() {
+  static void execute() throws Exception {
     printMenu();
     while (true) {
       String input = Prompt.input("메인/게시글> ");
