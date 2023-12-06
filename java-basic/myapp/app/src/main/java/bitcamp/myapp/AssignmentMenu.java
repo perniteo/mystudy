@@ -2,9 +2,7 @@ package bitcamp.myapp;
 
 public class AssignmentMenu {
 
-  static String title;
-  static String content;
-  static String deadline;
+  static Assignment assignment = new Assignment();
 
   static void printMenu() {
     System.out.println("[과제]");
@@ -47,32 +45,32 @@ public class AssignmentMenu {
 
   static void add() {
     System.out.println("과제 등록:");
-    title = Prompt.input("과제명? ");
-    content = Prompt.input("내용? ");
-    deadline = Prompt.input("제출 마감일? ");
+    assignment.title = Prompt.input("과제명? ");
+    assignment.content = Prompt.input("내용? ");
+    assignment.deadline = Prompt.input("제출 마감일? ");
 
   }
 
   static void view() {
     System.out.println("과제 조회:");
-    System.out.printf("과제명: %s\n", title);
-    System.out.printf("내용: %s\n", content);
-    System.out.printf("제출 마감일: %s\n", deadline);
+    System.out.printf("과제명: %s\n", assignment.title);
+    System.out.printf("내용: %s\n", assignment.content);
+    System.out.printf("제출 마감일: %s\n", assignment.deadline);
 
   }
 
   static void modify() {
     System.out.println("과제 변경:");
-    title = Prompt.input(String.format("과제명(%s)? ", title));
-    content = Prompt.input(String.format("내용(%s)? ", content));
-    deadline = Prompt.input(String.format("제출 마감일(%s)? ", deadline));
+    assignment.title = Prompt.input(String.format("과제명(%s)? ", assignment.title));
+    assignment.content = Prompt.input(String.format("내용(%s)? ", assignment.content));
+    assignment.deadline = Prompt.input(String.format("제출 마감일(%s)? ", assignment.deadline));
 
   }
 
   static void delete() {
     System.out.println("과제 삭제");
-    title = "";
-    content = "";
-    deadline = "";
+    assignment.title = "";
+    assignment.content = "";
+    assignment.deadline = "";
   }
 }

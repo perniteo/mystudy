@@ -2,10 +2,7 @@ package bitcamp.myapp;
 
 public class BoardMenu {
 
-  static String title;
-  static String content;
-  static String writer;
-  static String date;
+  static Board board = new Board();
 
   static void printMenu() {
     System.out.println("[게시글]");
@@ -18,15 +15,34 @@ public class BoardMenu {
 
   static void add() {
     System.out.println("게시글 등록:");
-    title = Prompt.input("제목: ");
-    content = Prompt.input("내용: ");
-    writer = Prompt.input("작성자: ");
-    date = Prompt.input("날짜: ");
+    board.title = Prompt.input("제목: ");
+    board.content = Prompt.input("내용: ");
+    board.writer = Prompt.input("작성자: ");
+    board.createDate = Prompt.input("작성일: ");
   }
 
   static void view() {
     System.out.println("게시글 조회");
-    System.out.printf("제목: %s\n", title);
+    System.out.printf("제목: %s\n", board.title);
+    System.out.printf("내용: %s\n", board.content);
+    System.out.printf("작성자: %s\n", board.writer);
+    System.out.printf("작성일: %s\n", board.createDate);
+  }
+
+  static void modify() {
+    System.out.println("게시글 변경");
+    board.title = Prompt.input(String.format("제목(%s) :", board.title));
+    board.content = Prompt.input(String.format("내용(%s) :", board.content));
+    board.writer = Prompt.input(String.format("작성자(%s) :", board.writer));
+    board.createDate = Prompt.input(String.format("작성일(%s) :", board.createDate));
+  }
+
+  static void delete() {
+    System.out.println("과제 삭제");
+    board.title = "";
+    board.content = "";
+    board.writer = "";
+    board.createDate = "";
   }
 
   static void execute() {
@@ -42,10 +58,10 @@ public class BoardMenu {
           view();
           break;
         case "3":
-          System.out.println("변경입니다.");
+          modify();
           break;
         case "4":
-          System.out.println("삭제입니다.");
+          delete();
           break;
         case "0":
           return;
