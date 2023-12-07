@@ -10,7 +10,8 @@ public class MainMenu {
       "1. 과제",
       "2. 게시글",
       "3. 회원",
-      "4. 도움말",
+      "4. 가입인사",
+      "5. 도움말",
       ANSI_RED + "0. 종료" + ANSI_CLEAR
   };
 
@@ -24,6 +25,8 @@ public class MainMenu {
 
   static void execute() throws Exception {
     printMenu();
+    BoardMenu boardMenu = new BoardMenu();
+    BoardMenu greetingMenu = new BoardMenu();
 
     while (true) {
       String input = Prompt.input("메인> ");
@@ -33,12 +36,15 @@ public class MainMenu {
           AssignmentMenu.execute();
           break;
         case "2":
-          BoardMenu.execute();
+          boardMenu.execute();
           break;
         case "3":
           MemberMenu.execute();
           break;
         case "4":
+          GreetingBoardMenu.execute();
+          break;
+        case "5":
           System.out.println("도움말입니다.");
           break;
         case "0":

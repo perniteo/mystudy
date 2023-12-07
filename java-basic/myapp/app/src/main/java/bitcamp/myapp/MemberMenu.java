@@ -89,10 +89,10 @@ public class MemberMenu {
       return;
     }
     Member member = arr[index];
-    member.email = Prompt.input(String.format("이메일(%s)? ", member.email));
-    member.name = Prompt.input(String.format("이름(%s)? ", member.name));
-    member.password = Prompt.input(String.format("암호(%s)? ", member.password));
-    member.joinDate = Prompt.input(String.format("가입일(%s)? ", member.joinDate));
+    member.email = Prompt.input("이메일(%s)? ", member.email);
+    member.name = Prompt.input("이름(%s)? ", member.name);
+    member.password = Prompt.input("암호(%s)? ", member.password);
+    member.joinDate = Prompt.input("가입일(%s)? ", member.joinDate);
   }
 
   static void delete() throws Exception {

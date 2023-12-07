@@ -1,12 +1,12 @@
 package bitcamp.myapp;
 
-public class BoardMenu {
+public class GreetingBoardMenu {
 
-  Board[] arr = new Board[3];
-  int length = 0;
+  static Board[] arr = new Board[3];
+  static int length = 0;
 
   static void printMenu() {
-    System.out.println("[게시글]");
+    System.out.println("[가입인사]");
     System.out.println("1. 등록");
     System.out.println("2. 조회");
     System.out.println("3. 변경");
@@ -14,13 +14,13 @@ public class BoardMenu {
     System.out.println("0. 이전");
   }
 
-  void add() throws Exception {
+  static void add() throws Exception {
     if (length == arr.length) {
       Board[] newArr = new Board[length + (length / 2)];
       System.arraycopy(arr, 0, newArr, 0, length);
       arr = newArr;
     }
-    System.out.println("게시글 등록:");
+    System.out.println("가입인사 등록:");
 
     Board board = new Board();
     board.title = Prompt.input("제목: ");
@@ -30,8 +30,8 @@ public class BoardMenu {
     arr[length++] = board;
   }
 
-  void view() throws Exception {
-    System.out.println("게시글 조회");
+  static void view() throws Exception {
+    System.out.println("가입인사 조회");
     int index = Integer.parseInt(Prompt.input("몇 번을 조회?(0 ~)"));
     if (index < 0 || index >= length) {
       System.out.println("유효하지 않은 입력입니다.");
@@ -44,8 +44,8 @@ public class BoardMenu {
     System.out.printf("작성일: %s\n", board.createDate);
   }
 
-  void modify() throws Exception {
-    System.out.println("게시글 변경");
+  static void modify() throws Exception {
+    System.out.println("가입인사 변경");
     int index = Integer.parseInt(Prompt.input("몇 번을 변경?(0 ~"));
     if (index < 0 || index >= length) {
       System.out.println("유효하지 않은 입력입니다.");
@@ -58,7 +58,7 @@ public class BoardMenu {
     board.createDate = Prompt.input("작성일(%s) :", board.createDate);
   }
 
-  void delete() throws Exception {
+  static void delete() throws Exception {
     System.out.println("과제 삭제");
 
     int index = Integer.parseInt(Prompt.input("몇 번을 삭제?(0 ~)"));
@@ -72,8 +72,8 @@ public class BoardMenu {
     arr[--length] = null;
   }
 
-  void list() {
-    System.out.println("게시글 목록을 호출합니다.");
+  static void list() {
+    System.out.println("가입인사 목록을 호출합니다.");
     System.out.printf("%-18s%s\t%s\n", "제목", "작성자", "작성일");
     for (int i = 0; i < length; i++) {
       Board board = arr[i];
@@ -81,10 +81,10 @@ public class BoardMenu {
     }
   }
 
-  void execute() throws Exception {
+  static void execute() throws Exception {
     printMenu();
     while (true) {
-      String input = Prompt.input("메인/게시글> ");
+      String input = Prompt.input("메인/가입인사> ");
 
       switch (input) {
         case "1":
