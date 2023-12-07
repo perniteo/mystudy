@@ -1,10 +1,14 @@
 package bitcamp.myapp;
 
+import bitcamp.myapp.menu.MainMenu;
+import bitcamp.util.Prompt;
+
 public class App {
 
   public static void main(String[] args) throws Exception {
-    MainMenu.execute();
-    Prompt.close();
+    Prompt prompt = new Prompt(System.in);
+    new MainMenu(prompt).execute();
+    prompt.close();
 //    int[] intArray = new int[5];
 
 //    // 배열의 각 요소에 값 할당

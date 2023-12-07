@@ -1,13 +1,18 @@
-package bitcamp.myapp;
+package bitcamp.myapp.menu;
+
+import bitcamp.myapp.vo.Member;
+import bitcamp.util.Prompt;
 
 public class MemberMenu {
 
   String title;
   Member[] arr = new Member[3];
   int length = 0;
+  Prompt prompt;
 
-  MemberMenu(String title) {
+  MemberMenu(String title, Prompt prompt) {
     this.title = title;
+    this.prompt = prompt;
   }
 
   void printMenu() {
@@ -24,7 +29,7 @@ public class MemberMenu {
     this.printMenu();
 
     while (true) {
-      String input = Prompt.input("메인/%s> ", this.title);
+      String input = this.prompt.input("메인/%s> ", this.title);
 
       switch (input) {
         case "1":
@@ -64,17 +69,17 @@ public class MemberMenu {
 
     Member member = new Member();
 
-    member.email = Prompt.input("이메일: ");
-    member.name = Prompt.input("이름: ");
-    member.password = Prompt.input("암호: ");
-    member.joinDate = Prompt.input("가입일: ");
+    member.email = this.prompt.input("이메일: ");
+    member.name = this.prompt.input("이름: ");
+    member.password = this.prompt.input("암호: ");
+    member.joinDate = this.prompt.input("가입일: ");
 
     this.arr[this.length++] = member;
   }
 
   void view() throws Exception {
     System.out.printf("%s 정보 조회\n", this.title);
-    int index = Integer.parseInt(Prompt.input(String.format("몇 번을 조회?(0~%d) ", length - 1)));
+    int index = Integer.parseInt(this.prompt.input(String.format("몇 번을 조회?(0~%d) ", length - 1)));
     if (index < 0 || index >= this.length) {
       System.out.println("잘못된 입력입니다.");
       return;
@@ -88,21 +93,21 @@ public class MemberMenu {
 
   void modify() throws Exception {
     System.out.printf("%s 정보 수정\n", this.title);
-    int index = Integer.parseInt(Prompt.input("몇 번을 수정?(0~) "));
+    int index = Integer.parseInt(this.prompt.input("몇 번을 수정?(0~) "));
     if (index < 0 || index >= this.length) {
       System.out.println("잘못된 입력입니다.");
       return;
     }
     Member member = this.arr[index];
-    member.email = Prompt.input("이메일(%s)? ", member.email);
-    member.name = Prompt.input("이름(%s)? ", member.name);
-    member.password = Prompt.input("암호(%s)? ", member.password);
-    member.joinDate = Prompt.input("가입일(%s)? ", member.joinDate);
+    member.email = this.prompt.input("이메일(%s)? ", member.email);
+    member.name = this.prompt.input("이름(%s)? ", member.name);
+    member.password = this.prompt.input("암호(%s)? ", member.password);
+    member.joinDate = this.prompt.input("가입일(%s)? ", member.joinDate);
   }
 
   void delete() throws Exception {
     System.out.printf("%s 정보 삭제\n", this.title);
-    int index = Integer.parseInt(Prompt.input("몇 번을 삭제?(0~) "));
+    int index = Integer.parseInt(this.prompt.input("몇 번을 삭제?(0~) "));
     if (index < 0 || index >= this.length) {
       System.out.println("잘못된 입력입니다.");
       return;

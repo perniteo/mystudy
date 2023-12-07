@@ -1,13 +1,18 @@
-package bitcamp.myapp;
+package bitcamp.myapp.menu;
+
+import bitcamp.myapp.vo.Board;
+import bitcamp.util.Prompt;
 
 public class BoardMenu {
 
   String title;
   Board[] arr = new Board[3];
   int length = 0;
+  Prompt prompt;
 
-  BoardMenu(String title) {
+  BoardMenu(String title, Prompt prompt) {
     this.title = title;
+    this.prompt = prompt;
   }
 
   void printMenu() {
@@ -28,16 +33,16 @@ public class BoardMenu {
     System.out.printf("%s 등록:\n", this.title);
 
     Board board = new Board();
-    board.title = Prompt.input("제목: ");
-    board.content = Prompt.input("내용: ");
-    board.writer = Prompt.input("작성자: ");
-    board.createDate = Prompt.input("작성일: ");
+    board.title = this.prompt.input("제목: ");
+    board.content = this.prompt.input("내용: ");
+    board.writer = this.prompt.input("작성자: ");
+    board.createDate = this.prompt.input("작성일: ");
     this.arr[this.length++] = board;
   }
 
   void view() throws Exception {
     System.out.printf("%s 조회\n", this.title);
-    int index = Integer.parseInt(Prompt.input("몇 번을 조회?(0 ~)"));
+    int index = this.prompt.inputInt("몇 번을 조회?(0 ~)");
     if (index < 0 || index >= this.length) {
       System.out.println("유효하지 않은 입력입니다.");
       return;
@@ -51,22 +56,22 @@ public class BoardMenu {
 
   void modify() throws Exception {
     System.out.printf("%s 변경\n", this.title);
-    int index = Integer.parseInt(Prompt.input("몇 번을 변경?(0 ~"));
+    int index = this.prompt.inputInt("몇 번을 변경?(0 ~");
     if (index < 0 || index >= this.length) {
       System.out.println("유효하지 않은 입력입니다.");
       return;
     }
     Board board = this.arr[index];
-    board.title = Prompt.input("제목(%s) :", board.title);
-    board.content = Prompt.input("내용(%s) :", board.content);
-    board.writer = Prompt.input("작성자(%s) :", board.writer);
-    board.createDate = Prompt.input("작성일(%s) :", board.createDate);
+    board.title = this.prompt.input("제목(%s) :", board.title);
+    board.content = this.prompt.input("내용(%s) :", board.content);
+    board.writer = this.prompt.input("작성자(%s) :", board.writer);
+    board.createDate = this.prompt.input("작성일(%s) :", board.createDate);
   }
 
   void delete() throws Exception {
     System.out.printf("%s 삭제\n", this.title);
 
-    int index = Integer.parseInt(Prompt.input("몇 번을 삭제?(0 ~)"));
+    int index = this.prompt.inputInt("몇 번을 삭제?(0 ~)");
     if (index < 0 || index >= this.length) {
       System.out.println("유효하지 않은 입력입니다.");
       return;
@@ -89,7 +94,7 @@ public class BoardMenu {
   void execute() throws Exception {
     this.printMenu();
     while (true) {
-      String input = Prompt.input("메인/%s> ", this.title);
+      String input = this.prompt.input("메인/%s> ", this.title);
 
       switch (input) {
         case "1":

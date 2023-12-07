@@ -1,13 +1,18 @@
-package bitcamp.myapp;
+package bitcamp.myapp.menu;
+
+import bitcamp.myapp.vo.Assignment;
+import bitcamp.util.Prompt;
 
 public class AssignmentMenu {
 
   String title;
   Assignment[] assignments = new Assignment[3];
   int length = 0;
+  Prompt prompt;
 
-  AssignmentMenu(String title) {
+  AssignmentMenu(String title, Prompt prompt) {
     this.title = title;
+    this.prompt = prompt;
   }
 
   void printMenu() {
@@ -24,7 +29,7 @@ public class AssignmentMenu {
     this.printMenu();
 
     while (true) {
-      String input = Prompt.input("메인/%s> ", this.title);
+      String input = this.prompt.input("메인/%s> ", this.title);
 
       switch (input) {
         case "1":
@@ -69,9 +74,9 @@ public class AssignmentMenu {
     }
 
     Assignment assignment = new Assignment();
-    assignment.title = Prompt.input("%s명? ", this.title);
-    assignment.content = Prompt.input("내용? ");
-    assignment.deadline = Prompt.input("제출 마감일? ");
+    assignment.title = this.prompt.input("%s명? ", this.title);
+    assignment.content = this.prompt.input("내용? ");
+    assignment.deadline = this.prompt.input("제출 마감일? ");
 
     assignments[length++] = assignment;
 
@@ -79,7 +84,7 @@ public class AssignmentMenu {
 
   void view() throws Exception {
     System.out.printf("%s 조회:\n", this.title);
-    int index = Integer.parseInt(Prompt.input("번호? "));
+    int index = this.prompt.inputInt("번호? ");
     if (index < 0 || index >= this.length) {
       System.out.printf("%s 번호가 유효하지 않습니다.\n", this.title);
       return;
@@ -94,22 +99,22 @@ public class AssignmentMenu {
 
   void modify() throws Exception {
     System.out.printf("%s 변경:\n", this.title);
-    int index = Integer.parseInt(Prompt.input("번호? "));
+    int index = Integer.parseInt(this.prompt.input("번호? "));
     if (index < 0 || index >= length) {
       System.out.printf("%s 번호가 유효하지 않습니다.\n", this.title);
       return;
     }
     Assignment assignment = assignments[index];
-    assignment.title = Prompt.input("%s명(%s)? ", this.title, assignment.title);
-    assignment.content = Prompt.input("내용(%s)? ", assignment.content);
-    assignment.deadline = Prompt.input("제출 마감일(%s)? ", assignment.deadline);
+    assignment.title = this.prompt.input("%s명(%s)? ", this.title, assignment.title);
+    assignment.content = this.prompt.input("내용(%s)? ", assignment.content);
+    assignment.deadline = this.prompt.input("제출 마감일(%s)? ", assignment.deadline);
 
   }
 
   void delete() throws Exception {
     System.out.printf("%s 삭제\n", this.title);
 
-    int index = Integer.parseInt(Prompt.input("번호? "));
+    int index = Integer.parseInt(this.prompt.input("번호? "));
     if (index < 0 || index >= this.length) {
       System.out.printf("%s 번호가 유효하지 않습니다.\n", this.title);
     }
