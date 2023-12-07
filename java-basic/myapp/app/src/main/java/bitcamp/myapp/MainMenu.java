@@ -25,8 +25,8 @@ public class MainMenu {
 
   static void execute() throws Exception {
     printMenu();
-    BoardMenu boardMenu = new BoardMenu();
-    BoardMenu greetingMenu = new BoardMenu();
+    BoardMenu boardMenu = new BoardMenu("게시판");
+    BoardMenu greetingMenu = new BoardMenu("가입인사");
 
     while (true) {
       String input = Prompt.input("메인> ");
@@ -42,7 +42,7 @@ public class MainMenu {
           MemberMenu.execute();
           break;
         case "4":
-          GreetingBoardMenu.execute();
+          greetingMenu.execute();
           break;
         case "5":
           System.out.println("도움말입니다.");
