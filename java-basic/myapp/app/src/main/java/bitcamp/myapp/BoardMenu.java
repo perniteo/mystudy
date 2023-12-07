@@ -5,6 +5,7 @@ public class BoardMenu {
   String title;
   Board[] arr = new Board[3];
   int length = 0;
+
   BoardMenu(String title) {
     this.title = title;
   }
@@ -24,7 +25,7 @@ public class BoardMenu {
       System.arraycopy(this.arr, 0, newArr, 0, this.length);
       this.arr = newArr;
     }
-    System.out.println("게시글 등록:");
+    System.out.printf("%s 등록:\n", this.title);
 
     Board board = new Board();
     board.title = Prompt.input("제목: ");
@@ -35,7 +36,7 @@ public class BoardMenu {
   }
 
   void view() throws Exception {
-    System.out.println("게시글 조회");
+    System.out.printf("%s 조회\n", this.title);
     int index = Integer.parseInt(Prompt.input("몇 번을 조회?(0 ~)"));
     if (index < 0 || index >= this.length) {
       System.out.println("유효하지 않은 입력입니다.");
@@ -49,7 +50,7 @@ public class BoardMenu {
   }
 
   void modify() throws Exception {
-    System.out.println("게시글 변경");
+    System.out.printf("%s 변경\n", this.title);
     int index = Integer.parseInt(Prompt.input("몇 번을 변경?(0 ~"));
     if (index < 0 || index >= this.length) {
       System.out.println("유효하지 않은 입력입니다.");
@@ -63,7 +64,7 @@ public class BoardMenu {
   }
 
   void delete() throws Exception {
-    System.out.println("과제 삭제");
+    System.out.printf("%s 삭제\n", this.title);
 
     int index = Integer.parseInt(Prompt.input("몇 번을 삭제?(0 ~)"));
     if (index < 0 || index >= this.length) {
@@ -77,7 +78,7 @@ public class BoardMenu {
   }
 
   void list() {
-    System.out.println("게시글 목록을 호출합니다.");
+    System.out.printf("%s 목록을 호출합니다.\n", this.title);
     System.out.printf("%-18s%s\t%s\n", "제목", "작성자", "작성일");
     for (int i = 0; i < this.length; i++) {
       Board board = this.arr[i];

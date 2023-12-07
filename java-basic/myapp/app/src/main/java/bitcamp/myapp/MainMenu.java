@@ -27,19 +27,21 @@ public class MainMenu {
     printMenu();
     BoardMenu boardMenu = new BoardMenu("게시판");
     BoardMenu greetingMenu = new BoardMenu("가입인사");
+    MemberMenu memberMenu = new MemberMenu("회원");
+    AssignmentMenu assignmentMenu = new AssignmentMenu("과제");
 
     while (true) {
       String input = Prompt.input("메인> ");
 
       switch (input) {
         case "1":
-          AssignmentMenu.execute();
+          assignmentMenu.execute();
           break;
         case "2":
           boardMenu.execute();
           break;
         case "3":
-          MemberMenu.execute();
+          memberMenu.execute();
           break;
         case "4":
           greetingMenu.execute();
