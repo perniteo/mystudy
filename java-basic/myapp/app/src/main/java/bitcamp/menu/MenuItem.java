@@ -22,7 +22,7 @@ public class MenuItem implements Menu {
   }
 
   @Override
-  public void execute(Prompt prompt) {
+  public void execute(Prompt prompt) throws Exception {
     if (this.menuHandler != null) {
       this.menuHandler.action();
     }
