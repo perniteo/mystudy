@@ -1,9 +1,9 @@
-package bitcamp.practice;
+package practice;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-public class Assign {
+public class Post {
 
   static int now = 0;
   static int as = -1;
@@ -11,8 +11,9 @@ public class Assign {
   static String cur = "메인/과제> ";
 
   static void execute() throws Exception {
+    cur = "메인/게시글> ";
     System.out.println("""
-        [과제]
+        [게시글]
         1. 등록
         2. 조회
         3. 변경
@@ -21,14 +22,14 @@ public class Assign {
     System.out.print(cur);
     while (as != 0) {
       as = Integer.parseInt(br.readLine());
-      String[] asArr = {"0", "등록", "조회", "변경", "삭제"};
+      String[] postArr = {"0", "등록", "조회", "변경", "삭제"};
       if (as == 0) {
         now = 0;
         cur = "메인 >";
         as = -1;
-        return;
+        break;
       } else {
-        System.out.printf("과제 %s입니다.\n%s", asArr[as], cur);
+        System.out.printf("게시글 %s입니다.\n%s", postArr[as], cur);
       }
     }
 

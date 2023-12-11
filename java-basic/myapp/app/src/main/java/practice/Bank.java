@@ -1,4 +1,4 @@
-package bitcamp.practice;
+package practice;
 
 import java.util.Scanner;
 

@@ -1,9 +1,10 @@
 package bitcamp.myapp.menu;
 
+import bitcamp.menu.Menu;
 import bitcamp.myapp.vo.Assignment;
 import bitcamp.util.Prompt;
 
-public class AssignmentMenu {
+public class AssignmentMenu implements Menu {
 
   String title;
   Assignment[] assignments = new Assignment[3];
@@ -25,7 +26,13 @@ public class AssignmentMenu {
     System.out.println("0. 이전");
   }
 
-  void execute() throws Exception {
+  @Override
+  public String getTitle() {
+    return null;
+  }
+
+  @Override
+  public void execute(Prompt prompt) throws Exception {
     this.printMenu();
 
     while (true) {

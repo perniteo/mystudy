@@ -1,4 +1,4 @@
-package bitcamp.practice;
+package practice;
 
 public class Prac {
 
