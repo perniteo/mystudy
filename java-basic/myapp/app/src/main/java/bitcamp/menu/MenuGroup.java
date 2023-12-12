@@ -86,6 +86,10 @@ public class MenuGroup implements Menu {
     this.menus[this.menuSize++] = menu;
   }
 
+  public void view(Menu menu) {
+
+  }
+
   public void remove(Menu menu) {
     int index = this.indexOf(menu);
     if (index == -1) {

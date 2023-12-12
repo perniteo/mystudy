@@ -1,4 +1,4 @@
-package bitcamp.myapp.menu;
+package bitcamp.myapp.handler.board;
 
 //게시글 데이터를 보관
 
