@@ -2,15 +2,16 @@ package bitcamp.myapp.handler.board;
 
 import bitcamp.menu.Menu;
 import bitcamp.menu.MenuHandler;
+import bitcamp.util.ObjectRepository;
 import bitcamp.util.Prompt;
 
 public class BoardDeleteHandler implements MenuHandler {
 
-  BoardRepository boardRepository;
+  ObjectRepository objectRepository;
   Prompt prompt;
 
-  public BoardDeleteHandler(BoardRepository boardRepository, Prompt prompt) {
-    this.boardRepository = boardRepository;
+  public BoardDeleteHandler(ObjectRepository objectRepository, Prompt prompt) {
+    this.objectRepository = objectRepository;
     this.prompt = prompt;
   }
 
@@ -19,7 +20,7 @@ public class BoardDeleteHandler implements MenuHandler {
     System.out.printf("[%s]", menu.getTitle());
 
     int index = this.prompt.inputInt("몇 번을 삭제?(0 ~)");
-    if (this.boardRepository.remove(index) == null) {
+    if (this.objectRepository.remove(index) == null) {
       System.out.println("유효하지 않은 입력입니다.");
     }
   }

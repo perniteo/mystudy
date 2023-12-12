@@ -20,6 +20,7 @@ import bitcamp.myapp.handler.member.MemberListHandler;
 import bitcamp.myapp.handler.member.MemberModifyHandler;
 import bitcamp.myapp.handler.member.MemberRepository;
 import bitcamp.myapp.handler.member.MemberViewHandler;
+import bitcamp.util.ObjectRepository;
 import bitcamp.util.Prompt;
 
 public class App {
@@ -29,6 +30,7 @@ public class App {
 //    new MainMenu(prompt).execute();
 //    prompt.close();
 
+    ObjectRepository objectRepository = new ObjectRepository();
     BoardRepository boardRepository = new BoardRepository();
     AssignRepository assignRepository = new AssignRepository();
     MemberRepository memberRepository = new MemberRepository();

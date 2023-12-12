@@ -3,15 +3,16 @@ package bitcamp.myapp.handler.board;
 import bitcamp.menu.Menu;
 import bitcamp.menu.MenuHandler;
 import bitcamp.myapp.vo.Board;
+import bitcamp.util.ObjectRepository;
 import bitcamp.util.Prompt;
 
 public class BoardAddHandler implements MenuHandler {
-  
-  Prompt prompt;
-  BoardRepository boardRepository;
 
-  public BoardAddHandler(BoardRepository boardRepository, Prompt prompt) {
-    this.boardRepository = boardRepository;
+  Prompt prompt;
+  ObjectRepository objectRepository;
+
+  public BoardAddHandler(ObjectRepository objectRepository, Prompt prompt) {
+    this.objectRepository = objectRepository;
     this.prompt = prompt;
   }
 
@@ -25,7 +26,7 @@ public class BoardAddHandler implements MenuHandler {
     board.writer = this.prompt.input("작성자: ");
     board.createDate = this.prompt.input("작성일: ");
 
-    boardRepository.add(board);
+    objectRepository.add(board);
   }
 
 }

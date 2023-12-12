@@ -3,15 +3,16 @@ package bitcamp.myapp.handler.board;
 import bitcamp.menu.Menu;
 import bitcamp.menu.MenuHandler;
 import bitcamp.myapp.vo.Board;
+import bitcamp.util.ObjectRepository;
 import bitcamp.util.Prompt;
 
 public class BoardModifyHandler implements MenuHandler {
 
-  BoardRepository boardRepository;
+  ObjectRepository objectRepository;
   Prompt prompt;
 
-  public BoardModifyHandler(BoardRepository boardRepository, Prompt prompt) {
-    this.boardRepository = boardRepository;
+  public BoardModifyHandler(ObjectRepository objectRepository, Prompt prompt) {
+    this.objectRepository = objectRepository;
     this.prompt = prompt;
   }
 
@@ -19,7 +20,7 @@ public class BoardModifyHandler implements MenuHandler {
   public void action(Menu menu) throws Exception {
     System.out.printf("[%s]", menu.getTitle());
     int index = this.prompt.inputInt("몇 번을 변경?(0 ~)");
-    Board oldBoard = this.boardRepository.get(index);
+    Board oldBoard = (Board) this.objectRepository.get(index);
     if (oldBoard == null) {
       System.out.println("유효하지 않은 입력입니다.");
       return;
@@ -30,7 +31,7 @@ public class BoardModifyHandler implements MenuHandler {
     board.writer = this.prompt.input("작성자(%s) :", oldBoard.writer);
     board.createDate = this.prompt.input("작성일(%s) :", oldBoard.createDate);
 
-    this.boardRepository.set(index, board);
+    this.objectRepository.set(index, board);
   }
 
 }

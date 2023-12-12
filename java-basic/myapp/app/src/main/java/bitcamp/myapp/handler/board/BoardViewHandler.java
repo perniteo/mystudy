@@ -3,15 +3,16 @@ package bitcamp.myapp.handler.board;
 import bitcamp.menu.Menu;
 import bitcamp.menu.MenuHandler;
 import bitcamp.myapp.vo.Board;
+import bitcamp.util.ObjectRepository;
 import bitcamp.util.Prompt;
 
 public class BoardViewHandler implements MenuHandler {
 
   Prompt prompt;
-  BoardRepository boardRepository;
+  ObjectRepository objectRepository;
 
-  public BoardViewHandler(BoardRepository boardRepository, Prompt prompt) {
-    this.boardRepository = boardRepository;
+  public BoardViewHandler(ObjectRepository objectRepository, Prompt prompt) {
+    this.objectRepository = objectRepository;
     this.prompt = prompt;
   }
 
@@ -19,7 +20,7 @@ public class BoardViewHandler implements MenuHandler {
     System.out.printf("[%s]", menu.getTitle());
     int index = this.prompt.inputInt("몇 번을 조회?(0 ~)");
 
-    Board board = this.boardRepository.get(index);
+    Board board = (Board) this.objectRepository.get(index);
 
     if (board == null) {
       System.out.println("유효하지 않은 입력입니다.");
