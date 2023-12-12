@@ -47,11 +47,11 @@ public class App {
 
     MenuGroup boardMenu = new MenuGroup("게시글");
     mainMenu.add(boardMenu);
-    boardMenu.add(new MenuItem("등록", new BoardAddHandler(boardRepository, prompt)));
-    boardMenu.add(new MenuItem("조회", new BoardViewHandler(boardRepository, prompt)));
-    boardMenu.add(new MenuItem("변경", new BoardModifyHandler(boardRepository, prompt)));
-    boardMenu.add(new MenuItem("삭제", new BoardDeleteHandler(boardRepository, prompt)));
-    boardMenu.add(new MenuItem("목록", new BoardListHandler(boardRepository, prompt)));
+    boardMenu.add(new MenuItem("등록", new BoardAddHandler(objectRepository, prompt)));
+    boardMenu.add(new MenuItem("조회", new BoardViewHandler(objectRepository, prompt)));
+    boardMenu.add(new MenuItem("변경", new BoardModifyHandler(objectRepository, prompt)));
+    boardMenu.add(new MenuItem("삭제", new BoardDeleteHandler(objectRepository, prompt)));
+    boardMenu.add(new MenuItem("목록", new BoardListHandler(objectRepository, prompt)));
 
     MenuGroup memberMenu = new MenuGroup("회원");
     mainMenu.add(memberMenu);
