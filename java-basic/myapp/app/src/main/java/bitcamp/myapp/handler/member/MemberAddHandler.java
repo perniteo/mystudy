@@ -1,5 +1,6 @@
 package bitcamp.myapp.handler.member;
 
+import bitcamp.menu.Menu;
 import bitcamp.menu.MenuHandler;
 import bitcamp.myapp.vo.Member;
 import bitcamp.util.Prompt;
@@ -15,7 +16,7 @@ public class MemberAddHandler implements MenuHandler {
   }
 
   @Override
-  public void action() throws Exception {
+  public void action(Menu menu) throws Exception {
     if (this.memberRepository.length == this.memberRepository.arr.length) {
       Member[] newArr = new Member[this.memberRepository.length + (this.memberRepository.length
           / 2)];

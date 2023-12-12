@@ -1,5 +1,6 @@
 package bitcamp.myapp.handler.assignment;
 
+import bitcamp.menu.Menu;
 import bitcamp.menu.MenuHandler;
 import bitcamp.myapp.vo.Assignment;
 import bitcamp.util.Prompt;
@@ -14,8 +15,8 @@ public class AssignModifyHandler implements MenuHandler {
     this.prompt = prompt;
   }
 
-  public void action() throws Exception {
-    System.out.println("과제 수정");
+  public void action(Menu menu) throws Exception {
+    System.out.printf("[%s]", menu.getTitle());
 
     int index = prompt.inputInt("몇 번을 수정?(0~ ) ");
     if (index < 0 || index > this.assignRepository.length) {

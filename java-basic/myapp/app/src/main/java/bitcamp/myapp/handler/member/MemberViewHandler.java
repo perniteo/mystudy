@@ -1,5 +1,6 @@
 package bitcamp.myapp.handler.member;
 
+import bitcamp.menu.Menu;
 import bitcamp.menu.MenuHandler;
 import bitcamp.myapp.vo.Member;
 import bitcamp.util.Prompt;
@@ -14,7 +15,7 @@ public class MemberViewHandler implements MenuHandler {
     this.prompt = prompt;
   }
 
-  public void action() throws Exception {
+  public void action(Menu menu) throws Exception {
     System.out.println("게시글 조회");
 //    System.out.printf("%s 조회\n", this.title);
     int index = this.prompt.inputInt("몇 번을 조회?(0 ~)");

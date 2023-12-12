@@ -1,5 +1,6 @@
 package bitcamp.myapp.handler.member;
 
+import bitcamp.menu.Menu;
 import bitcamp.menu.MenuHandler;
 import bitcamp.myapp.vo.Member;
 import bitcamp.util.Prompt;
@@ -15,7 +16,7 @@ public class MemberModifyHandler implements MenuHandler {
   }
 
   @Override
-  public void action() throws Exception {
+  public void action(Menu menu) throws Exception {
     System.out.println("게시글 수정");
 //    System.out.printf("%s 변경\n", this.title);
     int index = this.prompt.inputInt("몇 번을 변경?(0 ~");

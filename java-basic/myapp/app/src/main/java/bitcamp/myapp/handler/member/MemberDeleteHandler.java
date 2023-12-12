@@ -1,5 +1,6 @@
 package bitcamp.myapp.handler.member;
 
+import bitcamp.menu.Menu;
 import bitcamp.menu.MenuHandler;
 import bitcamp.util.Prompt;
 
@@ -14,7 +15,7 @@ public class MemberDeleteHandler implements MenuHandler {
   }
 
   @Override
-  public void action() throws Exception {
+  public void action(Menu menu) throws Exception {
     System.out.println("회원정보 삭제");
 //    System.out.printf("%s 삭제\n", this.title);
 

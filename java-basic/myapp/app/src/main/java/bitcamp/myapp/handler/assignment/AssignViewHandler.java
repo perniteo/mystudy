@@ -1,5 +1,6 @@
 package bitcamp.myapp.handler.assignment;
 
+import bitcamp.menu.Menu;
 import bitcamp.menu.MenuHandler;
 import bitcamp.myapp.vo.Assignment;
 import bitcamp.util.Prompt;
@@ -15,9 +16,8 @@ public class AssignViewHandler implements MenuHandler {
   }
 
   @Override
-  public void action() throws Exception {
-    System.out.println("과제 조회");
-//    System.out.printf("%s 조회\n", this.title);
+  public void action(Menu menu) throws Exception {
+    System.out.printf("[%s]", menu.getTitle());
     int index = this.prompt.inputInt("몇 번을 조회?(0 ~)");
     if (index < 0 || index >= this.assignRepository.length) {
       System.out.println("유효하지 않은 입력입니다.");

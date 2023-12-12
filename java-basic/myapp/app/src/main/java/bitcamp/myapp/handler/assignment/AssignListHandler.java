@@ -1,5 +1,6 @@
 package bitcamp.myapp.handler.assignment;
 
+import bitcamp.menu.Menu;
 import bitcamp.menu.MenuHandler;
 import bitcamp.myapp.vo.Assignment;
 import bitcamp.util.Prompt;
@@ -14,8 +15,8 @@ public class AssignListHandler implements MenuHandler {
     this.prompt = prompt;
   }
 
-  public void action() {
-    System.out.println("과제 목록");
+  public void action(Menu menu) {
+    System.out.printf("[%s]", menu.getTitle());
     System.out.printf("%-18s\t%s\n", "과제명", "제출마감일");
     for (int i = 0; i < this.assignRepository.length; i++) {
       Assignment assignment = this.assignRepository.arr[i];
