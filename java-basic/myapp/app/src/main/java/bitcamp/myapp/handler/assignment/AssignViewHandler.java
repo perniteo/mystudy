@@ -19,11 +19,13 @@ public class AssignViewHandler implements MenuHandler {
   public void action(Menu menu) throws Exception {
     System.out.printf("[%s]", menu.getTitle());
     int index = this.prompt.inputInt("몇 번을 조회?(0 ~)");
-    if (index < 0 || index >= this.assignRepository.length) {
+
+    Assignment assignment = this.assignRepository.get(index);
+
+    if (assignment == null) {
       System.out.println("유효하지 않은 입력입니다.");
       return;
     }
-    Assignment assignment = this.assignRepository.arr[index];
     System.out.printf("제목: %s\n", assignment.title);
     System.out.printf("내용: %s\n", assignment.content);
     System.out.printf("마감기한: %s\n", assignment.deadline);

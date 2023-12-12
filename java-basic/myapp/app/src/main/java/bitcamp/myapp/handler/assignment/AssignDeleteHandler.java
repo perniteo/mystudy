@@ -17,13 +17,8 @@ public class AssignDeleteHandler implements MenuHandler {
   public void action(Menu menu) throws Exception {
     System.out.printf("[%s]", menu.getTitle());
     int index = prompt.inputInt("몇 번을 수정? ");
-    if (index < 0 || index > this.assignRepository.length) {
+    if (assignRepository.remove(index) == null) {
       System.out.println("Wrong input");
-      return;
     }
-    for (int i = index; i < (this.assignRepository.length - 1); i++) {
-      this.assignRepository.arr[i] = this.assignRepository.arr[i + 1];
-    }
-    this.assignRepository.arr[--this.assignRepository.length] = null;
   }
 }

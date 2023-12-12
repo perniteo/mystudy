@@ -27,7 +27,7 @@ public class BoardRepository {
     for (int i = index; i < (this.length - 1); i++) {
       this.arr[i] = this.arr[i + 1];
     }
-    this.arr[--length] = null;
+    this.arr[--this.length] = null;
 
     return deleted;
   }

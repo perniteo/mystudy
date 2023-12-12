@@ -17,18 +17,24 @@ public class MemberModifyHandler implements MenuHandler {
 
   @Override
   public void action(Menu menu) throws Exception {
-    System.out.println("게시글 수정");
-//    System.out.printf("%s 변경\n", this.title);
+    System.out.printf("[%s]", menu.getTitle());
+
     int index = this.prompt.inputInt("몇 번을 변경?(0 ~");
-    if (index < 0 || index >= this.memberRepository.length) {
+
+    Member oldMember = this.memberRepository.get(index);
+
+    if (oldMember == null) {
       System.out.println("유효하지 않은 입력입니다.");
       return;
     }
-    Member member = this.memberRepository.arr[index];
+
+    Member member = new Member();
     member.email = this.prompt.input("이메일(%s) :", member.email);
     member.name = this.prompt.input("이름(%s) :", member.name);
     member.password = this.prompt.input("암호(%s) :", member.password);
     member.joinDate = this.prompt.input("가입일(%s) :", member.joinDate);
+
+    memberRepository.set(index, member);
   }
 
 }

@@ -16,14 +16,17 @@ public class MemberViewHandler implements MenuHandler {
   }
 
   public void action(Menu menu) throws Exception {
-    System.out.println("게시글 조회");
-//    System.out.printf("%s 조회\n", this.title);
+    System.out.printf("[%s]", menu.getTitle());
+
     int index = this.prompt.inputInt("몇 번을 조회?(0 ~)");
-    if (index < 0 || index >= this.memberRepository.length) {
+
+    Member member = memberRepository.get(index);
+
+    if (member == null) {
       System.out.println("유효하지 않은 입력입니다.");
       return;
     }
-    Member member = this.memberRepository.arr[index];
+    
     System.out.printf("이메일: %s\n", member.email);
     System.out.printf("이름: %s\n", member.name);
     System.out.printf("암호: %s\n", member.password);

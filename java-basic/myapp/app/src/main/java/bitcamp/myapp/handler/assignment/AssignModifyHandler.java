@@ -19,15 +19,20 @@ public class AssignModifyHandler implements MenuHandler {
     System.out.printf("[%s]", menu.getTitle());
 
     int index = prompt.inputInt("몇 번을 수정?(0~ ) ");
-    if (index < 0 || index > this.assignRepository.length) {
+
+    Assignment oldAssignment = this.assignRepository.get(index);
+
+    if (oldAssignment == null) {
       System.out.println("Wrong input");
       return;
     }
 
-    Assignment assignment = this.assignRepository.arr[index];
+    Assignment assignment = new Assignment();
     assignment.title = this.prompt.input("제목(%s): ", assignment.title);
     assignment.content = this.prompt.input("내용(%s): ", assignment.content);
     assignment.deadline = this.prompt.input("마감기한(%s): ", assignment.deadline);
+
+    assignRepository.set(index, assignment);
 
   }
 }

@@ -17,11 +17,10 @@ public class MemberListHandler implements MenuHandler {
 
   @Override
   public void action(Menu menu) {
-    System.out.println("게시글 목록");
-//    System.out.printf("%s 목록을 호출합니다.\n", this.title);
+    System.out.printf("[%s]", menu.getTitle());
+
     System.out.printf("%-18s%s\t%s\n", "이메일", "이름", "가입일");
-    for (int i = 0; i < this.memberRepository.length; i++) {
-      Member member = this.memberRepository.arr[i];
+    for (Member member : memberRepository.toArray()) {
       System.out.printf("%-20s%s\t\t%s\n", member.email, member.name, member.joinDate);
     }
   }
