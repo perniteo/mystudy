@@ -6,20 +6,20 @@ import bitcamp.myapp.handler.assignment.AssignAddHandler;
 import bitcamp.myapp.handler.assignment.AssignDeleteHandler;
 import bitcamp.myapp.handler.assignment.AssignListHandler;
 import bitcamp.myapp.handler.assignment.AssignModifyHandler;
-import bitcamp.myapp.handler.assignment.AssignRepository;
 import bitcamp.myapp.handler.assignment.AssignViewHandler;
 import bitcamp.myapp.handler.board.BoardAddHandler;
 import bitcamp.myapp.handler.board.BoardDeleteHandler;
 import bitcamp.myapp.handler.board.BoardListHandler;
 import bitcamp.myapp.handler.board.BoardModifyHandler;
-import bitcamp.myapp.handler.board.BoardRepository;
 import bitcamp.myapp.handler.board.BoardViewHandler;
 import bitcamp.myapp.handler.member.MemberAddHandler;
 import bitcamp.myapp.handler.member.MemberDeleteHandler;
 import bitcamp.myapp.handler.member.MemberListHandler;
 import bitcamp.myapp.handler.member.MemberModifyHandler;
-import bitcamp.myapp.handler.member.MemberRepository;
 import bitcamp.myapp.handler.member.MemberViewHandler;
+import bitcamp.myapp.vo.Assignment;
+import bitcamp.myapp.vo.Board;
+import bitcamp.myapp.vo.Member;
 import bitcamp.util.ObjectRepository;
 import bitcamp.util.Prompt;
 
@@ -30,28 +30,28 @@ public class App {
 //    new MainMenu(prompt).execute();
 //    prompt.close();
 
-    ObjectRepository objectRepository = new ObjectRepository();
-    BoardRepository boardRepository = new BoardRepository();
-    AssignRepository assignRepository = new AssignRepository();
-    MemberRepository memberRepository = new MemberRepository();
+    ObjectRepository<Board> boardRepository = new ObjectRepository<>();
+    ObjectRepository<Assignment> assignmentRepository = new ObjectRepository<>();
+    ObjectRepository<Member> memberRepository = new ObjectRepository<>();
+    ObjectRepository<Board> greetingRepository = new ObjectRepository<>();
 
     MenuGroup mainMenu = new MenuGroup("메인");
 
     MenuGroup assignmentMenu = new MenuGroup("과제");
     mainMenu.add(assignmentMenu);
-    assignmentMenu.add(new MenuItem("등록", new AssignAddHandler(assignRepository, prompt)));
-    assignmentMenu.add(new MenuItem("조회", new AssignViewHandler(assignRepository, prompt)));
-    assignmentMenu.add(new MenuItem("변경", new AssignModifyHandler(assignRepository, prompt)));
-    assignmentMenu.add(new MenuItem("삭제", new AssignDeleteHandler(assignRepository, prompt)));
-    assignmentMenu.add(new MenuItem("목록", new AssignListHandler(assignRepository, prompt)));
+    assignmentMenu.add(new MenuItem("등록", new AssignAddHandler(assignmentRepository, prompt)));
+    assignmentMenu.add(new MenuItem("조회", new AssignViewHandler(assignmentRepository, prompt)));
+    assignmentMenu.add(new MenuItem("변경", new AssignModifyHandler(assignmentRepository, prompt)));
+    assignmentMenu.add(new MenuItem("삭제", new AssignDeleteHandler(assignmentRepository, prompt)));
+    assignmentMenu.add(new MenuItem("목록", new AssignListHandler(assignmentRepository)));
 
     MenuGroup boardMenu = new MenuGroup("게시글");
     mainMenu.add(boardMenu);
-    boardMenu.add(new MenuItem("등록", new BoardAddHandler(objectRepository, prompt)));
-    boardMenu.add(new MenuItem("조회", new BoardViewHandler(objectRepository, prompt)));
-    boardMenu.add(new MenuItem("변경", new BoardModifyHandler(objectRepository, prompt)));
-    boardMenu.add(new MenuItem("삭제", new BoardDeleteHandler(objectRepository, prompt)));
-    boardMenu.add(new MenuItem("목록", new BoardListHandler(objectRepository, prompt)));
+    boardMenu.add(new MenuItem("등록", new BoardAddHandler(boardRepository, prompt)));
+    boardMenu.add(new MenuItem("조회", new BoardViewHandler(boardRepository, prompt)));
+    boardMenu.add(new MenuItem("변경", new BoardModifyHandler(boardRepository, prompt)));
+    boardMenu.add(new MenuItem("삭제", new BoardDeleteHandler(boardRepository, prompt)));
+    boardMenu.add(new MenuItem("목록", new BoardListHandler(boardRepository)));
 
     MenuGroup memberMenu = new MenuGroup("회원");
     mainMenu.add(memberMenu);
@@ -59,7 +59,7 @@ public class App {
     memberMenu.add(new MenuItem("조회", new MemberViewHandler(memberRepository, prompt)));
     memberMenu.add(new MenuItem("변경", new MemberModifyHandler(memberRepository, prompt)));
     memberMenu.add(new MenuItem("삭제", new MemberDeleteHandler(memberRepository, prompt)));
-    memberMenu.add(new MenuItem("목록", new MemberListHandler(memberRepository, prompt)));
+    memberMenu.add(new MenuItem("목록", new MemberListHandler(memberRepository)));
 
     MenuGroup greetingMenu = new MenuGroup("가입인사");
     mainMenu.add(greetingMenu);

@@ -3,15 +3,16 @@ package bitcamp.myapp.handler.member;
 import bitcamp.menu.Menu;
 import bitcamp.menu.MenuHandler;
 import bitcamp.myapp.vo.Member;
+import bitcamp.util.ObjectRepository;
 import bitcamp.util.Prompt;
 
 public class MemberModifyHandler implements MenuHandler {
 
-  MemberRepository memberRepository;
+  ObjectRepository objectRepository;
   Prompt prompt;
 
-  public MemberModifyHandler(MemberRepository memberRepository, Prompt prompt) {
-    this.memberRepository = memberRepository;
+  public MemberModifyHandler(ObjectRepository objectRepository, Prompt prompt) {
+    this.objectRepository = objectRepository;
     this.prompt = prompt;
   }
 
@@ -21,7 +22,7 @@ public class MemberModifyHandler implements MenuHandler {
 
     int index = this.prompt.inputInt("몇 번을 변경?(0 ~");
 
-    Member oldMember = this.memberRepository.get(index);
+    Member oldMember = (Member) this.objectRepository.get(index);
 
     if (oldMember == null) {
       System.out.println("유효하지 않은 입력입니다.");
@@ -34,7 +35,7 @@ public class MemberModifyHandler implements MenuHandler {
     member.password = this.prompt.input("암호(%s) :", member.password);
     member.joinDate = this.prompt.input("가입일(%s) :", member.joinDate);
 
-    memberRepository.set(index, member);
+    objectRepository.set(index, member);
   }
 
 }

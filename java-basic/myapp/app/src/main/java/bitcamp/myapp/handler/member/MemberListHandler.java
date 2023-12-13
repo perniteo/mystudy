@@ -3,16 +3,14 @@ package bitcamp.myapp.handler.member;
 import bitcamp.menu.Menu;
 import bitcamp.menu.MenuHandler;
 import bitcamp.myapp.vo.Member;
-import bitcamp.util.Prompt;
+import bitcamp.util.ObjectRepository;
 
 public class MemberListHandler implements MenuHandler {
 
-  Prompt prompt;
-  MemberRepository memberRepository;
+  ObjectRepository objectRepository;
 
-  public MemberListHandler(MemberRepository memberRepository, Prompt prompt) {
-    this.memberRepository = memberRepository;
-    this.prompt = prompt;
+  public MemberListHandler(ObjectRepository objectRepository) {
+    this.objectRepository = objectRepository;
   }
 
   @Override
@@ -20,7 +18,8 @@ public class MemberListHandler implements MenuHandler {
     System.out.printf("[%s]", menu.getTitle());
 
     System.out.printf("%-18s%s\t%s\n", "이메일", "이름", "가입일");
-    for (Member member : memberRepository.toArray()) {
+    for (Object object : objectRepository.toArray()) {
+      Member member = (Member) object;
       System.out.printf("%-20s%s\t\t%s\n", member.email, member.name, member.joinDate);
     }
   }

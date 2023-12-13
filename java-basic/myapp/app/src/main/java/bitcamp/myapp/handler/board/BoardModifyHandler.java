@@ -8,10 +8,10 @@ import bitcamp.util.Prompt;
 
 public class BoardModifyHandler implements MenuHandler {
 
-  ObjectRepository objectRepository;
+  ObjectRepository<Board> objectRepository;
   Prompt prompt;
 
-  public BoardModifyHandler(ObjectRepository objectRepository, Prompt prompt) {
+  public BoardModifyHandler(ObjectRepository<Board> objectRepository, Prompt prompt) {
     this.objectRepository = objectRepository;
     this.prompt = prompt;
   }
@@ -20,7 +20,7 @@ public class BoardModifyHandler implements MenuHandler {
   public void action(Menu menu) throws Exception {
     System.out.printf("[%s]", menu.getTitle());
     int index = this.prompt.inputInt("몇 번을 변경?(0 ~)");
-    Board oldBoard = (Board) this.objectRepository.get(index);
+    Board oldBoard = this.objectRepository.get(index);
     if (oldBoard == null) {
       System.out.println("유효하지 않은 입력입니다.");
       return;

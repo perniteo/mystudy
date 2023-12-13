@@ -3,12 +3,12 @@ package bitcamp.util;
 //게시글 데이터를 보관
 
 
-public class ObjectRepository {
+public class ObjectRepository<E> {
 
   private java.lang.Object[] arr = new java.lang.Object[3];
   private int length = 0;
 
-  public void add(Object object) {
+  public void add(E object) {
     if (this.arr.length == this.length) {
       Object[] newArr = new Object[this.arr.length + (this.arr.length / 2)];
       System.arraycopy(this.arr, 0, newArr, 0, this.length);
@@ -17,7 +17,7 @@ public class ObjectRepository {
     this.arr[this.length++] = object;
   }
 
-  public Object remove(int index) {
+  public E remove(int index) {
     if (index < 0 || index >= this.length) {
       return null;
     }
@@ -28,7 +28,7 @@ public class ObjectRepository {
     }
     this.arr[--this.length] = null;
 
-    return deleted;
+    return (E) deleted;
   }
 
   public Object[] toArray() {
@@ -37,21 +37,31 @@ public class ObjectRepository {
     return newArr;
   }
 
-  public Object get(int index) {
+  public void toArray(E[] arr) {
+    for (int i = 0; i < this.length; i++) {
+      arr[i] = (E) this.arr[i];
+    }
+  }
+
+  public E get(int index) {
     if (index < 0 || index >= this.length) {
       return null;
     }
-    return this.arr[index];
+    return (E) this.arr[index];
   }
 
-  public Object set(int index, Object object) {
+  public E set(int index, E object) {
     if (index < 0 || index >= this.length) {
       return null;
     }
     Object old = this.arr[index];
     this.arr[index] = object;
 
-    return old;
+    return (E) old;
+  }
+
+  public int size() {
+    return this.length;
   }
 }
 

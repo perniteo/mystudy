@@ -9,9 +9,9 @@ import bitcamp.util.Prompt;
 public class BoardViewHandler implements MenuHandler {
 
   Prompt prompt;
-  ObjectRepository objectRepository;
+  ObjectRepository<Board> objectRepository;
 
-  public BoardViewHandler(ObjectRepository objectRepository, Prompt prompt) {
+  public BoardViewHandler(ObjectRepository<Board> objectRepository, Prompt prompt) {
     this.objectRepository = objectRepository;
     this.prompt = prompt;
   }
@@ -20,7 +20,7 @@ public class BoardViewHandler implements MenuHandler {
     System.out.printf("[%s]", menu.getTitle());
     int index = this.prompt.inputInt("몇 번을 조회?(0 ~)");
 
-    Board board = (Board) this.objectRepository.get(index);
+    Board board = this.objectRepository.get(index);
 
     if (board == null) {
       System.out.println("유효하지 않은 입력입니다.");
