@@ -23,7 +23,7 @@ public class ObjectRepository<E> {
     if (index < 0 || index >= this.length) {
       return null;
     }
-    Object deleted = this.arr[index];
+    E deleted = (E) this.arr[index];
 
     System.arraycopy(this.arr, index + 1, this.arr, index, length - index + 1);
 //    for (int i = index; i < (this.length - 1); i++) {
@@ -31,7 +31,7 @@ public class ObjectRepository<E> {
 //    }
     this.arr[--this.length] = null;
 
-    return (E) deleted;
+    return deleted;
   }
 
   public Object[] toArray() {
