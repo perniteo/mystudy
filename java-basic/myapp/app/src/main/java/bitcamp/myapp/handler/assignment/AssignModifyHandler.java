@@ -3,15 +3,15 @@ package bitcamp.myapp.handler.assignment;
 import bitcamp.menu.Menu;
 import bitcamp.menu.MenuHandler;
 import bitcamp.myapp.vo.Assignment;
-import bitcamp.util.ObjectRepository;
 import bitcamp.util.Prompt;
+import java.util.ArrayList;
 
 public class AssignModifyHandler implements MenuHandler {
 
-  ObjectRepository objectRepository;
+  ArrayList<Assignment> objectRepository;
   Prompt prompt;
 
-  public AssignModifyHandler(ObjectRepository objectRepository, Prompt prompt) {
+  public AssignModifyHandler(ArrayList<Assignment> objectRepository, Prompt prompt) {
     this.objectRepository = objectRepository;
     this.prompt = prompt;
   }

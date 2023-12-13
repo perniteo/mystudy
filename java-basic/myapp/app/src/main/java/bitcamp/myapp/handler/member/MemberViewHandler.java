@@ -3,15 +3,15 @@ package bitcamp.myapp.handler.member;
 import bitcamp.menu.Menu;
 import bitcamp.menu.MenuHandler;
 import bitcamp.myapp.vo.Member;
-import bitcamp.util.ObjectRepository;
 import bitcamp.util.Prompt;
+import java.util.ArrayList;
 
 public class MemberViewHandler implements MenuHandler {
 
   Prompt prompt;
-  ObjectRepository objectRepository;
+  ArrayList<Member> objectRepository;
 
-  public MemberViewHandler(ObjectRepository objectRepository, Prompt prompt) {
+  public MemberViewHandler(ArrayList<Member> objectRepository, Prompt prompt) {
     this.objectRepository = objectRepository;
     this.prompt = prompt;
   }
@@ -21,7 +21,7 @@ public class MemberViewHandler implements MenuHandler {
 
     int index = this.prompt.inputInt("몇 번을 조회?(0 ~)");
 
-    Member member = (Member) objectRepository.get(index);
+    Member member = objectRepository.get(index);
 
     if (member == null) {
       System.out.println("유효하지 않은 입력입니다.");

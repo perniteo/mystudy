@@ -3,6 +3,8 @@ package bitcamp.util;
 //게시글 데이터를 보관
 
 
+import java.util.Arrays;
+
 public class ObjectRepository<E> {
 
   private java.lang.Object[] arr = new java.lang.Object[3];
@@ -23,24 +25,31 @@ public class ObjectRepository<E> {
     }
     Object deleted = this.arr[index];
 
-    for (int i = index; i < (this.length - 1); i++) {
-      this.arr[i] = this.arr[i + 1];
-    }
+    System.arraycopy(this.arr, index + 1, this.arr, index, length - index + 1);
+//    for (int i = index; i < (this.length - 1); i++) {
+//      this.arr[i] = this.arr[i + 1];
+//    }
     this.arr[--this.length] = null;
 
     return (E) deleted;
   }
 
   public Object[] toArray() {
-    Object[] newArr = new Object[this.length];
-    System.arraycopy(this.arr, 0, newArr, 0, this.length);
-    return newArr;
+//    Object[] newArr = new Object[this.length];
+//    System.arraycopy(this.arr, 0, newArr, 0, this.length);
+//    return newArr;
+    return Arrays.copyOf(this.arr, this.length);
   }
 
-  public void toArray(E[] arr) {
-    for (int i = 0; i < this.length; i++) {
-      arr[i] = (E) this.arr[i];
+  public E[] toArray(E[] arr) {
+//    for (int i = 0; i < this.length; i++) {
+//      arr[i] = (E) this.arr[i];
+//    }
+    if (arr.length >= this.length) {
+      System.arraycopy(this.arr, 0, arr, 0, this.length);
+      return arr;
     }
+    return (E[]) Arrays.copyOf(this.arr, this.length, arr.getClass());
   }
 
   public E get(int index) {

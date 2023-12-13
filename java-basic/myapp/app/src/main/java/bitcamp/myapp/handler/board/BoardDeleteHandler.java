@@ -3,15 +3,15 @@ package bitcamp.myapp.handler.board;
 import bitcamp.menu.Menu;
 import bitcamp.menu.MenuHandler;
 import bitcamp.myapp.vo.Board;
-import bitcamp.util.ObjectRepository;
 import bitcamp.util.Prompt;
+import java.util.ArrayList;
 
 public class BoardDeleteHandler implements MenuHandler {
 
-  ObjectRepository<Board> objectRepository;
+  ArrayList<Board> objectRepository;
   Prompt prompt;
 
-  public BoardDeleteHandler(ObjectRepository<Board> objectRepository, Prompt prompt) {
+  public BoardDeleteHandler(ArrayList<Board> objectRepository, Prompt prompt) {
     this.objectRepository = objectRepository;
     this.prompt = prompt;
   }
