@@ -1,10 +1,16 @@
 package practice;
 
 import java.io.IOException;
+import java.util.Calendar;
 
 public class Main {
 
   public static void main(String[] args) throws IOException {
+    StringBuilder sb = new StringBuilder();
+    Calendar cal = Calendar.getInstance();
+    Calendar cal1 = Calendar.getInstance();
+    System.out.println(cal == cal1);
+    System.out.println(cal.getCalendarType());
 //    AutoCloseable
     System.in.close();
 //    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -59,5 +65,11 @@ public class Main {
 //        ;
 //      }
 //    }
+  }
+
+  @Override
+  public int hashCode() {
+    int hashCode = no + name.hashCode();
+    return hashCode;
   }
 }

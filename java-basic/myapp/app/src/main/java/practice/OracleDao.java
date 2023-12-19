@@ -19,6 +19,6 @@ public class OracleDao implements DataAccessObject {
 
   @Override
   public void delete() {
-    
+
   }
 }
