@@ -63,11 +63,11 @@ public class App {
 
     MenuGroup greetingMenu = new MenuGroup("가입인사");
     mainMenu.add(greetingMenu);
-    greetingMenu.add(new MenuItem("등록"));
-    greetingMenu.add(new MenuItem("조회"));
-    greetingMenu.add(new MenuItem("변경"));
-    greetingMenu.add(new MenuItem("삭제"));
-    greetingMenu.add(new MenuItem("목록"));
+    greetingMenu.add(new MenuItem("등록", new BoardAddHandler(greetingRepository, prompt)));
+    greetingMenu.add(new MenuItem("조회", new BoardViewHandler(greetingRepository, prompt)));
+    greetingMenu.add(new MenuItem("변경", new BoardModifyHandler(greetingRepository, prompt)));
+    greetingMenu.add(new MenuItem("삭제", new BoardDeleteHandler(greetingRepository, prompt)));
+    greetingMenu.add(new MenuItem("목록", new BoardListHandler(greetingRepository)));
 
     MenuGroup helpMenu = new MenuGroup("도움말");
     mainMenu.add(helpMenu);
