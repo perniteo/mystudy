@@ -1,4 +1,4 @@
-package practice;
+package baekjoon;
 
 public class Baek24060 {
 
