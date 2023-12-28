@@ -3,10 +3,11 @@ package bitcamp.util;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.Date;
 
 public class Prompt {
 
-  BufferedReader keyIn;
+  private BufferedReader keyIn;
 
   public Prompt(InputStream in) {
     keyIn = new BufferedReader(new InputStreamReader(in));
@@ -30,6 +31,10 @@ public class Prompt {
   public boolean booleanInput(String title, Object... args) throws Exception {
     String str = this.input(title, args);
     return Boolean.parseBoolean(str);
+  }
+
+  public Date inputDate(String title, Object... args) throws Exception {
+    return Date.valueOf(this.input(title, args));
   }
 
   public void close() throws Exception {

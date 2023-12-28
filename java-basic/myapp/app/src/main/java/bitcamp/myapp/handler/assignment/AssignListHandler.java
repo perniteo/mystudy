@@ -1,24 +1,29 @@
 package bitcamp.myapp.handler.assignment;
 
-import bitcamp.menu.Menu;
-import bitcamp.menu.MenuHandler;
+import bitcamp.menu.AbstractMenuHandler;
 import bitcamp.myapp.vo.Assignment;
 import bitcamp.util.List;
+import bitcamp.util.Prompt;
 
-public class AssignListHandler implements MenuHandler {
+public class AssignListHandler extends AbstractMenuHandler {
 
-  List<Assignment> objectRepository;
+  private final List<Assignment> objectRepository;
 
-  public AssignListHandler(List<Assignment> objectRepository) {
+  public AssignListHandler(List<Assignment> objectRepository, Prompt prompt) {
+    super(prompt);
     this.objectRepository = objectRepository;
   }
 
-  public void action(Menu menu) {
-    System.out.printf("[%s]", menu.getTitle());
+  @Override
+  protected void action() {
+//    System.out.printf("[%s]", menu.getTitle());
     System.out.printf("%-18s\t%s\n", "과제명", "제출마감일");
-    for (Object object : objectRepository.toArray()) {
-      Assignment assignment = (Assignment) object;
-      System.out.printf("%-20s\t%s\n", assignment.title, assignment.deadline);
+
+    Assignment[] assignments = this.objectRepository.toArray(new Assignment[0]);
+
+    for (Assignment assignment : assignments) {
+//      Assignment assignment = (Assignment) object;
+      System.out.printf("%-20s\t%s\n", assignment.getTitle(), assignment.getDeadline());
     }
   }
 }

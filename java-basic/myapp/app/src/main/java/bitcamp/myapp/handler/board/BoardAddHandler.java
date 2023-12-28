@@ -1,30 +1,30 @@
 package bitcamp.myapp.handler.board;
 
-import bitcamp.menu.Menu;
-import bitcamp.menu.MenuHandler;
+import bitcamp.menu.AbstractMenuHandler;
 import bitcamp.myapp.vo.Board;
 import bitcamp.util.List;
 import bitcamp.util.Prompt;
+import java.util.Date;
 
-public class BoardAddHandler implements MenuHandler {
+public class BoardAddHandler extends AbstractMenuHandler {
 
-  Prompt prompt;
-  List<Board> objectRepository;
+  //  Prompt prompt;
+  private final List<Board> objectRepository;
 
   public BoardAddHandler(List<Board> objectRepository, Prompt prompt) {
+    super(prompt);
     this.objectRepository = objectRepository;
-    this.prompt = prompt;
   }
 
   @Override
-  public void action(Menu menu) throws Exception {
-    System.out.printf("[%s]", menu.getTitle());
+  protected void action() throws Exception {
+//    System.out.printf("[%s]", menu.getTitle());
 
     Board board = new Board();
-    board.title = this.prompt.input("제목: ");
-    board.content = this.prompt.input("내용: ");
-    board.writer = this.prompt.input("작성자: ");
-    board.createDate = this.prompt.input("작성일: ");
+    board.setTitle(this.prompt.input("제목: "));
+    board.setContent(this.prompt.input("내용: "));
+    board.setWriter(this.prompt.input("작성자: "));
+    board.setCreatedDate(new Date());
 
     objectRepository.add(board);
   }

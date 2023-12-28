@@ -1,35 +1,34 @@
 package bitcamp.myapp.handler.board;
 
-import bitcamp.menu.Menu;
-import bitcamp.menu.MenuHandler;
+import bitcamp.menu.AbstractMenuHandler;
 import bitcamp.myapp.vo.Board;
 import bitcamp.util.List;
 import bitcamp.util.Prompt;
 
-public class BoardModifyHandler implements MenuHandler {
+public class BoardModifyHandler extends AbstractMenuHandler {
 
-  List<Board> objectRepository;
-  Prompt prompt;
+  private final List<Board> objectRepository;
+//  Prompt prompt;
 
   public BoardModifyHandler(List<Board> objectRepository, Prompt prompt) {
+    super(prompt);
     this.objectRepository = objectRepository;
-    this.prompt = prompt;
   }
 
   @Override
-  public void action(Menu menu) throws Exception {
-    System.out.printf("[%s]", menu.getTitle());
+  protected void action() throws Exception {
+//    System.out.printf("[%s]", menu.getTitle());
     int index = this.prompt.inputInt("몇 번을 변경?(0 ~)");
     Board oldBoard = this.objectRepository.get(index);
-    if (oldBoard == null) {
-      System.out.println("유효하지 않은 입력입니다.");
-      return;
-    }
+//    if (oldBoard == null) {
+//      System.out.println("유효하지 않은 입력입니다.");
+//      return;
+//    }
     Board board = new Board();
-    board.title = this.prompt.input("제목(%s) :", oldBoard.title);
-    board.content = this.prompt.input("내용(%s) :", oldBoard.content);
-    board.writer = this.prompt.input("작성자(%s) :", oldBoard.writer);
-    board.createDate = this.prompt.input("작성일(%s) :", oldBoard.createDate);
+    board.setTitle(this.prompt.input("제목(%s) :", oldBoard.getTitle()));
+    board.setContent(this.prompt.input("내용(%s) :", oldBoard.getContent()));
+    board.setWriter(this.prompt.input("작성자(%s) :", oldBoard.getWriter()));
+    board.setCreatedDate(oldBoard.getCreatedDate());
 
     this.objectRepository.set(index, board);
   }

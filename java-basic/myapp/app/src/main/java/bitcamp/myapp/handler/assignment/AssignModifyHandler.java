@@ -1,37 +1,38 @@
 package bitcamp.myapp.handler.assignment;
 
-import bitcamp.menu.Menu;
-import bitcamp.menu.MenuHandler;
+import bitcamp.menu.AbstractMenuHandler;
 import bitcamp.myapp.vo.Assignment;
 import bitcamp.util.List;
 import bitcamp.util.Prompt;
 
-public class AssignModifyHandler implements MenuHandler {
+public class AssignModifyHandler extends AbstractMenuHandler {
 
-  List<Assignment> objectRepository;
-  Prompt prompt;
+  private final List<Assignment> objectRepository;
+//  Prompt prompt;
 
   public AssignModifyHandler(List<Assignment> objectRepository, Prompt prompt) {
+    super(prompt);
     this.objectRepository = objectRepository;
-    this.prompt = prompt;
   }
 
-  public void action(Menu menu) throws Exception {
-    System.out.printf("[%s]", menu.getTitle());
+  @Override
+  protected void action() throws Exception {
+//    System.out.printf("[%s]", menu.getTitle());
 
     int index = prompt.inputInt("몇 번을 수정?(0~ ) ");
 
-    Assignment oldAssignment = (Assignment) this.objectRepository.get(index);
+    Assignment oldAssignment = this.objectRepository.get(index);
 
-    if (oldAssignment == null) {
-      System.out.println("Wrong input");
-      return;
-    }
+//    if (oldAssignment == null) {
+//      System.out.println("Wrong input");
+//      return;
+//    }
 
     Assignment assignment = new Assignment();
-    assignment.title = this.prompt.input("제목(%s): ", assignment.title);
-    assignment.content = this.prompt.input("내용(%s): ", assignment.content);
-    assignment.deadline = this.prompt.input("마감기한(%s): ", assignment.deadline);
+    assignment.setTitle(this.prompt.input("제목(%s): ", assignment.getTitle()));
+    ;
+    assignment.setContent(this.prompt.input("내용(%s): ", assignment.getContent()));
+    assignment.setDeadline(oldAssignment.getDeadline());
 
     objectRepository.set(index, assignment);
 

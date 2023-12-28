@@ -1,33 +1,32 @@
 package bitcamp.myapp.handler.member;
 
-import bitcamp.menu.Menu;
-import bitcamp.menu.MenuHandler;
+import bitcamp.menu.AbstractMenuHandler;
 import bitcamp.myapp.vo.Member;
 import bitcamp.util.List;
 import bitcamp.util.Prompt;
+import java.util.Date;
 
-public class MemberAddHandler implements MenuHandler {
+public class MemberAddHandler extends AbstractMenuHandler {
 
-  Prompt prompt;
-  List<Member> objectRepository;
+  //  Prompt prompt;
+  private final List<Member> objectRepository;
 
   public MemberAddHandler(List<Member> objectRepository, Prompt prompt) {
+    super(prompt);
     this.objectRepository = objectRepository;
-    this.prompt = prompt;
   }
 
   @Override
-  public void action(Menu menu) throws Exception {
-    System.out.printf("[%s]", menu.getTitle());
-
+  protected void action() throws Exception {
+//    System.out.printf("[%s]", menu.getTitle());
     Member member = new Member();
 
-    member.email = this.prompt.input("이메일: ");
-    member.name = this.prompt.input("이름: ");
-    member.password = this.prompt.input("암호: ");
-    member.joinDate = this.prompt.input("가입일: ");
+    member.setEmail(this.prompt.input("이메일: "));
+    member.setName(this.prompt.input("이름: "));
+    member.setPassword(this.prompt.input("암호: "));
+    member.setCreatedDate(new Date());
 
-    objectRepository.add(member);
+    this.objectRepository.add(member);
   }
 
 }

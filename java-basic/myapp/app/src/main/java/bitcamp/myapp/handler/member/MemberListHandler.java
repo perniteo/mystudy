@@ -1,26 +1,31 @@
 package bitcamp.myapp.handler.member;
 
-import bitcamp.menu.Menu;
-import bitcamp.menu.MenuHandler;
+import bitcamp.menu.AbstractMenuHandler;
 import bitcamp.myapp.vo.Member;
 import bitcamp.util.List;
+import bitcamp.util.Prompt;
 
-public class MemberListHandler implements MenuHandler {
+public class MemberListHandler extends AbstractMenuHandler {
 
-  List<Member> objectRepository;
+  private final List<Member> objectRepository;
 
-  public MemberListHandler(List<Member> objectRepository) {
+  public MemberListHandler(List<Member> objectRepository, Prompt prompt) {
+    super(prompt);
     this.objectRepository = objectRepository;
   }
 
   @Override
-  public void action(Menu menu) {
-    System.out.printf("[%s]", menu.getTitle());
+  protected void action() {
+//    System.out.printf("[%s]", menu.getTitle());
 
     System.out.printf("%-18s%s\t%s\n", "이메일", "이름", "가입일");
-    for (Object object : objectRepository.toArray()) {
-      Member member = (Member) object;
-      System.out.printf("%-20s%s\t\t%s\n", member.email, member.name, member.joinDate);
+
+    Member[] members = this.objectRepository.toArray(new Member[0]);
+
+    for (Member member : members) {
+//      Member member = (Member) object;
+      System.out.printf("%-20s%s\t\t%s\n", member.getEmail(), member.getName(),
+          member.getCreatedDate());
     }
   }
 
