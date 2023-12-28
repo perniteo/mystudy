@@ -1,12 +1,12 @@
 package bitcamp.util;
 
-public class Node<T> {
+public class Node<E> {
 
-  Node<T> prev;
-  T data;
-  Node<T> next;
+  Node<E> prev;
+  E data;
+  Node<E> next;
 
-  public Node(T data) {
+  public Node(E data) {
     this.data = data;
     this.next = null;
   }

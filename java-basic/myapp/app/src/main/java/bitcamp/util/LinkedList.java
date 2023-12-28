@@ -1,9 +1,11 @@
 package bitcamp.util;
 
-public class LinkedList<T> {
+import java.util.Arrays;
 
-  public Node<T> last;
-  public Node<T> first;
+public class LinkedList<E> extends AbstractList<E> {
+
+  public Node<E> last;
+  public Node<E> first;
   private int size;
 
   public LinkedList() {
@@ -13,7 +15,7 @@ public class LinkedList<T> {
   public Object[] toArray() {
     Object[] result = new Object[size];
     int idx = 0;
-    for (Node<T> x = first; x.next != null; x = x.next) {
+    for (Node<E> x = first; x.next != null; x = x.next) {
       result[idx++] = x.data;
     }
     return result;
@@ -23,11 +25,28 @@ public class LinkedList<T> {
     return size;
   }
 
-  public T get(int idx) {
+  public E[] toArray(final E[] arr) {
+    E[] values = arr;
+    if (values.length < size) {
+      values = Arrays.copyOf(arr, size);
+    }
+
+    int i = 0;
+    Node<E> node = first;
+
+    while (node != null) {
+      values[i++] = node.data;
+      node = node.next;
+    }
+
+    return values;
+  }
+
+  public E get(int idx) {
     checkIndexError(idx);
 
     int cursor = 0;
-    Node<T> node = first;
+    Node<E> node = first;
 
     while (cursor++ < idx) {
       node = node.next;
@@ -35,11 +54,11 @@ public class LinkedList<T> {
     return node.data;
   }
 
-  public Node<T> getNode(int idx) {
+  public Node<E> getNode(int idx) {
     checkIndexError(idx);
 
     int cursor = 0;
-    Node<T> node = first;
+    Node<E> node = first;
 
     while (cursor++ < idx) {
       node = node.next;
@@ -53,24 +72,27 @@ public class LinkedList<T> {
     }
   }
 
-  public void set(int idx, T element) {
+  public E set(int idx, E element) {
     checkIndexError(idx);
 
     int cursor = 0;
-    Node<T> node = first;
+    Node<E> node = first;
 
     while (cursor++ < idx) {
       node = node.next;
     }
+    E old = node.data;
     node.data = element;
+
+    return old;
   }
 
-  public void add(T data) {
-    Node<T> newNode = new Node<>(data);
+  public void add(E data) {
+    Node<E> newNode = new Node<>(data);
     if (first == null) {
       first = newNode;
     } else {
-      Node<T> current = first;
+      Node<E> current = first;
       while (current.next != null) {
         current = current.next;
       }
@@ -80,12 +102,12 @@ public class LinkedList<T> {
     size++;
   }
 
-  public void add(int idx, T data) {
+  public void add(int idx, E data) {
     if (idx < 0 || idx > size) {
       throw new IndexOutOfBoundsException("Wrong idx");
     }
 
-    Node<T> newNode = new Node<>(data);
+    Node<E> newNode = new Node<>(data);
 
     if (first == null) {
       first = last = newNode;
@@ -104,7 +126,7 @@ public class LinkedList<T> {
 //      prev.next = newNode;
 //      newNode.next = next;
       int cursor = 0;
-      Node<T> node = first;
+      Node<E> node = first;
       while (++cursor < idx) {
         node = node.next;
       }
@@ -114,31 +136,69 @@ public class LinkedList<T> {
     size++;
   }
 
-  public void remove(int idx) {
+  public E remove(int idx) {
     checkIndexError(idx);
+    Node<E> deleted = getNode(idx);
 
     if (size == 1) {
+//      deleted = first;
       first = last = null;
 
     } else if (idx == 0) {
+//      deleted = first;
       first = first.next;
 
     } else if (idx == (size - 1)) {
-      Node<T> node = getNode(idx - 1);
+//      deleted = last;
+      Node<E> node = getNode(idx - 1);
       node.next = null;
       last = node;
 
     } else {
-      Node<T> node = getNode(idx - 1);
+      Node<E> node = getNode(idx - 1);
       node.next = getNode(idx + 1);
 
     }
     size--;
 
+    return deleted.data;
   }
 
+  // null 배제
+  public boolean remove(E value) {
+
+    Node<E> prevNode = null;
+    Node<E> node = first;
+
+    while (node != null) {
+      if (node.data.equals(value)) {
+        break;
+      }
+      prevNode = node;
+      node = node.next;
+    }
+
+    if (node == null) {
+      return false;
+    }
+
+    if (node == first) {
+      first = first.next;
+      if (first == null) {
+        last = null;
+      }
+
+    } else {
+      prevNode.next = node.next;
+    }
+
+    size--;
+    return true;
+  }
+
+
   public void printList() {
-    Node<T> current = first;
+    Node<E> current = first;
     while (current != null) {
       System.out.print(current.data + " ");
       current = current.next;

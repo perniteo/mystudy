@@ -3,13 +3,13 @@ package bitcamp.myapp.handler.assignment;
 import bitcamp.menu.Menu;
 import bitcamp.menu.MenuHandler;
 import bitcamp.myapp.vo.Assignment;
-import java.util.ArrayList;
+import bitcamp.util.List;
 
 public class AssignListHandler implements MenuHandler {
 
-  ArrayList<Assignment> objectRepository;
+  List<Assignment> objectRepository;
 
-  public AssignListHandler(ArrayList<Assignment> objectRepository) {
+  public AssignListHandler(List<Assignment> objectRepository) {
     this.objectRepository = objectRepository;
   }
 

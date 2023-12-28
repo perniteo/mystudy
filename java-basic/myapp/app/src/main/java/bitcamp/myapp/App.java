@@ -20,8 +20,9 @@ import bitcamp.myapp.handler.member.MemberViewHandler;
 import bitcamp.myapp.vo.Assignment;
 import bitcamp.myapp.vo.Board;
 import bitcamp.myapp.vo.Member;
+import bitcamp.util.LinkedList;
+import bitcamp.util.List;
 import bitcamp.util.Prompt;
-import java.util.ArrayList;
 
 public class App {
 
@@ -30,10 +31,10 @@ public class App {
 //    new MainMenu(prompt).execute();
 //    prompt.close();
 
-    ArrayList<Board> boardRepository = new ArrayList<>();
-    ArrayList<Assignment> assignmentRepository = new ArrayList<>();
-    ArrayList<Member> memberRepository = new ArrayList<>();
-    ArrayList<Board> greetingRepository = new ArrayList<>();
+    List<Board> boardRepository = new LinkedList<>();
+    List<Assignment> assignmentRepository = new LinkedList<>();
+    List<Member> memberRepository = new LinkedList<>();
+    List<Board> greetingRepository = new LinkedList<>();
 
     MenuGroup mainMenu = new MenuGroup("메인");
 
@@ -72,8 +73,15 @@ public class App {
     MenuGroup helpMenu = new MenuGroup("도움말");
     mainMenu.add(helpMenu);
 
-    mainMenu.execute(prompt);
-    prompt.close();
+    while (true) {
+      try {
+        mainMenu.execute(prompt);
+        prompt.close();
+        break;
+      } catch (Exception e) {
+        System.err.println("Exception !");
+      }
+    }
 
 //    int[] intArray = new int[5];
 

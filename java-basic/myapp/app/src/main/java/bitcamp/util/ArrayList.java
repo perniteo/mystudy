@@ -5,9 +5,9 @@ package bitcamp.util;
 
 import java.util.Arrays;
 
-public class ObjectRepository<E> {
+public class ArrayList<E> extends AbstractList<E> {
 
-  private java.lang.Object[] arr = new java.lang.Object[3];
+  private Object[] arr = new Object[3];
   private int length = 0;
 
   public void add(E object) {
@@ -18,6 +18,7 @@ public class ObjectRepository<E> {
     }
     this.arr[this.length++] = object;
   }
+
 
   public E remove(int index) {
     if (index < 0 || index >= this.length) {
@@ -32,6 +33,16 @@ public class ObjectRepository<E> {
     this.arr[--this.length] = null;
 
     return deleted;
+  }
+
+  public boolean remove(E value) {
+    for (int i = 0; i < this.size; i++) {
+      if (this.arr[i].equals(value)) {
+        this.remove(i);
+        return true;
+      }
+    }
+    return false;
   }
 
   public Object[] toArray() {

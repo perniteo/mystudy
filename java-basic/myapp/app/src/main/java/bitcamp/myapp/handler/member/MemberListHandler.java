@@ -3,13 +3,13 @@ package bitcamp.myapp.handler.member;
 import bitcamp.menu.Menu;
 import bitcamp.menu.MenuHandler;
 import bitcamp.myapp.vo.Member;
-import java.util.ArrayList;
+import bitcamp.util.List;
 
 public class MemberListHandler implements MenuHandler {
 
-  ArrayList<Member> objectRepository;
+  List<Member> objectRepository;
 
-  public MemberListHandler(ArrayList<Member> objectRepository) {
+  public MemberListHandler(List<Member> objectRepository) {
     this.objectRepository = objectRepository;
   }
 

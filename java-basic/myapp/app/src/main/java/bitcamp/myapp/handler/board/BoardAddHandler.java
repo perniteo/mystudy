@@ -3,15 +3,15 @@ package bitcamp.myapp.handler.board;
 import bitcamp.menu.Menu;
 import bitcamp.menu.MenuHandler;
 import bitcamp.myapp.vo.Board;
+import bitcamp.util.List;
 import bitcamp.util.Prompt;
-import java.util.ArrayList;
 
 public class BoardAddHandler implements MenuHandler {
 
   Prompt prompt;
-  ArrayList<Board> objectRepository;
+  List<Board> objectRepository;
 
-  public BoardAddHandler(ArrayList<Board> objectRepository, Prompt prompt) {
+  public BoardAddHandler(List<Board> objectRepository, Prompt prompt) {
     this.objectRepository = objectRepository;
     this.prompt = prompt;
   }

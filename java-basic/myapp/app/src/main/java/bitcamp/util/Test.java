@@ -13,6 +13,9 @@ public class Test {
     linkedList.add(0, "why");
     linkedList.add(2, "juice");
     linkedList.remove(0);
+    if (linkedList.remove("juice")) {
+      System.out.println("Hello");
+    }
 
     linkedList.printList();
 //    System.out.println(linkedList.toArray());
