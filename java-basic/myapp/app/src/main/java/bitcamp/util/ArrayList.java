@@ -83,5 +83,57 @@ public class ArrayList<E> extends AbstractList<E> {
   public int size() {
     return this.length;
   }
+
+  @Override
+  public Iterator<E> iterator() {
+    return new Iterator<>() {
+      int cursor;
+
+      @Override
+      public boolean hasNext() {
+        return cursor >= 0 && cursor < ArrayList.this.size();
+      }
+
+      @Override
+      public E next() {
+        return ArrayList.this.get(cursor++);
+      }
+    };
+  }
+
+  //  @Override
+//  public Iterator<E> iterator() {
+//    return new ArrayListIterator<>(this);
+//  }
+
+//  @Override
+//  public Iterator<E> iterator() {
+//    return new IteratorImpl<>(this);
+//  }
+//
+//  private static class IteratorImpl<E> implements Iterator<E> {
+//
+//    ArrayList<E> list;
+//    int cursor;
+//
+//    public IteratorImpl(ArrayList<E> list) {
+//      this.list = list;
+//    }
+//
+//    @Override
+//    public boolean hasNext() {
+//      return cursor >= 0 && cursor < this.list.size();
+//    }
+//
+//    @Override
+//    public E next() {
+//      return list.get(this.cursor++);
+//    }
+
+//  private class IteratorImpl<E> implements Iterator<E> {
+//
+//  }
+
 }
+
 

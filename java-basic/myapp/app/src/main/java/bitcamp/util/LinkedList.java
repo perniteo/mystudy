@@ -205,4 +205,19 @@ public class LinkedList<E> extends AbstractList<E> {
     }
     System.out.println();
   }
+
+  @Override
+  public Iterator<E> iterator() {
+    return new Iterator<E>() {
+      @Override
+      public boolean hasNext() {
+        return false;
+      }
+
+      @Override
+      public E next() {
+        return null;
+      }
+    };
+  }
 }
