@@ -1,25 +1,26 @@
 package bitcamp.menu;
 
 import bitcamp.util.Prompt;
+import bitcamp.util.Stack;
 
-public class MenuItem implements Menu {
+public class MenuItem extends AbstractMenu {
 
-  String title;
+  //  String title;
   MenuHandler menuHandler;
 
-  public MenuItem(String title) {
-    this.title = title;
+  public MenuItem(String title, Stack<String> breadcrumb) {
+    super(title, breadcrumb);
   }
 
-  public MenuItem(String title, MenuHandler menuHandler) {
-    this(title);
+  public MenuItem(String title, Stack<String> breadcrumb, MenuHandler menuHandler) {
+    super(title, breadcrumb);
     this.menuHandler = menuHandler;
   }
 
-  @Override
-  public String getTitle() {
-    return this.title;
-  }
+//  @Override
+//  public String getTitle() {
+//    return this.title;
+//  }
 
   @Override
   public void execute(Prompt prompt) throws Exception {

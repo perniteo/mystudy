@@ -3,6 +3,7 @@ package bitcamp.menu;
 import bitcamp.util.LinkedList;
 import bitcamp.util.List;
 import bitcamp.util.Prompt;
+import bitcamp.util.Stack;
 
 public class MenuGroup extends AbstractMenu {
 
@@ -10,16 +11,35 @@ public class MenuGroup extends AbstractMenu {
 //  int menuSize;
   private final List<Menu> menus = new LinkedList<>();
 
+  private MenuGroup(String title, Stack<String> breadScrum) {
+    super(title, breadScrum);
+  }
 
-  public MenuGroup(String title) {
-    super(title);
+  public static MenuGroup getInstance(String title) {
+    return new MenuGroup(title, new Stack<String>());
+  }
+
+  public MenuItem addItem(String title, MenuHandler handler) {
+    MenuItem menuItem = new MenuItem(title, this.breadcrumb, handler);
+    this.add(menuItem);
+    return menuItem;
+  }
+
+  public MenuGroup addGroup(String title) {
+    MenuGroup menuGroup = new MenuGroup(title, this.breadcrumb);
+    this.add(menuGroup);
+    return menuGroup;
   }
 
   @Override
   public void execute(Prompt prompt) throws Exception {
-    printMenu();
+
+    breadcrumb.push(this.getTitle());
+
+    this.printMenu();
+
     while (true) {
-      String input = prompt.input("%s> ", this.getTitle());
+      String input = prompt.input("%s> ", this.getMenuPath());
 
       if (input.equals("menu")) {
         this.printMenu();
@@ -67,6 +87,7 @@ public class MenuGroup extends AbstractMenu {
 //          System.out.println("메뉴 번호가 옳지 않습니다.");
 //      }
     }
+    breadcrumb.pop();
 
   }
 
@@ -87,13 +108,13 @@ public class MenuGroup extends AbstractMenu {
 //  }
 
   public void add(Menu menu) {
+    this.menus.add(menu);
 //    if (this.menus.length == this.menuSize) {
 //      Menu[] newMenus = new Menu[this.menuSize + (this.menuSize / 2)];
 //      System.arraycopy(this.menus, 0, newMenus, 0, this.menuSize);
 //      this.menus = newMenus;
 //    }
 //    this.menus[this.menuSize++] = menu;
-    this.menus.add(menu);
   }
 
 //  public void view(Menu menu) {
@@ -101,6 +122,7 @@ public class MenuGroup extends AbstractMenu {
 //  }
 
   public void remove(Menu menu) {
+    this.menus.remove(menu);
 //    int index = this.indexOf(menu);
 //    if (index == -1) {
 //      System.out.println("wrong idx");
@@ -110,7 +132,6 @@ public class MenuGroup extends AbstractMenu {
 //      this.menus[i] = this.menus[i + 1];
 //    }
 //    this.menus[--this.menuSize] = null;
-    this.menus.remove(menu);
   }
 
 //  private int indexOf(Menu menu) {

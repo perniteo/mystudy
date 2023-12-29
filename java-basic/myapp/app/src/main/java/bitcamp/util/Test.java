@@ -3,6 +3,15 @@ package bitcamp.util;
 public class Test {
 
   public static void main(String[] args) {
+    Stack<String> stack = new Stack<>();
+    stack.push("aaa");
+    stack.push("bbb");
+    stack.push("ccc");
+    stack.push("ddd");
+
+    while (!stack.empty()) {
+      System.out.println(stack.pop());
+    }
 //    java.util.LinkedList<Object> linkedList1 = new java.util.LinkedList<>();
     LinkedList<Object> linkedList = new LinkedList<>();
     linkedList.add("apple");
