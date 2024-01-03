@@ -2,9 +2,9 @@ package bitcamp.myapp.handler.board;
 
 import bitcamp.menu.AbstractMenuHandler;
 import bitcamp.myapp.vo.Board;
-import bitcamp.util.List;
 import bitcamp.util.Prompt;
 import java.util.Date;
+import java.util.List;
 
 public class BoardAddHandler extends AbstractMenuHandler {
 

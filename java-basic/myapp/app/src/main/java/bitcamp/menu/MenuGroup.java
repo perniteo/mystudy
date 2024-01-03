@@ -1,9 +1,11 @@
 package bitcamp.menu;
 
-import bitcamp.util.LinkedList;
-import bitcamp.util.List;
+
 import bitcamp.util.Prompt;
-import bitcamp.util.Stack;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Stack;
+
 
 public class MenuGroup extends AbstractMenu {
 
@@ -16,7 +18,7 @@ public class MenuGroup extends AbstractMenu {
   }
 
   public static MenuGroup getInstance(String title) {
-    return new MenuGroup(title, new Stack<String>());
+    return new MenuGroup(title, new Stack<>());
   }
 
   public MenuItem addItem(String title, MenuHandler handler) {
@@ -50,10 +52,10 @@ public class MenuGroup extends AbstractMenu {
 
       try {
         int menuNum = Integer.parseInt(input);
-        if (menuNum < 1 || menuNum > menus.size()) {
-          System.out.println("wrong input");
-          continue;
-        }
+//        if (menuNum < 1 || menuNum > menus.size()) {
+//          System.out.println("wrong input");
+//          continue;
+//        }
 
         this.menus.get(menuNum - 1).execute(prompt);
 

@@ -1,13 +1,13 @@
 package com.eomcs.lang.ex06;
 
-// # 흐름 제어문 - switch 문법 II
+//# 흐름 제어문 - switch 문법 II
 //
 public class Exam0242 {
 
   // 상수를 좀 더 조직적으로 관리하는 방법
   // => enum을 사용하여 상수를 정의한다.
   // => nested enum은 기본이 static 이다.
-  // 그래서 static을 생략해도 된다.
+  //    그래서 static을 생략해도 된다.
   //
   enum Level {
     GUEST, MEMBER, ADMIN
@@ -37,9 +37,6 @@ public class Exam0242 {
       case ADMIN:
         System.out.println("다른 회원의 글을 변경, 삭제할 수 있습니다.");
         break;
-      // 28 104 38 30 27.5 22
-      // 63.5 51.5 64.5 64
-
     }
   }
 }

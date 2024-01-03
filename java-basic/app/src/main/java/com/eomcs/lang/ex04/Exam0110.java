@@ -9,8 +9,8 @@ package com.eomcs.lang.ex04;
 // - 변수를 선언한 후 바로 그 이름을 사용하여 메모리에 접근하고 값을 넣고 꺼낸다.
 // - 보통 "변수를 생성한다"라고 표현하기도 한다.
 // - 문법
-// 메모리의종류 메모리이름;
-// int a;
+//     메모리의종류 메모리이름;
+//     int a;
 //
 public class Exam0110 {
   public static void main(String[] args) {
@@ -19,7 +19,6 @@ public class Exam0110 {
     // - 데이터타입 변수
     //
     int i;
-    System.out.println(211111111.1f);
 
     // 문법
     // - int : 값을 저장할 메모리의 종류. '데이터 타입(data type; 자료형)'이라 부른다.

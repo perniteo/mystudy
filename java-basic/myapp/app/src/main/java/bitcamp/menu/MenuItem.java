@@ -1,7 +1,8 @@
 package bitcamp.menu;
 
 import bitcamp.util.Prompt;
-import bitcamp.util.Stack;
+import java.util.Stack;
+
 
 public class MenuItem extends AbstractMenu {
 

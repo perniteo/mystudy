@@ -7,7 +7,7 @@ import java.sql.Date;
 
 public class Prompt {
 
-  private BufferedReader keyIn;
+  private final BufferedReader keyIn;
 
   public Prompt(InputStream in) {
     keyIn = new BufferedReader(new InputStreamReader(in));
