@@ -17,16 +17,15 @@ public class DataOutputStream extends FileOutputStream {
     write(bytes);
   }
 
-  public void writeLong(int value) throws IOException {
-    write(value >> 64);
-    write(value >> 56);
-    write(value >> 48);
-    write(value >> 40);
-    write(value >> 32);
-    write(value >> 24);
-    write(value >> 16);
-    write(value >> 8);
-    write(value);
+  public void writeLong(Long value) throws IOException {
+    write((int) (value >> 56));
+    write((int) (value >> 48));
+    write((int) (value >> 40));
+    write((int) (value >> 32));
+    write((int) (value >> 24));
+    write((int) (value >> 16));
+    write((int) (value >> 8));
+    write((int) (value >> 0));
   }
 
   public void writdInt(int value) throws IOException {
@@ -42,4 +41,11 @@ public class DataOutputStream extends FileOutputStream {
     write(value);
   }
 
+  public void writeBoolean(boolean value) throws IOException {
+    if (value) {
+      write(1);
+    } else {
+      write(0);
+    }
+  }
 }

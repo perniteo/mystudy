@@ -1,5 +1,6 @@
 package bitcamp.myapp;
 
+import bitcamp.io.DataInputStream;
 import bitcamp.io.DataOutputStream;
 import bitcamp.menu.MenuGroup;
 import bitcamp.myapp.handler.HelpHandler;
@@ -22,10 +23,6 @@ import bitcamp.myapp.vo.Assignment;
 import bitcamp.myapp.vo.Board;
 import bitcamp.myapp.vo.Member;
 import bitcamp.util.Prompt;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,6 +41,8 @@ public class App {
     prepareMenu();
     loadAssignment();
     loadBoard();
+    loadMember();
+    loadGreeting();
   }
 
   public static void main(String[] args) throws Exception {
@@ -110,30 +109,31 @@ public class App {
     }
     saveAssignment();
     saveBoard();
+    saveMember();
+    saveGreeting();
   }
 
   void loadAssignment() throws Exception {
-    try (FileInputStream in = new FileInputStream("assignment.data")) {
-      byte[] bytes = new byte[60000];
-      int size = in.read() << 8 | in.read();
+    try (DataInputStream in = new DataInputStream("assignment.data")) {
+//      byte[] bytes = new byte[60000];
+//      int size = in.read() << 8 | in.read();
+      int size = in.readShort();
 
       for (int i = 0; i < size; i++) {
-        int len = in.read() << 8 | in.read();
-        in.read(bytes, 0, len);
-        String title = new String(bytes, 0, len, StandardCharsets.UTF_8);
-
-        len = in.read() << 8 | in.read();
-        in.read(bytes, 0, len);
-        String content = new String(bytes, 0, len, StandardCharsets.UTF_8);
-
-        in.read(bytes, 0, 10);
-        Date deadline = Date.valueOf(new String(bytes, 0, 10, StandardCharsets.UTF_8));
-
+//        int len = in.read() << 8 | in.read();
+//        in.read(bytes, 0, len);
+//        String title = new String(bytes, 0, len, StandardCharsets.UTF_8);
+//
+//        len = in.read() << 8 | in.read();
+//        in.read(bytes, 0, len);
+//        String content = new String(bytes, 0, len, StandardCharsets.UTF_8);
+//
+//        in.read(bytes, 0, 10);
+//        Date deadline = Date.valueOf(new String(bytes, 0, 10, StandardCharsets.UTF_8));
         Assignment assignment = new Assignment();
-        assignment.setTitle(title);
-        assignment.setContent(content);
-        assignment.setDeadline(deadline);
-
+        assignment.setTitle(in.readUTF());
+        assignment.setContent(in.readUTF());
+        assignment.setDeadline(Date.valueOf((in.readUTF())));
         assignmentRepository.add(assignment);
       }
     } catch (Exception e) {
@@ -144,7 +144,6 @@ public class App {
 
   void saveAssignment() throws Exception {
     try (DataOutputStream out = new DataOutputStream("assignment.data")) {
-
       // 저장할 데이터 개수를 2바이트로 출력한다.
 //      out.write(assignmentRepository.size() >> 8);
 //      out.write(assignmentRepository.size());
@@ -154,7 +153,6 @@ public class App {
         out.writeUTF(assignment.getTitle());
         out.writeUTF(assignment.getContent());
         out.writeUTF(assignment.getDeadline().toString());
-
 //        String title = assignment.getTitle();
 //        byte[] bytes = title.getBytes(StandardCharsets.UTF_8);
 //        // 바이트의 개수를 2바이트로 출력한다.
@@ -180,37 +178,37 @@ public class App {
   }
 
   void loadBoard() {
-    try (FileInputStream in = new FileInputStream("board.data")) {
-      byte[] bytes = new byte[60000];
-      int size = in.read() << 8 | in.read();
+    try (DataInputStream in = new DataInputStream("board.data")) {
+//      byte[] bytes = new byte[60000];
+//      int size = in.read() << 8 | in.read();
+      int size = in.readShort();
 
       for (int i = 0; i < size; i++) {
-        int len = in.read() << 8 | in.read();
-        in.read(bytes, 0, len);
-        String title = new String(bytes, 0, len, StandardCharsets.UTF_8);
-
-        len = in.read() << 8 | in.read();
-        in.read(bytes, 0, len);
-        String content = new String(bytes, 0, len, StandardCharsets.UTF_8);
-
-        len = in.read() << 8 | in.read();
-        in.read(bytes, 0, len);
-        String writer = new String(bytes, 0, len, StandardCharsets.UTF_8);
-
-        long date = ((long) in.read()) << 56 |
-            ((long) in.read()) << 48 |
-            ((long) in.read()) << 40 |
-            ((long) in.read()) << 32 |
-            ((long) in.read()) << 24 |
-            ((long) in.read()) << 16 |
-            ((long) in.read()) << 8 |
-            in.read();
-
+//        int len = in.read() << 8 | in.read();
+//        in.read(bytes, 0, len);
+//        String title = new String(bytes, 0, len, StandardCharsets.UTF_8);
+//
+//        len = in.read() << 8 | in.read();
+//        in.read(bytes, 0, len);
+//        String content = new String(bytes, 0, len, StandardCharsets.UTF_8);
+//
+//        len = in.read() << 8 | in.read();
+//        in.read(bytes, 0, len);
+//        String writer = new String(bytes, 0, len, StandardCharsets.UTF_8);
+//
+//        long date = ((long) in.read()) << 56 |
+//            ((long) in.read()) << 48 |
+//            ((long) in.read()) << 40 |
+//            ((long) in.read()) << 32 |
+//            ((long) in.read()) << 24 |
+//            ((long) in.read()) << 16 |
+//            ((long) in.read()) << 8 |
+//            in.read();
         Board board = new Board();
-        board.setTitle(title);
-        board.setContent(content);
-        board.setWriter(writer);
-        board.setCreatedDate(new java.util.Date(date));
+        board.setTitle(in.readUTF());
+        board.setContent(in.readUTF());
+        board.setWriter(in.readUTF());
+        board.setCreatedDate(new java.util.Date(in.readLong()));
 
         boardRepository.add(board);
       }
@@ -223,51 +221,55 @@ public class App {
   }
 
   void saveBoard() {
-    try (FileOutputStream out = new FileOutputStream("board.data")) {
+    try (DataOutputStream out = new DataOutputStream("board.data")) {
 
-      out.write(boardRepository.size() >> 8);
-      out.write(boardRepository.size());
+//      out.write(boardRepository.size() >> 8);
+//      out.write(boardRepository.size());
+      out.writeShort(boardRepository.size());
 
       for (Board board : boardRepository) {
-        byte[] bytes;
+//        byte[] bytes;
 
-        String title = board.getTitle();
-        bytes = title.getBytes(StandardCharsets.UTF_8);
-        out.write(bytes.length >> 8);
-        out.write(bytes.length);
-        out.write(bytes);
-
-        String content = board.getTitle();
-        bytes = content.getBytes(StandardCharsets.UTF_8);
-        out.write(bytes.length >> 8);
-        out.write(bytes.length);
-        out.write(bytes);
-
-        String writer = board.getWriter();
-        bytes = writer.getBytes(StandardCharsets.UTF_8);
-        out.write(bytes.length >> 8);
-        out.write(bytes.length);
-        out.write(bytes);
-
-//        String createDate = board.getCreatedDate().toString();
-//        bytes = createDate.getBytes(StandardCharsets.UTF_8);
+        out.writeUTF(board.getTitle());
+        out.writeUTF(board.getContent());
+        out.writeUTF(board.getWriter());
+        out.writeLong(board.getCreatedDate().getTime());
+//        String title = board.getTitle();
+//        bytes = title.getBytes(StandardCharsets.UTF_8);
+//        out.write(bytes.length >> 8);
+//        out.write(bytes.length);
 //        out.write(bytes);
+//
+//        String content = board.getTitle();
+//        bytes = content.getBytes(StandardCharsets.UTF_8);
+//        out.write(bytes.length >> 8);
+//        out.write(bytes.length);
+//        out.write(bytes);
+//
+//        String writer = board.getWriter();
+//        bytes = writer.getBytes(StandardCharsets.UTF_8);
+//        out.write(bytes.length >> 8);
+//        out.write(bytes.length);
+//        out.write(bytes);
+//
+////        String createDate = board.getCreatedDate().toString();
+////        bytes = createDate.getBytes(StandardCharsets.UTF_8);
+////        out.write(bytes);
+////        long date = board.getCreatedDate().getTime();
+////        out.write((int) (date >> 56));
+////        out.write((int) (date >> 48));
+////        out.write((int) (date >> 40));
+////        out.write((int) (date >> 32));
+////        out.write((int) (date >> 24));
+////        out.write((int) (date >> 16));
+////        out.write((int) (date >> 8));
+////        out.write((int) date);
 //        long date = board.getCreatedDate().getTime();
-//        out.write((int) (date >> 56));
-//        out.write((int) (date >> 48));
-//        out.write((int) (date >> 40));
-//        out.write((int) (date >> 32));
-//        out.write((int) (date >> 24));
-//        out.write((int) (date >> 16));
-//        out.write((int) (date >> 8));
-//        out.write((int) date);
-        long date = board.getCreatedDate().getTime();
-        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
-        buffer.putLong(date);
-        byte[] dateBytes = buffer.array();
-
-// 파일에 바이트 배열 쓰기
-        out.write(dateBytes);
+//        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+//        buffer.putLong(date);
+//        byte[] dateBytes = buffer.array();
+//// 파일에 바이트 배열 쓰기
+//        out.write(dateBytes);
 
       }
 
@@ -278,24 +280,88 @@ public class App {
   }
 
   void saveMember() {
-    try (FileOutputStream out = new FileOutputStream("member.data")) {
-
-      out.write(boardRepository.size() >> 8);
-      out.write(boardRepository.size());
+    try (DataOutputStream out = new DataOutputStream("member.data")) {
+//      out.write(boardRepository.size() >> 8);
+//      out.write(boardRepository.size());
+      out.writeShort(boardRepository.size());
 
       for (Member member : memberRepository) {
-        byte[] bytes;
+//        byte[] bytes;
+//
+//        String email = member.getEmail();
+//        bytes = email.getBytes(StandardCharsets.UTF_8);
+//        out.write(bytes.length >> 8);
+//        out.write(bytes.length);
+        out.writeUTF(member.getEmail());
+        out.writeUTF(member.getName());
+        out.writeUTF(member.getPassword());
+        out.writeLong(member.getCreatedDate().getTime());
+      }
+    } catch (Exception e) {
+      System.out.println("Error for saving file");
+      e.printStackTrace();
+    }
+  }
 
-        String email = member.getEmail();
-        bytes = email.getBytes(StandardCharsets.UTF_8);
-        out.write(bytes.length >> 8);
-        out.write(bytes.length);
+  void loadMember() {
+    try (DataInputStream in = new DataInputStream("member.data")) {
 
+      int size = in.readShort();
 
+      for (int i = 0; i < size; i++) {
+        Member member = new Member();
+
+        member.setEmail(in.readUTF());
+        member.setName(in.readUTF());
+        member.setPassword(in.readUTF());
+        member.setCreatedDate(new java.util.Date(in.readLong()));
+
+        memberRepository.add(member);
       }
 
     } catch (Exception e) {
+      System.out.println("Error for loading file");
+      e.printStackTrace();
+    }
+  }
 
+  void saveGreeting() {
+    try (DataOutputStream out = new DataOutputStream("greeting.data")) {
+
+      out.writeShort(greetingRepository.size());
+
+      for (Board greeting : greetingRepository) {
+        out.writeUTF(greeting.getTitle());
+        out.writeUTF(greeting.getContent());
+        out.writeUTF(greeting.getWriter());
+        out.writeLong(greeting.getCreatedDate().getTime());
+      }
+
+    } catch (Exception e) {
+      System.out.println("Error for saving file");
+      e.printStackTrace();
+    }
+  }
+
+  void loadGreeting() {
+    try (DataInputStream in = new DataInputStream("greeting.data")) {
+
+      int size = in.readShort();
+
+      for (int i = 0; i < size; i++) {
+        Board greeting = new Board();
+
+        greeting.setTitle(in.readUTF());
+        greeting.setContent(in.readUTF());
+        greeting.setWriter(in.readUTF());
+        greeting.setCreatedDate(new java.util.Date(in.readLong()));
+
+        greetingRepository.add(greeting);
+      }
+
+    } catch (Exception e) {
+      System.err.println("Error for loading file");
+      e.printStackTrace();
     }
   }
 
