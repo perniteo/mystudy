@@ -30,8 +30,9 @@ public class DataInputStream extends FileInputStream {
 
   public String readUTF() throws IOException {
     int length = readShort();
-    byte[] bytes = new byte[length];
-    this.read(bytes, 0, length);
+//    byte[] bytes = new byte[length];
+//    this.read(bytes, 0, length);
+    byte[] bytes = readNBytes(length);
     return new String(bytes, 0, length, StandardCharsets.UTF_8);
   }
 }

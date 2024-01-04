@@ -1,5 +1,7 @@
 package bitcamp.myapp;
 
+import bitcamp.io.BufferedDataInputStream;
+import bitcamp.io.BufferedDataOutputStream;
 import bitcamp.io.DataInputStream;
 import bitcamp.io.DataOutputStream;
 import bitcamp.menu.MenuGroup;
@@ -114,10 +116,11 @@ public class App {
   }
 
   void loadAssignment() throws Exception {
-    try (DataInputStream in = new DataInputStream("assignment.data")) {
+    try (BufferedDataInputStream in = new BufferedDataInputStream("assignment.data")) {
 //      byte[] bytes = new byte[60000];
 //      int size = in.read() << 8 | in.read();
-      int size = in.readShort();
+      int size = in.readInt();
+      long start = System.currentTimeMillis();
 
       for (int i = 0; i < size; i++) {
 //        int len = in.read() << 8 | in.read();
@@ -136,6 +139,8 @@ public class App {
         assignment.setDeadline(Date.valueOf((in.readUTF())));
         assignmentRepository.add(assignment);
       }
+      long end = System.currentTimeMillis();
+      System.out.println(end - start);
     } catch (Exception e) {
       System.out.println("Error for loading file");
       e.printStackTrace();
@@ -143,12 +148,14 @@ public class App {
   }
 
   void saveAssignment() throws Exception {
-    try (DataOutputStream out = new DataOutputStream("assignment.data")) {
+    try (BufferedDataOutputStream out = new BufferedDataOutputStream("assignment.data")) {
+      long start = System.currentTimeMillis();
       // 저장할 데이터 개수를 2바이트로 출력한다.
 //      out.write(assignmentRepository.size() >> 8);
 //      out.write(assignmentRepository.size());
-      out.writeShort(assignmentRepository.size());
+      out.writeInt(assignmentRepository.size());
 
+//      for (int i = 0; i < 400000; i++) {
       for (Assignment assignment : assignmentRepository) {
         out.writeUTF(assignment.getTitle());
         out.writeUTF(assignment.getContent());
@@ -171,6 +178,10 @@ public class App {
 //        bytes = deadline.getBytes(StandardCharsets.UTF_8);
 //        out.write(bytes);
       }
+//      }
+      long end = System.currentTimeMillis();
+      System.out.println(end - start);
+
     } catch (Exception e) {
       System.out.println("Error for saving file");
       e.printStackTrace();

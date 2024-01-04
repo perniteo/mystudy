@@ -28,7 +28,7 @@ public class DataOutputStream extends FileOutputStream {
     write((int) (value >> 0));
   }
 
-  public void writdInt(int value) throws IOException {
+  public void writeInt(int value) throws IOException {
 //    write(value >> 32);
     write(value >> 24);
     write(value >> 16);
