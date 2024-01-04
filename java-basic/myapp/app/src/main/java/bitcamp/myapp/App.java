@@ -1,7 +1,5 @@
 package bitcamp.myapp;
 
-import bitcamp.io.BufferedDataInputStream;
-import bitcamp.io.BufferedDataOutputStream;
 import bitcamp.menu.MenuGroup;
 import bitcamp.myapp.handler.HelpHandler;
 import bitcamp.myapp.handler.assignment.AssignAddHandler;
@@ -23,6 +21,12 @@ import bitcamp.myapp.vo.Assignment;
 import bitcamp.myapp.vo.Board;
 import bitcamp.myapp.vo.Member;
 import bitcamp.util.Prompt;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.sql.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -114,7 +118,8 @@ public class App {
   }
 
   void loadAssignment() throws Exception {
-    try (BufferedDataInputStream in = new BufferedDataInputStream("assignment.data")) {
+    try (DataInputStream in = new DataInputStream(
+        new BufferedInputStream(new FileInputStream("assignment.data")))) {
 //      byte[] bytes = new byte[60000];
 //      int size = in.read() << 8 | in.read();
       int size = in.readInt();
@@ -146,7 +151,8 @@ public class App {
   }
 
   void saveAssignment() throws Exception {
-    try (BufferedDataOutputStream out = new BufferedDataOutputStream("assignment.data")) {
+    try (DataOutputStream out = new DataOutputStream(
+        new BufferedOutputStream(new FileOutputStream("assignment.data")))) {
       long start = System.currentTimeMillis();
       // 저장할 데이터 개수를 2바이트로 출력한다.
 //      out.write(assignmentRepository.size() >> 8);
@@ -187,7 +193,8 @@ public class App {
   }
 
   void loadBoard() {
-    try (BufferedDataInputStream in = new BufferedDataInputStream("board.data")) {
+    try (DataInputStream in = new DataInputStream(
+        new BufferedInputStream(new FileInputStream("board.data")))) {
 //      byte[] bytes = new byte[60000];
 //      int size = in.read() << 8 | in.read();
       int size = in.readShort();
@@ -230,7 +237,8 @@ public class App {
   }
 
   void saveBoard() {
-    try (BufferedDataOutputStream out = new BufferedDataOutputStream("board.data")) {
+    try (DataOutputStream out = new DataOutputStream(
+        new BufferedOutputStream(new FileOutputStream("board.data")))) {
 
 //      out.write(boardRepository.size() >> 8);
 //      out.write(boardRepository.size());
@@ -238,7 +246,6 @@ public class App {
 
       for (Board board : boardRepository) {
 //        byte[] bytes;
-
         out.writeUTF(board.getTitle());
         out.writeUTF(board.getContent());
         out.writeUTF(board.getWriter());
@@ -289,7 +296,8 @@ public class App {
   }
 
   void saveMember() {
-    try (BufferedDataOutputStream out = new BufferedDataOutputStream("member.data")) {
+    try (DataOutputStream out = new DataOutputStream(
+        new BufferedOutputStream(new FileOutputStream("member.data")))) {
 //      out.write(boardRepository.size() >> 8);
 //      out.write(boardRepository.size());
       out.writeShort(boardRepository.size());
@@ -313,7 +321,8 @@ public class App {
   }
 
   void loadMember() {
-    try (BufferedDataInputStream in = new BufferedDataInputStream("member.data")) {
+    try (DataInputStream in = new DataInputStream(
+        new BufferedInputStream(new FileInputStream("member.data")))) {
 
       int size = in.readShort();
 
@@ -335,7 +344,8 @@ public class App {
   }
 
   void saveGreeting() {
-    try (BufferedDataOutputStream out = new BufferedDataOutputStream("greeting.data")) {
+    try (DataOutputStream out = new DataOutputStream(
+        new BufferedOutputStream(new FileOutputStream("greeting.data")))) {
 
       out.writeShort(greetingRepository.size());
 
@@ -353,7 +363,8 @@ public class App {
   }
 
   void loadGreeting() {
-    try (BufferedDataInputStream in = new BufferedDataInputStream("greeting.data")) {
+    try (DataInputStream in = new DataInputStream(
+        new BufferedInputStream(new FileInputStream("greeting.data")))) {
 
       int size = in.readShort();
 
