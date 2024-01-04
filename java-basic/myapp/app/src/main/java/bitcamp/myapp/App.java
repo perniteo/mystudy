@@ -2,8 +2,6 @@ package bitcamp.myapp;
 
 import bitcamp.io.BufferedDataInputStream;
 import bitcamp.io.BufferedDataOutputStream;
-import bitcamp.io.DataInputStream;
-import bitcamp.io.DataOutputStream;
 import bitcamp.menu.MenuGroup;
 import bitcamp.myapp.handler.HelpHandler;
 import bitcamp.myapp.handler.assignment.AssignAddHandler;
@@ -189,7 +187,7 @@ public class App {
   }
 
   void loadBoard() {
-    try (DataInputStream in = new DataInputStream("board.data")) {
+    try (BufferedDataInputStream in = new BufferedDataInputStream("board.data")) {
 //      byte[] bytes = new byte[60000];
 //      int size = in.read() << 8 | in.read();
       int size = in.readShort();
@@ -232,7 +230,7 @@ public class App {
   }
 
   void saveBoard() {
-    try (DataOutputStream out = new DataOutputStream("board.data")) {
+    try (BufferedDataOutputStream out = new BufferedDataOutputStream("board.data")) {
 
 //      out.write(boardRepository.size() >> 8);
 //      out.write(boardRepository.size());
@@ -291,7 +289,7 @@ public class App {
   }
 
   void saveMember() {
-    try (DataOutputStream out = new DataOutputStream("member.data")) {
+    try (BufferedDataOutputStream out = new BufferedDataOutputStream("member.data")) {
 //      out.write(boardRepository.size() >> 8);
 //      out.write(boardRepository.size());
       out.writeShort(boardRepository.size());
@@ -315,7 +313,7 @@ public class App {
   }
 
   void loadMember() {
-    try (DataInputStream in = new DataInputStream("member.data")) {
+    try (BufferedDataInputStream in = new BufferedDataInputStream("member.data")) {
 
       int size = in.readShort();
 
@@ -337,7 +335,7 @@ public class App {
   }
 
   void saveGreeting() {
-    try (DataOutputStream out = new DataOutputStream("greeting.data")) {
+    try (BufferedDataOutputStream out = new BufferedDataOutputStream("greeting.data")) {
 
       out.writeShort(greetingRepository.size());
 
@@ -355,7 +353,7 @@ public class App {
   }
 
   void loadGreeting() {
-    try (DataInputStream in = new DataInputStream("greeting.data")) {
+    try (BufferedDataInputStream in = new BufferedDataInputStream("greeting.data")) {
 
       int size = in.readShort();
 
