@@ -41,10 +41,10 @@ public class App {
   MenuGroup mainMenu;
 
   App() throws Exception {
-    loadAssignment();
-    loadBoard();
-    loadMember();
-    loadGreeting();
+    loadData("assignment.ser", assignmentRepository);
+    loadData("board.ser", boardRepository);
+    loadData("member.ser", boardRepository);
+    loadData("greeting.ser", greetingRepository);
     prepareMenu();
   }
 
@@ -110,16 +110,17 @@ public class App {
         System.err.println("Exception !");
       }
     }
-    saveAssignment();
-    saveBoard();
-    saveMember();
-    saveGreeting();
+    saveData("assignment.ser", assignmentRepository);
+    saveData("board.ser", boardRepository);
+    saveData("member.ser", memberRepository);
+    saveData("greeting.ser", greetingRepository);
   }
 
-  void loadAssignment() throws Exception {
+  <E> void loadData(String filepath, List<E> dataList) throws Exception {
     try (ObjectInputStream in = new ObjectInputStream(
-        new BufferedInputStream(new FileInputStream("assignment.ser")))) {
-      assignmentRepository = (List<Assignment>) in.readObject();
+        new BufferedInputStream(new FileInputStream(filepath)))) {
+//      List<E> list = (List<E>) in.readObject();
+      dataList.addAll((List<E>) in.readObject());
 //      byte[] bytes = new byte[60000];
 //      int size = in.read() << 8 | in.read();
 //      int size = in.readInt();
@@ -150,11 +151,11 @@ public class App {
     }
   }
 
-  void saveAssignment() throws Exception {
+  void saveData(String filepath, List<?> dataList) throws Exception {
     try (ObjectOutputStream out = new ObjectOutputStream(
-        new BufferedOutputStream(new FileOutputStream("assignment.ser")))) {
+        new BufferedOutputStream(new FileOutputStream(filepath)))) {
       long start = System.currentTimeMillis();
-      out.writeObject(assignmentRepository);
+      out.writeObject(dataList);
       // 저장할 데이터 개수를 2바이트로 출력한다.
 //      out.write(assignmentRepository.size() >> 8);
 //      out.write(assignmentRepository.size());
@@ -347,7 +348,7 @@ public class App {
 
   void saveGreeting() {
     try (ObjectOutputStream out = new ObjectOutputStream(
-        new BufferedOutputStream(new FileOutputStream("greeting.data")))) {
+        new BufferedOutputStream(new FileOutputStream("greeting.ser")))) {
 
       out.writeObject(greetingRepository);
 //      out.writeShort(greetingRepository.size());
@@ -367,7 +368,7 @@ public class App {
 
   void loadGreeting() {
     try (ObjectInputStream in = new ObjectInputStream(
-        new BufferedInputStream(new FileInputStream("greeting.data")))) {
+        new BufferedInputStream(new FileInputStream("greeting.ser")))) {
 
       greetingRepository = (List<Board>) in.readObject();
 //      int size = in.readShort();
