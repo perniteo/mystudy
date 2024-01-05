@@ -27,6 +27,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -41,10 +43,10 @@ public class App {
   MenuGroup mainMenu;
 
   App() throws Exception {
-    loadData("assignment.ser", assignmentRepository);
-    loadData("board.ser", boardRepository);
-    loadData("member.ser", boardRepository);
-    loadData("greeting.ser", greetingRepository);
+    assignmentRepository = loadData("assignment.ser");
+    boardRepository = loadData("board.ser");
+    memberRepository = loadData("member.ser");
+    greetingRepository = loadData("greeting.ser");
     prepareMenu();
   }
 
@@ -116,15 +118,17 @@ public class App {
     saveData("greeting.ser", greetingRepository);
   }
 
-  <E> void loadData(String filepath, List<E> dataList) throws Exception {
+  <E> List<E> loadData(String filepath) throws Exception {
+    long start = 0;
     try (ObjectInputStream in = new ObjectInputStream(
         new BufferedInputStream(new FileInputStream(filepath)))) {
 //      List<E> list = (List<E>) in.readObject();
-      dataList.addAll((List<E>) in.readObject());
+//      dataList.addAll((List<E>) in.readObject());
+      start = System.currentTimeMillis();
+      return (List<E>) in.readObject();
 //      byte[] bytes = new byte[60000];
 //      int size = in.read() << 8 | in.read();
 //      int size = in.readInt();
-      long start = System.currentTimeMillis();
 //
 //      for (int i = 0; i < size; i++) {
 //        int len = in.read() << 8 | in.read();
@@ -143,15 +147,19 @@ public class App {
 //        assignment.setDeadline(Date.valueOf((in.readUTF())));
 //        assignmentRepository.add(assignment);
 //      }
-      long end = System.currentTimeMillis();
-      System.out.println(end - start);
     } catch (Exception e) {
       System.out.println("Error for loading file");
       e.printStackTrace();
+    } finally {
+      long end = System.currentTimeMillis();
+      if (start != 0) {
+        System.out.println(end - start);
+      }
     }
+    return new ArrayList<E>();
   }
 
-  void saveData(String filepath, List<?> dataList) throws Exception {
+  void saveData(String filepath, List<? extends Serializable> dataList) throws Exception {
     try (ObjectOutputStream out = new ObjectOutputStream(
         new BufferedOutputStream(new FileOutputStream(filepath)))) {
       long start = System.currentTimeMillis();
