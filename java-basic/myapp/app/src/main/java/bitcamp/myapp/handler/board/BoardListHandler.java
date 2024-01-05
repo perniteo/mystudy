@@ -17,10 +17,11 @@ public class BoardListHandler extends AbstractMenuHandler {
   @Override
   protected void action() {
 //    System.out.printf("[%s]", menu.getTitle());
-    System.out.printf("%-18s%s\t%s\n", "제목", "작성자", "작성일");
-    Board[] boards = this.objectRepository.toArray(new Board[0]);
 //    this.objectRepository.toArray(boards);
-    for (Board board : boards) {
+//    Board[] boards = this.objectRepository.toArray(new Board[0]);
+    System.out.printf("%-18s%s\t%s\n", "제목", "작성자", "작성일");
+
+    for (Board board : this.objectRepository) {
       System.out.printf("%-20s%s\t\t%s\n", board.getTitle(), board.getWriter(),
           board.getCreatedDate());
     }

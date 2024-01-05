@@ -23,11 +23,10 @@ import bitcamp.myapp.vo.Member;
 import bitcamp.util.Prompt;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.sql.Date;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -42,11 +41,11 @@ public class App {
   MenuGroup mainMenu;
 
   App() throws Exception {
-    prepareMenu();
     loadAssignment();
     loadBoard();
     loadMember();
     loadGreeting();
+    prepareMenu();
   }
 
   public static void main(String[] args) throws Exception {
@@ -118,14 +117,15 @@ public class App {
   }
 
   void loadAssignment() throws Exception {
-    try (DataInputStream in = new DataInputStream(
-        new BufferedInputStream(new FileInputStream("assignment.data")))) {
+    try (ObjectInputStream in = new ObjectInputStream(
+        new BufferedInputStream(new FileInputStream("assignment.ser")))) {
+      assignmentRepository = (List<Assignment>) in.readObject();
 //      byte[] bytes = new byte[60000];
 //      int size = in.read() << 8 | in.read();
-      int size = in.readInt();
+//      int size = in.readInt();
       long start = System.currentTimeMillis();
-
-      for (int i = 0; i < size; i++) {
+//
+//      for (int i = 0; i < size; i++) {
 //        int len = in.read() << 8 | in.read();
 //        in.read(bytes, 0, len);
 //        String title = new String(bytes, 0, len, StandardCharsets.UTF_8);
@@ -136,12 +136,12 @@ public class App {
 //
 //        in.read(bytes, 0, 10);
 //        Date deadline = Date.valueOf(new String(bytes, 0, 10, StandardCharsets.UTF_8));
-        Assignment assignment = new Assignment();
-        assignment.setTitle(in.readUTF());
-        assignment.setContent(in.readUTF());
-        assignment.setDeadline(Date.valueOf((in.readUTF())));
-        assignmentRepository.add(assignment);
-      }
+//        Assignment assignment = new Assignment();
+//        assignment.setTitle(in.readUTF());
+//        assignment.setContent(in.readUTF());
+//        assignment.setDeadline(Date.valueOf((in.readUTF())));
+//        assignmentRepository.add(assignment);
+//      }
       long end = System.currentTimeMillis();
       System.out.println(end - start);
     } catch (Exception e) {
@@ -151,19 +151,20 @@ public class App {
   }
 
   void saveAssignment() throws Exception {
-    try (DataOutputStream out = new DataOutputStream(
-        new BufferedOutputStream(new FileOutputStream("assignment.data")))) {
+    try (ObjectOutputStream out = new ObjectOutputStream(
+        new BufferedOutputStream(new FileOutputStream("assignment.ser")))) {
       long start = System.currentTimeMillis();
+      out.writeObject(assignmentRepository);
       // 저장할 데이터 개수를 2바이트로 출력한다.
 //      out.write(assignmentRepository.size() >> 8);
 //      out.write(assignmentRepository.size());
-      out.writeInt(assignmentRepository.size());
+//      out.writeInt(assignmentRepository.size());
 
 //      for (int i = 0; i < 400000; i++) {
-      for (Assignment assignment : assignmentRepository) {
-        out.writeUTF(assignment.getTitle());
-        out.writeUTF(assignment.getContent());
-        out.writeUTF(assignment.getDeadline().toString());
+//      for (Assignment assignment : assignmentRepository) {
+//        out.writeUTF(assignment.getTitle());
+//        out.writeUTF(assignment.getContent());
+//        out.writeUTF(assignment.getDeadline().toString());
 //        String title = assignment.getTitle();
 //        byte[] bytes = title.getBytes(StandardCharsets.UTF_8);
 //        // 바이트의 개수를 2바이트로 출력한다.
@@ -181,7 +182,7 @@ public class App {
 //        String deadline = assignment.getDeadline().toString();
 //        bytes = deadline.getBytes(StandardCharsets.UTF_8);
 //        out.write(bytes);
-      }
+//      }
 //      }
       long end = System.currentTimeMillis();
       System.out.println(end - start);
@@ -193,13 +194,14 @@ public class App {
   }
 
   void loadBoard() {
-    try (DataInputStream in = new DataInputStream(
-        new BufferedInputStream(new FileInputStream("board.data")))) {
+    try (ObjectInputStream in = new ObjectInputStream(
+        new BufferedInputStream(new FileInputStream("board.ser")))) {
+      boardRepository = (List<Board>) in.readObject();
 //      byte[] bytes = new byte[60000];
 //      int size = in.read() << 8 | in.read();
-      int size = in.readShort();
+//      int size = in.readShort();
 
-      for (int i = 0; i < size; i++) {
+//      for (int i = 0; i < size; i++) {
 //        int len = in.read() << 8 | in.read();
 //        in.read(bytes, 0, len);
 //        String title = new String(bytes, 0, len, StandardCharsets.UTF_8);
@@ -220,15 +222,14 @@ public class App {
 //            ((long) in.read()) << 16 |
 //            ((long) in.read()) << 8 |
 //            in.read();
-        Board board = new Board();
-        board.setTitle(in.readUTF());
-        board.setContent(in.readUTF());
-        board.setWriter(in.readUTF());
-        board.setCreatedDate(new java.util.Date(in.readLong()));
-
-        boardRepository.add(board);
-      }
-
+//        Board board = new Board();
+//        board.setTitle(in.readUTF());
+//        board.setContent(in.readUTF());
+//        board.setWriter(in.readUTF());
+//        board.setCreatedDate(new java.util.Date(in.readLong()));
+//
+//        boardRepository.add(board);
+//      }
 
     } catch (Exception e) {
       System.out.println("Error for loading file");
@@ -237,19 +238,19 @@ public class App {
   }
 
   void saveBoard() {
-    try (DataOutputStream out = new DataOutputStream(
-        new BufferedOutputStream(new FileOutputStream("board.data")))) {
-
+    try (ObjectOutputStream out = new ObjectOutputStream(
+        new BufferedOutputStream(new FileOutputStream("board.ser")))) {
+      out.writeObject(boardRepository);
 //      out.write(boardRepository.size() >> 8);
 //      out.write(boardRepository.size());
-      out.writeShort(boardRepository.size());
+//      out.writeShort(boardRepository.size());
 
-      for (Board board : boardRepository) {
+//      for (Board board : boardRepository) {
 //        byte[] bytes;
-        out.writeUTF(board.getTitle());
-        out.writeUTF(board.getContent());
-        out.writeUTF(board.getWriter());
-        out.writeLong(board.getCreatedDate().getTime());
+//        out.writeUTF(board.getTitle());
+//        out.writeUTF(board.getContent());
+//        out.writeUTF(board.getWriter());
+//        out.writeLong(board.getCreatedDate().getTime());
 //        String title = board.getTitle();
 //        bytes = title.getBytes(StandardCharsets.UTF_8);
 //        out.write(bytes.length >> 8);
@@ -287,7 +288,7 @@ public class App {
 //// 파일에 바이트 배열 쓰기
 //        out.write(dateBytes);
 
-      }
+//      }
 
     } catch (Exception e) {
       System.out.println("Error for saving file");
@@ -296,24 +297,25 @@ public class App {
   }
 
   void saveMember() {
-    try (DataOutputStream out = new DataOutputStream(
-        new BufferedOutputStream(new FileOutputStream("member.data")))) {
+    try (ObjectOutputStream out = new ObjectOutputStream(
+        new BufferedOutputStream(new FileOutputStream("member.ser")))) {
+      out.writeObject(memberRepository);
 //      out.write(boardRepository.size() >> 8);
 //      out.write(boardRepository.size());
-      out.writeShort(boardRepository.size());
+//      out.writeShort(boardRepository.size());
 
-      for (Member member : memberRepository) {
+//      for (Member member : memberRepository) {
 //        byte[] bytes;
 //
 //        String email = member.getEmail();
 //        bytes = email.getBytes(StandardCharsets.UTF_8);
 //        out.write(bytes.length >> 8);
 //        out.write(bytes.length);
-        out.writeUTF(member.getEmail());
-        out.writeUTF(member.getName());
-        out.writeUTF(member.getPassword());
-        out.writeLong(member.getCreatedDate().getTime());
-      }
+//        out.writeUTF(member.getEmail());
+//        out.writeUTF(member.getName());
+//        out.writeUTF(member.getPassword());
+//        out.writeLong(member.getCreatedDate().getTime());
+//      }
     } catch (Exception e) {
       System.out.println("Error for saving file");
       e.printStackTrace();
@@ -321,21 +323,21 @@ public class App {
   }
 
   void loadMember() {
-    try (DataInputStream in = new DataInputStream(
-        new BufferedInputStream(new FileInputStream("member.data")))) {
+    try (ObjectInputStream in = new ObjectInputStream(
+        new BufferedInputStream(new FileInputStream("member.ser")))) {
+      boardRepository = (List<Board>) in.readObject();
+//      int size = in.readShort();
 
-      int size = in.readShort();
-
-      for (int i = 0; i < size; i++) {
-        Member member = new Member();
-
-        member.setEmail(in.readUTF());
-        member.setName(in.readUTF());
-        member.setPassword(in.readUTF());
-        member.setCreatedDate(new java.util.Date(in.readLong()));
-
-        memberRepository.add(member);
-      }
+//      for (int i = 0; i < size; i++) {
+//        Member member = new Member();
+//
+//        member.setEmail(in.readUTF());
+//        member.setName(in.readUTF());
+//        member.setPassword(in.readUTF());
+//        member.setCreatedDate(new java.util.Date(in.readLong()));
+//
+//        memberRepository.add(member);
+//      }
 
     } catch (Exception e) {
       System.out.println("Error for loading file");
@@ -344,17 +346,18 @@ public class App {
   }
 
   void saveGreeting() {
-    try (DataOutputStream out = new DataOutputStream(
+    try (ObjectOutputStream out = new ObjectOutputStream(
         new BufferedOutputStream(new FileOutputStream("greeting.data")))) {
 
-      out.writeShort(greetingRepository.size());
+      out.writeObject(greetingRepository);
+//      out.writeShort(greetingRepository.size());
 
-      for (Board greeting : greetingRepository) {
-        out.writeUTF(greeting.getTitle());
-        out.writeUTF(greeting.getContent());
-        out.writeUTF(greeting.getWriter());
-        out.writeLong(greeting.getCreatedDate().getTime());
-      }
+//      for (Board greeting : greetingRepository) {
+//        out.writeUTF(greeting.getTitle());
+//        out.writeUTF(greeting.getContent());
+//        out.writeUTF(greeting.getWriter());
+//        out.writeLong(greeting.getCreatedDate().getTime());
+//      }
 
     } catch (Exception e) {
       System.out.println("Error for saving file");
@@ -363,21 +366,22 @@ public class App {
   }
 
   void loadGreeting() {
-    try (DataInputStream in = new DataInputStream(
+    try (ObjectInputStream in = new ObjectInputStream(
         new BufferedInputStream(new FileInputStream("greeting.data")))) {
 
-      int size = in.readShort();
-
-      for (int i = 0; i < size; i++) {
-        Board greeting = new Board();
-
-        greeting.setTitle(in.readUTF());
-        greeting.setContent(in.readUTF());
-        greeting.setWriter(in.readUTF());
-        greeting.setCreatedDate(new java.util.Date(in.readLong()));
-
-        greetingRepository.add(greeting);
-      }
+      greetingRepository = (List<Board>) in.readObject();
+//      int size = in.readShort();
+//
+//      for (int i = 0; i < size; i++) {
+//        Board greeting = new Board();
+//
+//        greeting.setTitle(in.readUTF());
+//        greeting.setContent(in.readUTF());
+//        greeting.setWriter(in.readUTF());
+//        greeting.setCreatedDate(new java.util.Date(in.readLong()));
+//
+//        greetingRepository.add(greeting);
+//      }
 
     } catch (Exception e) {
       System.err.println("Error for loading file");
