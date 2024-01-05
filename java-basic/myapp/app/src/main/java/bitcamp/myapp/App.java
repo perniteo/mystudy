@@ -19,18 +19,21 @@ import bitcamp.myapp.handler.member.MemberModifyHandler;
 import bitcamp.myapp.handler.member.MemberViewHandler;
 import bitcamp.myapp.vo.Assignment;
 import bitcamp.myapp.vo.Board;
+import bitcamp.myapp.vo.CsvString;
 import bitcamp.myapp.vo.Member;
 import bitcamp.util.Prompt;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.util.ArrayList;
+import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Scanner;
 
 public class App {
 
@@ -43,10 +46,10 @@ public class App {
   MenuGroup mainMenu;
 
   App() throws Exception {
-    assignmentRepository = loadData("assignment.ser");
-    boardRepository = loadData("board.ser");
-    memberRepository = loadData("member.ser");
-    greetingRepository = loadData("greeting.ser");
+    assignmentRepository = loadData("assignment.csv", Assignment.class);
+    boardRepository = loadData("board.csv", Board.class);
+    memberRepository = loadData("member.csv", Member.class);
+    greetingRepository = loadData("greeting.csv", Board.class);
     prepareMenu();
   }
 
@@ -112,20 +115,29 @@ public class App {
         System.err.println("Exception !");
       }
     }
-    saveData("assignment.ser", assignmentRepository);
-    saveData("board.ser", boardRepository);
-    saveData("member.ser", memberRepository);
-    saveData("greeting.ser", greetingRepository);
+    saveData("assignment.csv", assignmentRepository);
+    saveData("board.csv", boardRepository);
+    saveData("member.csv", memberRepository);
+    saveData("greeting.csv", greetingRepository);
   }
 
-  <E> List<E> loadData(String filepath) throws Exception {
+  <E> List<E> loadData(String filepath, Class<E> clazz) throws Exception {
     long start = 0;
-    try (ObjectInputStream in = new ObjectInputStream(
-        new BufferedInputStream(new FileInputStream(filepath)))) {
+
+    LinkedList<E> list = new LinkedList<>();
+
+    try (Scanner in = new Scanner((new FileReader(filepath)))) {
 //      List<E> list = (List<E>) in.readObject();
 //      dataList.addAll((List<E>) in.readObject());
       start = System.currentTimeMillis();
-      return (List<E>) in.readObject();
+
+      Method factoryMethod = clazz.getMethod("createFromCsv", String.class);
+
+      while (in.hasNextLine()) {
+        E obj = (E) factoryMethod.invoke(null, in.nextLine());
+
+        list.add(obj);
+      }
 //      byte[] bytes = new byte[60000];
 //      int size = in.read() << 8 | in.read();
 //      int size = in.readInt();
@@ -156,51 +168,69 @@ public class App {
         System.out.println(end - start);
       }
     }
-    return new ArrayList<E>();
+    return list;
   }
 
-  void saveData(String filepath, List<? extends Serializable> dataList) throws Exception {
-    try (ObjectOutputStream out = new ObjectOutputStream(
-        new BufferedOutputStream(new FileOutputStream(filepath)))) {
+  void saveData(String filepath, List<? extends CsvString> dataList) throws Exception {
+    try (FileWriter out = new FileWriter((filepath))) {
       long start = System.currentTimeMillis();
-      out.writeObject(dataList);
-      // 저장할 데이터 개수를 2바이트로 출력한다.
-//      out.write(assignmentRepository.size() >> 8);
-//      out.write(assignmentRepository.size());
-//      out.writeInt(assignmentRepository.size());
 
-//      for (int i = 0; i < 400000; i++) {
-//      for (Assignment assignment : assignmentRepository) {
-//        out.writeUTF(assignment.getTitle());
-//        out.writeUTF(assignment.getContent());
-//        out.writeUTF(assignment.getDeadline().toString());
-//        String title = assignment.getTitle();
-//        byte[] bytes = title.getBytes(StandardCharsets.UTF_8);
-//        // 바이트의 개수를 2바이트로 출력한다.
-//        out.write(bytes.length >> 8);
-//        out.write(bytes.length);
-//        // 문자열의 바이트 배열을 출력한다.
-//        out.write(bytes);
-//
-//        String content = assignment.getContent();
-//        bytes = content.getBytes(StandardCharsets.UTF_8);
-//        out.write(bytes.length >> 8);
-//        out.write(bytes.length);
-//        out.write(bytes);
-//
-//        String deadline = assignment.getDeadline().toString();
-//        bytes = deadline.getBytes(StandardCharsets.UTF_8);
-//        out.write(bytes);
-//      }
-//      }
-      long end = System.currentTimeMillis();
-      System.out.println(end - start);
+      for (CsvString csvString : dataList) {
+        out.write(csvString.toCsvString() + "\n");
+      }
 
+      System.out.println(System.currentTimeMillis() - start);
     } catch (Exception e) {
       System.out.println("Error for saving file");
       e.printStackTrace();
     }
   }
+
+//
+//  void saveData(String filepath, List<? extends CsvString> dataList) throws Exception {
+//    try (FileWriter out = new FileWriter(filepath)) {
+//      long start = System.currentTimeMillis();
+//      for (CsvString csvString : dataList) {
+//        out.write(csvString.toCsvString() + "\n");
+//      }
+////      out.writeObject(dataList);
+//      // 저장할 데이터 개수를 2바이트로 출력한다.
+////      out.write(assignmentRepository.size() >> 8);
+////      out.write(assignmentRepository.size());
+////      out.writeInt(assignmentRepository.size());
+//
+////      for (int i = 0; i < 400000; i++) {
+////      for (Assignment assignment : assignmentRepository) {
+////        out.writeUTF(assignment.getTitle());
+////        out.writeUTF(assignment.getContent());
+////        out.writeUTF(assignment.getDeadline().toString());
+////        String title = assignment.getTitle();
+////        byte[] bytes = title.getBytes(StandardCharsets.UTF_8);
+////        // 바이트의 개수를 2바이트로 출력한다.
+////        out.write(bytes.length >> 8);
+////        out.write(bytes.length);
+////        // 문자열의 바이트 배열을 출력한다.
+////        out.write(bytes);
+////
+////        String content = assignment.getContent();
+////        bytes = content.getBytes(StandardCharsets.UTF_8);
+////        out.write(bytes.length >> 8);
+////        out.write(bytes.length);
+////        out.write(bytes);
+////
+////        String deadline = assignment.getDeadline().toString();
+////        bytes = deadline.getBytes(StandardCharsets.UTF_8);
+////        out.write(bytes);
+////      }
+////      }
+//      long end = System.currentTimeMillis();
+//      System.out.println(end - start);
+//
+//    } catch (Exception e) {
+//      System.out.println("Error for saving file");
+//      e.printStackTrace();
+//    }
+//  }
 
   void loadBoard() {
     try (ObjectInputStream in = new ObjectInputStream(

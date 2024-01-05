@@ -1,14 +1,27 @@
 package bitcamp.myapp.vo;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Board implements Serializable {
+public class Board implements Serializable, CsvString {
 
+  @Serial
+  private static final long serialVersionUID = 1L;
   private String title;
   private String content;
   private String writer;
   private Date createDate;
+
+  public static Board createFromCsv(String csv) {
+    String[] values = csv.split(",");
+    Board obj = new Board();
+    obj.setTitle(values[0]);
+    obj.setContent(values[1]);
+    obj.setWriter(values[2]);
+    obj.setCreatedDate(new Date(Long.parseLong(values[3])));
+    return obj;
+  }
 
   public String getTitle() {
     return title;
@@ -40,5 +53,10 @@ public class Board implements Serializable {
 
   public void setCreatedDate(Date createdDate) {
     this.createDate = createdDate;
+  }
+
+  public String toCsvString() {
+    return String.format("%s,%s,%s,%d", this.title, this.content, this.writer,
+        this.createDate.getTime());
   }
 }
