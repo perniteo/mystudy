@@ -4,7 +4,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Date;
 
-public class Assignment implements Serializable, CsvString {
+public class Assignment implements Serializable {
 
   @Serial
   private static final long serialVersionUID = 1L;
@@ -46,10 +46,10 @@ public class Assignment implements Serializable, CsvString {
     this.deadline = deadline;
   }
 
-  @Override
-  public String toCsvString() {
-    return String.format("%s,%s,%s", this.title, this.content, this.deadline);
-  }
+//  @Override
+//  public String toCsvString() {
+//    return String.format("%s,%s,%s", this.title, this.content, this.deadline);
+//  }
 //  public void assingment(String title, String content, String deadline) {
 //    this.title = title;
 //    this.content = content;

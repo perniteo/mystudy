@@ -19,21 +19,23 @@ import bitcamp.myapp.handler.member.MemberModifyHandler;
 import bitcamp.myapp.handler.member.MemberViewHandler;
 import bitcamp.myapp.vo.Assignment;
 import bitcamp.myapp.vo.Board;
-import bitcamp.myapp.vo.CsvString;
 import bitcamp.myapp.vo.Member;
 import bitcamp.util.Prompt;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Scanner;
 
 public class App {
 
@@ -46,10 +48,10 @@ public class App {
   MenuGroup mainMenu;
 
   App() throws Exception {
-    assignmentRepository = loadData("assignment.csv", Assignment.class);
-    boardRepository = loadData("board.csv", Board.class);
-    memberRepository = loadData("member.csv", Member.class);
-    greetingRepository = loadData("greeting.csv", Board.class);
+    assignmentRepository = loadData("assignment.json", Assignment.class);
+    boardRepository = loadData("board.json", Board.class);
+    memberRepository = loadData("member.json", Member.class);
+    greetingRepository = loadData("greeting.json", Board.class);
     prepareMenu();
   }
 
@@ -115,29 +117,31 @@ public class App {
         System.err.println("Exception !");
       }
     }
-    saveData("assignment.csv", assignmentRepository);
-    saveData("board.csv", boardRepository);
-    saveData("member.csv", memberRepository);
-    saveData("greeting.csv", greetingRepository);
+    saveData("assignment.json", assignmentRepository);
+    saveData("board.json", boardRepository);
+    saveData("member.json", memberRepository);
+    saveData("greeting.json", greetingRepository);
   }
+
 
   <E> List<E> loadData(String filepath, Class<E> clazz) throws Exception {
     long start = 0;
 
-    LinkedList<E> list = new LinkedList<>();
-
-    try (Scanner in = new Scanner((new FileReader(filepath)))) {
+    try (BufferedReader in = new BufferedReader((new FileReader(filepath)))) {
 //      List<E> list = (List<E>) in.readObject();
 //      dataList.addAll((List<E>) in.readObject());
       start = System.currentTimeMillis();
 
-      Method factoryMethod = clazz.getMethod("createFromCsv", String.class);
+      StringBuilder sb = new StringBuilder();
+      String str;
 
-      while (in.hasNextLine()) {
-        E obj = (E) factoryMethod.invoke(null, in.nextLine());
-
-        list.add(obj);
+      while ((str = in.readLine()) != null) {
+        sb.append(str);
       }
+
+      return new GsonBuilder().setDateFormat("yyyy-MM-dd").create()
+          .fromJson(sb.toString(), TypeToken.getParameterized(ArrayList.class, clazz).getType());
+
 //      byte[] bytes = new byte[60000];
 //      int size = in.read() << 8 | in.read();
 //      int size = in.readInt();
@@ -168,16 +172,14 @@ public class App {
         System.out.println(end - start);
       }
     }
-    return list;
+    return new ArrayList<>();
   }
 
-  void saveData(String filepath, List<? extends CsvString> dataList) throws Exception {
-    try (FileWriter out = new FileWriter((filepath))) {
+  void saveData(String filepath, List<?> dataList) throws Exception {
+    try (BufferedWriter out = new BufferedWriter(new FileWriter((filepath)))) {
       long start = System.currentTimeMillis();
 
-      for (CsvString csvString : dataList) {
-        out.write(csvString.toCsvString() + "\n");
-      }
+      out.write(new GsonBuilder().setDateFormat("yyyy-MM-dd").create().toJson(dataList));
 
       System.out.println(System.currentTimeMillis() - start);
     } catch (Exception e) {

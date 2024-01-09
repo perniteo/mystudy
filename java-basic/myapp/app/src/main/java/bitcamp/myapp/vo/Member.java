@@ -4,7 +4,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Member implements Serializable, CsvString {
+public class Member implements Serializable {
 
   @Serial
   private static final long serialVersionUID = 1L;
@@ -55,8 +55,8 @@ public class Member implements Serializable, CsvString {
     this.joinDate = createdDate;
   }
 
-  public String toCsvString() {
-    return String.format("%s,%s,%s,%d", this.email, this.name, this.password,
-        this.joinDate.getTime());
-  }
+//  public String toCsvString() {
+//    return String.format("%s,%s,%s,%d", this.email, this.name, this.password,
+//        this.joinDate.getTime());
+//  }
 }

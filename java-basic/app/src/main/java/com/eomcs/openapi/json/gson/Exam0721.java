@@ -7,9 +7,10 @@ import com.google.gson.Gson;
 public class Exam0721 {
   public static void main(String[] args) {
 
-    String jsonStr = "{\"no\":\"100\",\"manager\":\"{\\\"position\\\":\\\"대리\\\",\\\"fax\\\":\\\"02-1111-2222\\\",\\\"no\\\":101,\\\"name\\\":\\\"홍길동\\\",\\\"email\\\":\\\"hong@test.com\\\",\\\"registeredDate\\\":\\\"10월 5, 2021\\\"}\",\"title\":\"Hello\"}";
+    String jsonStr =
+        "{\"no\":\"100\",\"manager\":\"{\\\"position\\\":\\\"대리\\\",\\\"fax\\\":\\\"02-1111-2222\\\",\\\"no\\\":101,\\\"name\\\":\\\"홍길동\\\",\\\"email\\\":\\\"hong@test.com\\\",\\\"registeredDate\\\":\\\"10월 5, 2021\\\"}\",\"title\":\"Hello\"}";
 
-    Map<String,String> map = new Gson().fromJson(jsonStr, Map.class);
+    Map<String, String> map = new Gson().fromJson(jsonStr, Map.class);
 
     String v1 = map.get("no");
     String v2 = map.get("title");
@@ -23,8 +24,5 @@ public class Exam0721 {
     System.out.println(mgr);
   }
 }
-
-
-
 
 

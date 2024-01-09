@@ -26,7 +26,7 @@ public class Exam0130 {
     in.close();
 
     try (BufferedReader reader = new BufferedReader(
-        new InputStreamReader(new FileInputStream("sample/utf8.txt")))) {
+        new InputStreamReader(new FileInputStream("sample/utf8.txt"), StandardCharsets.UTF_8))) {
       String line;
       int aaa;
       while ((line = reader.readLine()) != null) {
