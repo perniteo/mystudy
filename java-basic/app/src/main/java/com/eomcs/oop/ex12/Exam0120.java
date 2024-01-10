@@ -9,6 +9,17 @@ public class Exam0120 {
   }
 
   public static void main(String[] args) {
+
+    Player p3 = () -> System.out.println("fucker");
+    p3.play();
+
+    Player p0 = new Player() {
+      @Override
+      public void play() {
+        System.out.println("Hello");
+      }
+    };
+    p0.play();
     // 1) 한 문장일 때는 중괄호를 생략할 수 있다.
     Player p1 = () -> System.out.println("테스트1");
     p1.play();

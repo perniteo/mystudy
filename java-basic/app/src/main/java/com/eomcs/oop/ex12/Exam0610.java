@@ -46,6 +46,8 @@ public class Exam0610 {
     //
     // 람다 문법으로 표현하면:
     //    Interest i1 = money -> 보통예금.year(money);
+    Interest i11 = money -> new Calculator(0.1).year(money);
+    System.out.println(i11.compute(3000000));
 
     System.out.printf("년 이자: %.1f\n", i1.compute(10_0000_0000));
 

@@ -12,6 +12,8 @@ public class Exam0241 {
   }
 
   public static void main(String[] args) {
+    Object object = "hi";
+    object.toString();
 
     // 제네릭으로 지정한 타입이 아닌 것을 넣으려 하면 컴파일 오류가 발생한다.
     // => 이것이 제네릭을 사용하는 이유이기도 하다.

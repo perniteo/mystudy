@@ -20,8 +20,8 @@ public class Exam0311 {
         System.out.println("실행~~~~");
       }
     };
-
     testPlayer(player);
+    testPlayer(() -> System.out.println("Hi"));
   }
 
 }

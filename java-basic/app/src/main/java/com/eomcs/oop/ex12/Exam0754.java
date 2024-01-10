@@ -26,6 +26,7 @@ public class Exam0754 {
   }
 
   public static void main(String[] args) {
+    print(prepareNames(ArrayList<String>::new, "홍길동", "임꺽정", "유관순", "임꺽정").iterator());
 
     // 4) 람다 문법으로 Supplier 구현체 만들기
     Collection<String> list = prepareNames(

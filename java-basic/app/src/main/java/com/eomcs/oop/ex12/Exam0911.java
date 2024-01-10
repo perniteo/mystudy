@@ -2,6 +2,7 @@
 package com.eomcs.oop.ex12;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class Exam0911 {
 
@@ -13,8 +14,10 @@ public class Exam0911 {
     names.add("김구");
     names.add("안중근");
 
+    Consumer<String> MyConsumer = System.out::println;
+
     for (String name : names) {
-      System.out.println(name);
+      MyConsumer.accept(name);
     }
   }
 }

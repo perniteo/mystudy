@@ -19,6 +19,7 @@ public class Exam0321 {
         return a + b;
       }
     });
+    test((a, b) -> a + b);
   }
 
 }

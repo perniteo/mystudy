@@ -3,6 +3,7 @@ package com.eomcs.oop.ex12;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class Exam0710 {
 
@@ -11,6 +12,18 @@ public class Exam0710 {
   }
 
   public static void main(String[] args) {
+    
+    // ListFactory listFactory = new ListFactory() {
+    //   @Override
+    //   public
+    //   List<String> create() {
+    //     return new ArrayList<String>();
+    //   }
+      // ListFactory listFactory = ArrayList::new;
+      // Supplier<ArrayList<String>> supplier = ArrayList::new;
+      // supplier.get();
+
+      // Supplier<ListFactory> supplier = listFactory::new;
 
     // 인터페이스에 정의된 메서드가
     // 생성자의 형식과 일치하다면

@@ -88,6 +88,8 @@ public class Exam0530 {
 
     // 리턴 타입 int ===> Object
     Calculator5 c5 = MyCalculator::plus; // OK!
+    Calculator5 c8 = (a, b) -> MyCalculator.plus(a, b);
+    System.out.println(c8.compute(3, 4).getClass());
     // 위 문장은 다음과 같다.
     //    Calculator5 c5 = new Calculator5() {
     //      @Override
@@ -96,7 +98,7 @@ public class Exam0530 {
     //        //이유? plus()가 리턴한 int 값이 오토박싱 되기 때문이다.
     //      }
     //    };
-    System.out.println(c5.compute(100, 200));
+    System.out.println(c5.compute(100, 200) + "CCCCCC");
 
     // 리턴 타입 int ===> String
     //    Calculator6 c6 = MyCalculator::plus; // 컴파일 오류!

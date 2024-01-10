@@ -5,7 +5,7 @@ import java.io.FileReader;
 import java.util.Properties;
 
 public class Exam01 {
-  static String filename = "message";
+  static String filename = "label";
   static String userCountry = "US";
   static String userLanguage = "en";
   static Properties label;
@@ -19,7 +19,7 @@ public class Exam01 {
 
     label = new Properties();
     label.load(new FileReader(
-        String.format("%s-%s%s.properties", 
+        String.format("%s-%s_%s.properties", 
             filename, userLanguage, userCountry)));
 
   }

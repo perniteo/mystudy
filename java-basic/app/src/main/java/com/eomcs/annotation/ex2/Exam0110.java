@@ -24,6 +24,9 @@ public class Exam0110 {
     Class<?> clazz = MyClass.class;
 
     // => 유지정책 : CLASS
+    @MyAnnotation(value = "1")
+    String str = "Hello";
+    
     MyAnnotation obj = clazz.getAnnotation(MyAnnotation.class);
     if (obj == null) {
       System.out.println("MyAnnotation을 추출할 수 없습니다!");

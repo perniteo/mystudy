@@ -6,6 +6,8 @@ import java.util.function.Predicate;
 public class Exam0630 {
 
   public static void main(String[] args) {
+    Predicate<String> predicate = String::isEmpty;
+    Predicate<String> predicate2 = value -> value.isEmpty();
 
     // Predicate<String> 인터페이스 구현체 준비하기
 

@@ -19,6 +19,8 @@ public class Exam0310 {
         System.out.println("실행!");
       }
     }
+    Player mPlayer = () -> System.out.println("Hello");
+    testPlayer(mPlayer);
 
     testPlayer(new MyPlayer());
 

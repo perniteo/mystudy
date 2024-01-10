@@ -23,6 +23,9 @@ public class Exam0213 {
 
     ArrayList<A> list1;
 
+    ArrayList<? extends Object> arrayList = new ArrayList<>();
+    arrayList.get(0);
+
     //    list1 = new ArrayList(); // 이렇게 사용하지 말고, 명확히 제네릭의 타입을 지정하라.
     //    list1 = new ArrayList<Object>(); // 컴파일 오류!
     list1 = new ArrayList<A>();

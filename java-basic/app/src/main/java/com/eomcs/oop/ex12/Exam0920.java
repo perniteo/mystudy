@@ -21,5 +21,6 @@ public class Exam0920 {
       }
     }
     names.forEach(new MyConsumer<String>());
+    names.forEach(System.out::println);
   }
 }

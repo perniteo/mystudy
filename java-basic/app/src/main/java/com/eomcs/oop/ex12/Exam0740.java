@@ -32,6 +32,8 @@ public class Exam0740 {
   }
 
   public static void main(String[] args) {
+    // Factory3 f3 = (name, age) -> new Message(name);
+    // f3.get("Fucker", 0).print();
 
     Factory1 f1 = Message::new; // Message() 생성자를 가리킨다.
     //=> 즉 컴파일러는 Message 의 기본 생성자를 호출하는 Factory 구현체를 만들어 리턴한다.

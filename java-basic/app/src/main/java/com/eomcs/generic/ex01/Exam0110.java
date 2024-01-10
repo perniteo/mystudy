@@ -11,6 +11,8 @@ public class Exam0110 {
   }
 
   public static void main(String[] args) {
+    Object object = echo("Hi");
+    System.out.println(object);
 
     // echo() 리턴 타입이 Object이기 때문에 String 레퍼런스로 바로 받을 수 없다.
     // => 해결책? 형변환 해야 한다.

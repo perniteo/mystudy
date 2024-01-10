@@ -23,7 +23,7 @@ public class Exam0540 {
   }
 
   static interface Calculator1 {
-    int compute(byte a, byte b);
+    int compute(byte a, byte b) ;
   }
 
   static interface Calculator2 {
@@ -93,8 +93,24 @@ public class Exam0540 {
     // 파라미터 타입: float, float ===> int, int
     // Calculator4 c4 = MyCalculator::plus; // 컴파일 오류!
 
+    // Calculator4 c4 = new Calculator4() {
+    //   @Override
+    //   public int compute(float a, float b) {
+    //     return MyCalculator.plus((int) a, (int) b);
+    //   };
+    // };
+    // Calculator4 c4 = (a, b) -> MyCalculator.plus((int) a,  (int) b);
+
     // 파라미터 타입: Object, Object ===> int, int
     // Calculator5 c5 = MyCalculator::plus; // 컴파일 오류!
+    Calculator5 c5 = (a, b) -> MyCalculator.plus((int) a, (int) b);
+    Calculator5 c5 = new Calculator5() {
+      @Override
+      public int compute(Object a , Object b) {
+        return MyCalculator.plus((int) a, (int) b);
+      }
+    };
+    System.out.println(c5);
 
     // 파라미터 타입: String, String ===> int, int
     // Calculator6 c6 = MyCalculator::plus; // 컴파일 오류!
