@@ -4,6 +4,9 @@ import bitcamp.menu.MenuGroup;
 import bitcamp.myapp.dao.AssignmentDao;
 import bitcamp.myapp.dao.BoardDao;
 import bitcamp.myapp.dao.MemberDao;
+import bitcamp.myapp.dao.json.AssignmentImpl;
+import bitcamp.myapp.dao.json.BoardDaoImpl;
+import bitcamp.myapp.dao.json.MemberDaoImpl;
 import bitcamp.myapp.handler.HelpHandler;
 import bitcamp.myapp.handler.assignment.AssignAddHandler;
 import bitcamp.myapp.handler.assignment.AssignDeleteHandler;
@@ -47,10 +50,10 @@ public class App {
   MenuGroup mainMenu;
 
   App() throws Exception {
-    boardDao = new BoardDao("board.json");
-    greetingDao = new BoardDao("greeting.json");
-    assignmentDao = new AssignmentDao("assignment.json");
-    memberDao = new MemberDao("member.json");
+    boardDao = new BoardDaoImpl("board.json");
+    greetingDao = new BoardDaoImpl("greeting.json");
+    assignmentDao = new AssignmentImpl("assignment.json");
+    memberDao = new MemberDaoImpl("member.json");
 //    boardRepository = loadData("board.json", Board.class);
 //    greetingRepository = loadData("greeting.json", Board.class);
     prepareMenu();

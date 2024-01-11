@@ -3,66 +3,17 @@ package bitcamp.myapp.dao;
 import bitcamp.myapp.vo.Board;
 import java.util.List;
 
-public class BoardDao extends AbstractDao<Board> {
+public interface BoardDao {
 
-  private int lastKey;
+  void add(Board board);
 
-  public BoardDao(String filepath) {
-    super(filepath);
-    if (list.isEmpty()) {
-      lastKey = 1;
-    } else {
-      lastKey = list.getLast().getNo();
-    }
-  }
+  int delete(int key);
 
-  public void add(Board board) {
-    board.setNo(++lastKey);
-    this.list.add(board);
-    saveData();
-  }
+  List<Board> findAll();
 
-  public int delete(int key) {
-    int index = this.indexOf(key);
-    if (index == -1) {
-      System.out.println("Wrong input");
-      return 0;
-    }
+  Board findBy(int key);
 
-    this.list.remove(index);
-    saveData();
-    return 1;
-  }
+  int update(Board board);
 
-  public List<Board> findAll() {
-    return this.list.subList(0, list.size());
-  }
-
-  public Board findBy(int key) {
-    int index = this.indexOf(key);
-    if (index == -1) {
-      return null;
-    }
-    return list.get(index);
-  }
-
-  public int update(Board board) {
-    int index = indexOf(board.getNo());
-    if (index == -1) {
-      return 0;
-    }
-    list.set(index, board);
-    saveData();
-    return 1;
-  }
-
-  public int indexOf(int key) {
-    for (int i = 0; i < list.size(); i++) {
-      if (list.get(i).getNo() == key) {
-        return i;
-      }
-    }
-    return -1;
-  }
-
+  int indexOf(int key);
 }

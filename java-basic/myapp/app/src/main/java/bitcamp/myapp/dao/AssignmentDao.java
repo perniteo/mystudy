@@ -3,67 +3,17 @@ package bitcamp.myapp.dao;
 import bitcamp.myapp.vo.Assignment;
 import java.util.List;
 
-public class AssignmentDao extends AbstractDao<Assignment> {
+public interface AssignmentDao {
 
-  private int lastKey;
+  void add(Assignment assignment);
 
-  public AssignmentDao(String filepath) {
-    super(filepath);
+  int delete(int key);
 
-    if (list.isEmpty()) {
-      lastKey = 1;
-    } else {
-      lastKey = this.list.getLast().getNo();
-    }
-  }
+  List<Assignment> findAll();
 
-  public void add(Assignment assignment) {
-    assignment.setNo(++lastKey);
-    this.list.add(assignment);
-    saveData();
-  }
+  Assignment findBy(int key);
 
-  public int delete(int key) {
-    int index = indexOf(key);
-    if (index == -1) {
-      System.out.println("wrong input");
-      return 0;
-    }
-    this.list.remove(index);
-    saveData();
-    return 1;
-  }
+  int update(Assignment assignment);
 
-  public List<Assignment> findAll() {
-    return this.list.subList(0, list.size());
-  }
-
-  public Assignment findBy(int key) {
-    int index = indexOf(key);
-    if (index == -1) {
-      System.out.println("Wrong input");
-      return null;
-    }
-    return this.list.get(index);
-  }
-
-  public int update(Assignment assignment) {
-    int index = indexOf(assignment.getNo());
-    if (index == -1) {
-      System.out.println("Wrong input");
-      return 0;
-    }
-    this.list.set(index, assignment);
-    saveData();
-    return 1;
-  }
-
-  public int indexOf(int key) {
-    for (int i = 0; i < this.list.size(); i++) {
-      if (list.get(i).getNo() == key) {
-        return i;
-      }
-    }
-    return -1;
-  }
+  int indexOf(int key);
 }
