@@ -12,6 +12,7 @@ public class Board implements Serializable {
   private String content;
   private String writer;
   private Date createDate;
+  private int no;
 
   public static Board createFromCsv(String csv) {
     String[] values = csv.split(",");
@@ -20,6 +21,7 @@ public class Board implements Serializable {
     obj.setContent(values[1]);
     obj.setWriter(values[2]);
     obj.setCreatedDate(new Date(Long.parseLong(values[3])));
+//    obj.setNo(values[4]);
     return obj;
   }
 
@@ -53,6 +55,14 @@ public class Board implements Serializable {
 
   public void setCreatedDate(Date createdDate) {
     this.createDate = createdDate;
+  }
+
+  public int getNo() {
+    return no;
+  }
+
+  public void setNo(int no) {
+    this.no = no;
   }
 
 //  public String toCsvString() {

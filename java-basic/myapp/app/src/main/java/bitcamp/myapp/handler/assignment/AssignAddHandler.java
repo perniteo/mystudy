@@ -1,18 +1,18 @@
 package bitcamp.myapp.handler.assignment;
 
 import bitcamp.menu.AbstractMenuHandler;
+import bitcamp.myapp.dao.AssignmentDao;
 import bitcamp.myapp.vo.Assignment;
 import bitcamp.util.Prompt;
-import java.util.List;
 
 public class AssignAddHandler extends AbstractMenuHandler {
 
-  private final List<Assignment> objectRepository;
+  private final AssignmentDao assignmentDao;
 //  Prompt prompt;
 
-  public AssignAddHandler(List<Assignment> objectRepository, Prompt prompt) {
+  public AssignAddHandler(AssignmentDao assignmentDao, Prompt prompt) {
     super(prompt);
-    this.objectRepository = objectRepository;
+    this.assignmentDao = assignmentDao;
   }
 
   @Override
@@ -32,7 +32,7 @@ public class AssignAddHandler extends AbstractMenuHandler {
       assignment.setDeadline(this.prompt.inputDate("제출 마감일? (ex: 2023-12-28) : "));
 
 //    this.assignRepository.arr[this.assignRepository.length++] = assignment;
-      objectRepository.add(assignment);
+      assignmentDao.add(assignment);
     } catch (Exception e) {
       System.err.println("Wrong input");
     }

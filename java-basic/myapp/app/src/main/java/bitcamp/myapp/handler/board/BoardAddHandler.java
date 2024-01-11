@@ -1,19 +1,19 @@
 package bitcamp.myapp.handler.board;
 
 import bitcamp.menu.AbstractMenuHandler;
+import bitcamp.myapp.dao.BoardDao;
 import bitcamp.myapp.vo.Board;
 import bitcamp.util.Prompt;
 import java.util.Date;
-import java.util.List;
 
 public class BoardAddHandler extends AbstractMenuHandler {
 
   //  Prompt prompt;
-  private final List<Board> objectRepository;
+  private final BoardDao boardDao;
 
-  public BoardAddHandler(List<Board> objectRepository, Prompt prompt) {
+  public BoardAddHandler(BoardDao boardDao, Prompt prompt) {
     super(prompt);
-    this.objectRepository = objectRepository;
+    this.boardDao = boardDao;
   }
 
   @Override
@@ -26,7 +26,7 @@ public class BoardAddHandler extends AbstractMenuHandler {
     board.setWriter(this.prompt.input("작성자: "));
     board.setCreatedDate(new Date());
 
-    objectRepository.add(board);
+    boardDao.add(board);
   }
 
 }

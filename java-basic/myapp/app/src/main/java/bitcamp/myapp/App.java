@@ -1,6 +1,9 @@
 package bitcamp.myapp;
 
 import bitcamp.menu.MenuGroup;
+import bitcamp.myapp.dao.AssignmentDao;
+import bitcamp.myapp.dao.BoardDao;
+import bitcamp.myapp.dao.MemberDao;
 import bitcamp.myapp.handler.HelpHandler;
 import bitcamp.myapp.handler.assignment.AssignAddHandler;
 import bitcamp.myapp.handler.assignment.AssignDeleteHandler;
@@ -17,9 +20,6 @@ import bitcamp.myapp.handler.member.MemberDeleteHandler;
 import bitcamp.myapp.handler.member.MemberListHandler;
 import bitcamp.myapp.handler.member.MemberModifyHandler;
 import bitcamp.myapp.handler.member.MemberViewHandler;
-import bitcamp.myapp.vo.Assignment;
-import bitcamp.myapp.vo.Board;
-import bitcamp.myapp.vo.Member;
 import bitcamp.util.Prompt;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -34,24 +34,25 @@ import java.io.FileWriter;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class App {
 
   Prompt prompt = new Prompt(System.in);
 
-  List<Board> boardRepository = new LinkedList<>();
-  List<Assignment> assignmentRepository = new LinkedList<>();
-  List<Member> memberRepository = new LinkedList<>();
-  List<Board> greetingRepository = new LinkedList<>();
+  BoardDao boardDao;
+  AssignmentDao assignmentDao;
+  MemberDao memberDao;
+  BoardDao greetingDao;
   MenuGroup mainMenu;
 
   App() throws Exception {
-    assignmentRepository = loadData("assignment.json", Assignment.class);
-    boardRepository = loadData("board.json", Board.class);
-    memberRepository = loadData("member.json", Member.class);
-    greetingRepository = loadData("greeting.json", Board.class);
+    boardDao = new BoardDao("board.json");
+    greetingDao = new BoardDao("greeting.json");
+    assignmentDao = new AssignmentDao("assignment.json");
+    memberDao = new MemberDao("member.json");
+//    boardRepository = loadData("board.json", Board.class);
+//    greetingRepository = loadData("greeting.json", Board.class);
     prepareMenu();
   }
 
@@ -75,32 +76,32 @@ public class App {
     mainMenu = MenuGroup.getInstance("메인");
 
     MenuGroup assignmentMenu = mainMenu.addGroup("과제");
-    assignmentMenu.addItem("등록", new AssignAddHandler(assignmentRepository, prompt));
-    assignmentMenu.addItem("조회", new AssignViewHandler(assignmentRepository, prompt));
-    assignmentMenu.addItem("변경", new AssignModifyHandler(assignmentRepository, prompt));
-    assignmentMenu.addItem("삭제", new AssignDeleteHandler(assignmentRepository, prompt));
-    assignmentMenu.addItem("목록", new AssignListHandler(assignmentRepository, prompt));
+    assignmentMenu.addItem("등록", new AssignAddHandler(assignmentDao, prompt));
+    assignmentMenu.addItem("조회", new AssignViewHandler(assignmentDao, prompt));
+    assignmentMenu.addItem("변경", new AssignModifyHandler(assignmentDao, prompt));
+    assignmentMenu.addItem("삭제", new AssignDeleteHandler(assignmentDao, prompt));
+    assignmentMenu.addItem("목록", new AssignListHandler(assignmentDao, prompt));
 
     MenuGroup boardMenu = mainMenu.addGroup("게시글");
-    boardMenu.addItem("등록", new BoardAddHandler(boardRepository, prompt));
-    boardMenu.addItem("조회", new BoardViewHandler(boardRepository, prompt));
-    boardMenu.addItem("변경", new BoardModifyHandler(boardRepository, prompt));
-    boardMenu.addItem("삭제", new BoardDeleteHandler(boardRepository, prompt));
-    boardMenu.addItem("목록", new BoardListHandler(boardRepository, prompt));
+    boardMenu.addItem("등록", new BoardAddHandler(boardDao, prompt));
+    boardMenu.addItem("조회", new BoardViewHandler(boardDao, prompt));
+    boardMenu.addItem("변경", new BoardModifyHandler(boardDao, prompt));
+    boardMenu.addItem("삭제", new BoardDeleteHandler(boardDao, prompt));
+    boardMenu.addItem("목록", new BoardListHandler(boardDao, prompt));
 
     MenuGroup memberMenu = mainMenu.addGroup("회원");
-    memberMenu.addItem("등록", new MemberAddHandler(memberRepository, prompt));
-    memberMenu.addItem("조회", new MemberViewHandler(memberRepository, prompt));
-    memberMenu.addItem("변경", new MemberModifyHandler(memberRepository, prompt));
-    memberMenu.addItem("삭제", new MemberDeleteHandler(memberRepository, prompt));
-    memberMenu.addItem("목록", new MemberListHandler(memberRepository, prompt));
+    memberMenu.addItem("등록", new MemberAddHandler(memberDao, prompt));
+    memberMenu.addItem("조회", new MemberViewHandler(memberDao, prompt));
+    memberMenu.addItem("변경", new MemberModifyHandler(memberDao, prompt));
+    memberMenu.addItem("삭제", new MemberDeleteHandler(memberDao, prompt));
+    memberMenu.addItem("목록", new MemberListHandler(memberDao, prompt));
 
     MenuGroup greetingMenu = mainMenu.addGroup("가입인사");
-    greetingMenu.addItem("등록", new BoardAddHandler(greetingRepository, prompt));
-    greetingMenu.addItem("조회", new BoardViewHandler(greetingRepository, prompt));
-    greetingMenu.addItem("변경", new BoardModifyHandler(greetingRepository, prompt));
-    greetingMenu.addItem("삭제", new BoardDeleteHandler(greetingRepository, prompt));
-    greetingMenu.addItem("목록", new BoardListHandler(greetingRepository, prompt));
+    greetingMenu.addItem("등록", new BoardAddHandler(greetingDao, prompt));
+    greetingMenu.addItem("조회", new BoardViewHandler(greetingDao, prompt));
+    greetingMenu.addItem("변경", new BoardModifyHandler(greetingDao, prompt));
+    greetingMenu.addItem("삭제", new BoardDeleteHandler(greetingDao, prompt));
+    greetingMenu.addItem("목록", new BoardListHandler(greetingDao, prompt));
 
 //    MenuGroup helpMenu = mainMenu.addGroup("도움말");
     mainMenu.addItem("도움말", new HelpHandler(prompt));
@@ -117,13 +118,13 @@ public class App {
         System.err.println("Exception !");
       }
     }
-    saveData("assignment.json", assignmentRepository);
-    saveData("board.json", boardRepository);
-    saveData("member.json", memberRepository);
-    saveData("greeting.json", greetingRepository);
+//    saveData("assignment.json", assignmentRepository);
+//    saveData("board.json", boardRepository);
+//    saveData("member.json", memberRepository);
+//    saveData("greeting.json", greetingRepository);
   }
 
-
+  @SuppressWarnings("unused")
   <E> List<E> loadData(String filepath, Class<E> clazz) throws Exception {
     long start = 0;
 
@@ -175,6 +176,7 @@ public class App {
     return new ArrayList<>();
   }
 
+  @SuppressWarnings("unused")
   void saveData(String filepath, List<?> dataList) throws Exception {
     try (BufferedWriter out = new BufferedWriter(new FileWriter((filepath)))) {
       long start = System.currentTimeMillis();
@@ -188,7 +190,7 @@ public class App {
     }
   }
 
-//
+  //
 //  void saveData(String filepath, List<? extends CsvString> dataList) throws Exception {
 //    try (FileWriter out = new FileWriter(filepath)) {
 //      long start = System.currentTimeMillis();
@@ -233,11 +235,11 @@ public class App {
 //      e.printStackTrace();
 //    }
 //  }
-
+  @SuppressWarnings("unused")
   void loadBoard() {
     try (ObjectInputStream in = new ObjectInputStream(
         new BufferedInputStream(new FileInputStream("board.ser")))) {
-      boardRepository = (List<Board>) in.readObject();
+//      boardRepository = (List<Board>) in.readObject();
 //      byte[] bytes = new byte[60000];
 //      int size = in.read() << 8 | in.read();
 //      int size = in.readShort();
@@ -278,10 +280,11 @@ public class App {
     }
   }
 
+  @SuppressWarnings("unused")
   void saveBoard() {
     try (ObjectOutputStream out = new ObjectOutputStream(
         new BufferedOutputStream(new FileOutputStream("board.ser")))) {
-      out.writeObject(boardRepository);
+//      out.writeObject(boardRepository);
 //      out.write(boardRepository.size() >> 8);
 //      out.write(boardRepository.size());
 //      out.writeShort(boardRepository.size());
@@ -337,10 +340,11 @@ public class App {
     }
   }
 
+  @SuppressWarnings("unused")
   void saveMember() {
     try (ObjectOutputStream out = new ObjectOutputStream(
         new BufferedOutputStream(new FileOutputStream("member.ser")))) {
-      out.writeObject(memberRepository);
+      out.writeObject(memberDao);
 //      out.write(boardRepository.size() >> 8);
 //      out.write(boardRepository.size());
 //      out.writeShort(boardRepository.size());
@@ -363,10 +367,11 @@ public class App {
     }
   }
 
+  @SuppressWarnings("unused")
   void loadMember() {
     try (ObjectInputStream in = new ObjectInputStream(
         new BufferedInputStream(new FileInputStream("member.ser")))) {
-      boardRepository = (List<Board>) in.readObject();
+//      boardRepository = (List<Board>) in.readObject();
 //      int size = in.readShort();
 
 //      for (int i = 0; i < size; i++) {
@@ -386,11 +391,12 @@ public class App {
     }
   }
 
+  @SuppressWarnings("unused")
   void saveGreeting() {
     try (ObjectOutputStream out = new ObjectOutputStream(
         new BufferedOutputStream(new FileOutputStream("greeting.ser")))) {
 
-      out.writeObject(greetingRepository);
+//      out.writeObject(greetingRepository);
 //      out.writeShort(greetingRepository.size());
 
 //      for (Board greeting : greetingRepository) {
@@ -406,11 +412,12 @@ public class App {
     }
   }
 
+  @SuppressWarnings("unused")
   void loadGreeting() {
     try (ObjectInputStream in = new ObjectInputStream(
         new BufferedInputStream(new FileInputStream("greeting.ser")))) {
 
-      greetingRepository = (List<Board>) in.readObject();
+//      greetingRepository = (List<Board>) in.readObject();
 //      int size = in.readShort();
 //
 //      for (int i = 0; i < size; i++) {

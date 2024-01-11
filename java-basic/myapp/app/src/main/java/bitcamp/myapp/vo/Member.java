@@ -8,6 +8,7 @@ public class Member implements Serializable {
 
   @Serial
   private static final long serialVersionUID = 1L;
+  private int No;
   private String email;
   private String name;
   private String password;
@@ -53,6 +54,14 @@ public class Member implements Serializable {
 
   public void setCreatedDate(Date createdDate) {
     this.joinDate = createdDate;
+  }
+
+  public int getNo() {
+    return No;
+  }
+
+  public void setNo(int no) {
+    No = no;
   }
 
 //  public String toCsvString() {

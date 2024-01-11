@@ -9,6 +9,7 @@ public class Assignment implements Serializable {
   @Serial
   private static final long serialVersionUID = 1L;
 
+  private int no;
   private String title;
   private String content;
   private Date deadline;
@@ -44,6 +45,14 @@ public class Assignment implements Serializable {
 
   public void setDeadline(Date deadline) {
     this.deadline = deadline;
+  }
+
+  public int getNo() {
+    return no;
+  }
+
+  public void setNo(int no) {
+    this.no = no;
   }
 
 //  @Override

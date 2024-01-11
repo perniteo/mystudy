@@ -1,27 +1,32 @@
 package bitcamp.myapp.handler.assignment;
 
 import bitcamp.menu.AbstractMenuHandler;
+import bitcamp.myapp.dao.AssignmentDao;
 import bitcamp.myapp.vo.Assignment;
 import bitcamp.util.Prompt;
-import java.util.List;
 
 public class AssignModifyHandler extends AbstractMenuHandler {
 
-  private final List<Assignment> objectRepository;
+  private final AssignmentDao assignmentDao;
 //  Prompt prompt;
 
-  public AssignModifyHandler(List<Assignment> objectRepository, Prompt prompt) {
+  public AssignModifyHandler(AssignmentDao assignmentDao, Prompt prompt) {
     super(prompt);
-    this.objectRepository = objectRepository;
+    this.assignmentDao = assignmentDao;
   }
 
   @Override
   protected void action() throws Exception {
 //    System.out.printf("[%s]", menu.getTitle());
 
-    int index = prompt.inputInt("몇 번을 수정?(0~ ) ");
+    int key = prompt.inputInt("몇 번을 수정?(0~ ) ");
 
-    Assignment oldAssignment = this.objectRepository.get(index);
+    Assignment oldAssignment = this.assignmentDao.findBy(key);
+
+    if (oldAssignment == null) {
+      System.out.println("Wrong input key");
+      return;
+    }
 
 //    if (oldAssignment == null) {
 //      System.out.println("Wrong input");
@@ -29,12 +34,17 @@ public class AssignModifyHandler extends AbstractMenuHandler {
 //    }
 
     Assignment assignment = new Assignment();
+    assignment.setNo(oldAssignment.getNo());
     assignment.setTitle(this.prompt.input("제목(%s): ", assignment.getTitle()));
-    ;
     assignment.setContent(this.prompt.input("내용(%s): ", assignment.getContent()));
     assignment.setDeadline(oldAssignment.getDeadline());
 
-    objectRepository.set(index, assignment);
+//    assignmentDao.update(assignment);
+    if (this.assignmentDao.update(assignment) == 0) {
+      System.out.println("Wrong input");
+    } else {
+      System.out.println("Update success");
+    }
 
   }
 }

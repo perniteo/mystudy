@@ -1,29 +1,32 @@
 package bitcamp.myapp.handler.board;
 
 import bitcamp.menu.AbstractMenuHandler;
-import bitcamp.myapp.vo.Board;
+import bitcamp.myapp.dao.BoardDao;
 import bitcamp.util.Prompt;
-import java.util.List;
 
 public class BoardDeleteHandler extends AbstractMenuHandler {
 
-  private final List<Board> objectRepository;
+  private final BoardDao boardDao;
 //  Prompt prompt;
 
-  public BoardDeleteHandler(List<Board> objectRepository, Prompt prompt) {
+  public BoardDeleteHandler(BoardDao boardDao, Prompt prompt) {
     super(prompt);
-    this.objectRepository = objectRepository;
+    this.boardDao = boardDao;
   }
 
   @Override
   protected void action() throws Exception {
 //    System.out.printf("[%s]", menu.getTitle());
 
-    int index = this.prompt.inputInt("몇 번을 삭제?(0 ~)");
+    int key = this.prompt.inputInt("몇 번을 삭제?(0 ~)");
 //    if (this.objectRepository.remove(index) == null) {
 //      System.out.println("유효하지 않은 입력입니다.");
 //    }
-    this.objectRepository.remove(index);
+    if (this.boardDao.delete(key) == 0) {
+      System.out.println("Wrong input");
+    } else {
+      System.out.println("Delete success");
+    }
   }
 
 }

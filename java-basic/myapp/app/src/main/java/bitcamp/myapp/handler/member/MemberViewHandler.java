@@ -1,18 +1,18 @@
 package bitcamp.myapp.handler.member;
 
 import bitcamp.menu.AbstractMenuHandler;
+import bitcamp.myapp.dao.MemberDao;
 import bitcamp.myapp.vo.Member;
 import bitcamp.util.Prompt;
-import java.util.List;
 
 public class MemberViewHandler extends AbstractMenuHandler {
 
   //  Prompt prompt;
-  private final List<Member> objectRepository;
+  private final MemberDao memberDao;
 
-  public MemberViewHandler(List<Member> objectRepository, Prompt prompt) {
+  public MemberViewHandler(MemberDao memberDao, Prompt prompt) {
     super(prompt);
-    this.objectRepository = objectRepository;
+    this.memberDao = memberDao;
   }
 
   protected void action() throws Exception {
@@ -20,13 +20,17 @@ public class MemberViewHandler extends AbstractMenuHandler {
 
     int index = this.prompt.inputInt("몇 번을 조회?(0 ~)");
 
-    Member member = objectRepository.get(index);
+    Member member = memberDao.findBy(index);
+    if (member == null) {
+      System.out.println("Wrong input number");
+      return;
+    }
 
 //    if (member == null) {
 //      System.out.println("유효하지 않은 입력입니다.");
 //      return;
 //    }
-
+    System.out.printf("Key: %s\n", member.getNo());
     System.out.printf("이메일: %s\n", member.getEmail());
     System.out.printf("이름: %s\n", member.getName());
     System.out.printf("암호: %s\n", member.getPassword());

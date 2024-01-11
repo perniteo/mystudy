@@ -1,17 +1,17 @@
 package bitcamp.myapp.handler.board;
 
 import bitcamp.menu.AbstractMenuHandler;
+import bitcamp.myapp.dao.BoardDao;
 import bitcamp.myapp.vo.Board;
 import bitcamp.util.Prompt;
-import java.util.List;
 
 public class BoardListHandler extends AbstractMenuHandler {
 
-  private final List<Board> objectRepository;
+  private final BoardDao boardDao;
 
-  public BoardListHandler(List<Board> objectRepository, Prompt prompt) {
+  public BoardListHandler(BoardDao boardDao, Prompt prompt) {
     super(prompt);
-    this.objectRepository = objectRepository;
+    this.boardDao = boardDao;
   }
 
   @Override
@@ -19,10 +19,13 @@ public class BoardListHandler extends AbstractMenuHandler {
 //    System.out.printf("[%s]", menu.getTitle());
 //    this.objectRepository.toArray(boards);
 //    Board[] boards = this.objectRepository.toArray(new Board[0]);
-    System.out.printf("%-18s%s\t%s\n", "제목", "작성자", "작성일");
+    System.out.printf("%-4s\t%-18s%s\t%s\n", "Key", "제목", "작성자", "작성일");
 
-    for (Board board : this.objectRepository) {
-      System.out.printf("%-20s%s\t\t%s\n", board.getTitle(), board.getWriter(),
+    for (Board board : this.boardDao.findAll()) {
+      System.out.printf("%-4s\t%-20s%s\t\t%s\n",
+          board.getNo(),
+          board.getTitle(),
+          board.getWriter(),
           board.getCreatedDate());
     }
   }

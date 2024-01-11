@@ -1,17 +1,17 @@
 package bitcamp.myapp.handler.member;
 
 import bitcamp.menu.AbstractMenuHandler;
+import bitcamp.myapp.dao.MemberDao;
 import bitcamp.myapp.vo.Member;
 import bitcamp.util.Prompt;
-import java.util.List;
 
 public class MemberListHandler extends AbstractMenuHandler {
 
-  private final List<Member> objectRepository;
+  private final MemberDao memberDao;
 
-  public MemberListHandler(List<Member> objectRepository, Prompt prompt) {
+  public MemberListHandler(MemberDao memberDao, Prompt prompt) {
     super(prompt);
-    this.objectRepository = objectRepository;
+    this.memberDao = memberDao;
   }
 
   @Override
@@ -20,10 +20,12 @@ public class MemberListHandler extends AbstractMenuHandler {
 //    Member[] members = this.objectRepository.toArray(new Member[0]);
 //      Member member = (Member) object;
 
-    System.out.printf("%-18s%s\t%s\n", "이메일", "이름", "가입일");
+    System.out.printf("%-4s\t%-18s%s\t%s\n", "Key", "이메일", "이름", "가입일");
 
-    for (Member member : this.objectRepository) {
-      System.out.printf("%-20s%s\t\t%s\n", member.getEmail(), member.getName(),
+    for (Member member : this.memberDao.findAll()) {
+      System.out.printf("%-4s\t%-20s%s\t\t%s\n", member.getNo(),
+          member.getEmail(),
+          member.getName(),
           member.getCreatedDate());
     }
   }
