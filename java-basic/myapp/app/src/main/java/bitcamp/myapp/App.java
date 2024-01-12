@@ -60,6 +60,7 @@ public class App {
   }
 
   public static void main(String[] args) throws Exception {
+    System.out.println("Current working directory: " + System.getProperty("user.dir"));
     new App().run();
 //    int[] intArray = new int[5];
 
