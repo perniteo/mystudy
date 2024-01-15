@@ -4,11 +4,11 @@ import bitcamp.myapp.dao.AssignmentDao;
 import bitcamp.myapp.vo.Assignment;
 import java.util.List;
 
-public class AssignmentImpl extends AbstractDao<Assignment> implements AssignmentDao {
+public class AssignmentDaoImpl extends AbstractDao<Assignment> implements AssignmentDao {
 
   private int lastKey;
 
-  public AssignmentImpl(String filepath) {
+  public AssignmentDaoImpl(String filepath) {
     super(filepath);
 
     if (list.isEmpty()) {

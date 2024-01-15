@@ -26,6 +26,7 @@ import bitcamp.myapp.handler.member.MemberViewHandler;
 import bitcamp.util.Prompt;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.Socket;
 
 public class ClientApp {
@@ -37,6 +38,10 @@ public class ClientApp {
   MemberDao memberDao;
   BoardDao greetingDao;
   MenuGroup mainMenu;
+
+  Socket socket;
+  DataInputStream in;
+  DataOutputStream out;
 
   ClientApp() throws Exception {
     prepareNetwork();
@@ -50,11 +55,11 @@ public class ClientApp {
   void prepareNetwork() {
     try {
       System.out.println("loading");
-      Socket socket = new Socket("localhost", 7777);
+      socket = new Socket("localhost", 7777);
       System.out.println("Success");
 
-      DataInputStream in = new DataInputStream(socket.getInputStream());
-      DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+      in = new DataInputStream(socket.getInputStream());
+      out = new DataOutputStream(socket.getOutputStream());
 
       boardDao = new BoardDaoImpl("board", in, out);
       assignmentDao = new AssignmentDaoImpl("assignment", in, out);
@@ -108,10 +113,23 @@ public class ClientApp {
       try {
         mainMenu.execute(prompt);
         prompt.close();
+        close();
         break;
       } catch (Exception e) {
         System.err.println("Exception !");
       }
+    }
+  }
+
+  void close() {
+    try (Socket socket = this.socket;
+        DataInputStream in = this.in;
+        DataOutputStream out = this.out) {
+      out.writeUTF("quit");
+      System.out.println(in.readUTF());
+
+    } catch (IOException e) {
+      System.out.println();
     }
   }
 
