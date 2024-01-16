@@ -57,12 +57,8 @@ public class ServerApp {
     return args;
   }
 
-  private int processRequest(DataInputStream in, DataOutputStream out) throws IOException {
+  private void processRequest(DataInputStream in, DataOutputStream out) throws IOException {
     String dataName = in.readUTF();
-    if (dataName.equals("quit")) {
-      out.writeUTF("bye bye");
-      return -1;
-    }
     String command = in.readUTF();
     String value = in.readUTF();
     try {
@@ -90,7 +86,7 @@ public class ServerApp {
       out.writeUTF("500");
       out.writeUTF(gson.toJson(e.getMessage()));
     }
-    return 0;
+
   }
 
   private void service(Socket socket) throws IOException {
@@ -99,10 +95,9 @@ public class ServerApp {
         DataOutputStream out = new DataOutputStream(socket.getOutputStream());) {
       System.out.println("Accept socket");
 
-      while (processRequest(in, out) != -1) {
-        System.out.println("---------------------");
-        processRequest(in, out);
-      }
+      System.out.println("---------------------");
+      processRequest(in, out);
+
     } catch (Exception e) {
       System.out.println("Connect Error");
     }

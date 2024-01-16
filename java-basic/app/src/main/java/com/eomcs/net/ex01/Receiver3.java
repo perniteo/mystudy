@@ -1,5 +1,5 @@
 // 서버 + 키보드 입력 + 무한 반복
-package com.eomcs.net.ex01;
+package net.ex01;
 
 import java.io.PrintStream;
 import java.net.ServerSocket;

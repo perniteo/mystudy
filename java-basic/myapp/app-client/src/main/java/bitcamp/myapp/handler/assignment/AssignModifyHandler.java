@@ -28,8 +28,8 @@ public class AssignModifyHandler extends AbstractMenuHandler {
 
     Assignment assignment = new Assignment();
     assignment.setNo(oldAssignment.getNo());
-    assignment.setTitle(this.prompt.input("제목(%s): ", assignment.getTitle()));
-    assignment.setContent(this.prompt.input("내용(%s): ", assignment.getContent()));
+    assignment.setTitle(this.prompt.input("제목(%s): ", oldAssignment.getTitle()));
+    assignment.setContent(this.prompt.input("내용(%s): ", oldAssignment.getContent()));
     assignment.setDeadline(oldAssignment.getDeadline());
 
     if (this.assignmentDao.update(assignment) == 0) {

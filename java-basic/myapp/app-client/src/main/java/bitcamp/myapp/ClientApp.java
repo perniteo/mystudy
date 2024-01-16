@@ -3,10 +3,8 @@ package bitcamp.myapp;
 import bitcamp.menu.MenuGroup;
 import bitcamp.myapp.dao.AssignmentDao;
 import bitcamp.myapp.dao.BoardDao;
+import bitcamp.myapp.dao.DaoProxyGenerator;
 import bitcamp.myapp.dao.MemberDao;
-import bitcamp.myapp.dao.network.AssignmentDaoImpl;
-import bitcamp.myapp.dao.network.BoardDaoImpl;
-import bitcamp.myapp.dao.network.MemberDaoImpl;
 import bitcamp.myapp.handler.HelpHandler;
 import bitcamp.myapp.handler.assignment.AssignAddHandler;
 import bitcamp.myapp.handler.assignment.AssignDeleteHandler;
@@ -24,10 +22,6 @@ import bitcamp.myapp.handler.member.MemberListHandler;
 import bitcamp.myapp.handler.member.MemberModifyHandler;
 import bitcamp.myapp.handler.member.MemberViewHandler;
 import bitcamp.util.Prompt;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.Socket;
 
 public class ClientApp {
 
@@ -38,10 +32,6 @@ public class ClientApp {
   MemberDao memberDao;
   BoardDao greetingDao;
   MenuGroup mainMenu;
-
-  Socket socket;
-  DataInputStream in;
-  DataOutputStream out;
 
   ClientApp() throws Exception {
     prepareNetwork();
@@ -55,16 +45,13 @@ public class ClientApp {
   void prepareNetwork() {
     try {
       System.out.println("loading");
-      socket = new Socket("localhost", 7777);
-      System.out.println("Success");
+      DaoProxyGenerator daoProxyGenerator = new DaoProxyGenerator("localhost", 7777);
+      System.out.println("success");
 
-      in = new DataInputStream(socket.getInputStream());
-      out = new DataOutputStream(socket.getOutputStream());
-
-      boardDao = new BoardDaoImpl("board", in, out);
-      assignmentDao = new AssignmentDaoImpl("assignment", in, out);
-      memberDao = new MemberDaoImpl("member", in, out);
-      greetingDao = new BoardDaoImpl("greeting", in, out);
+      boardDao = daoProxyGenerator.create(BoardDao.class, "board");
+      assignmentDao = daoProxyGenerator.create(AssignmentDao.class, "assignment");
+      memberDao = daoProxyGenerator.create(MemberDao.class, "member");
+      greetingDao = daoProxyGenerator.create(BoardDao.class, "greeting");
 
     } catch (Exception e) {
       System.out.println("Error");
@@ -113,25 +100,11 @@ public class ClientApp {
       try {
         mainMenu.execute(prompt);
         prompt.close();
-        close();
         break;
       } catch (Exception e) {
         System.err.println("Exception !");
       }
     }
   }
-
-  void close() {
-    try (Socket socket = this.socket;
-        DataInputStream in = this.in;
-        DataOutputStream out = this.out) {
-      out.writeUTF("quit");
-      System.out.println(in.readUTF());
-
-    } catch (IOException e) {
-      System.out.println();
-    }
-  }
-
 }
 

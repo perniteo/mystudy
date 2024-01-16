@@ -1,5 +1,5 @@
 // 파일 보내기
-package com.eomcs.net.ex01;
+package net.ex01;
 
 import java.io.DataOutputStream;
 import java.io.File;

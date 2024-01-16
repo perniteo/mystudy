@@ -28,9 +28,9 @@ public class MemberModifyHandler extends AbstractMenuHandler {
 
     Member member = new Member();
     member.setNo(oldMember.getNo());
-    member.setEmail(this.prompt.input("이메일(%s) :", member.getEmail()));
-    member.setName(this.prompt.input("이름(%s) :", member.getName()));
-    member.setPassword(this.prompt.input("암호(%s) :", member.getPassword()));
+    member.setEmail(this.prompt.input("이메일(%s) :", oldMember.getEmail()));
+    member.setName(this.prompt.input("이름(%s) :", oldMember.getName()));
+    member.setPassword(this.prompt.input("암호(%s) :", oldMember.getPassword()));
     member.setCreatedDate(oldMember.getCreatedDate());
 
     if (this.memberDao.update(member) == 0) {

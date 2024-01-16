@@ -1,5 +1,5 @@
 // 파일 보내기 + 버퍼
-package com.eomcs.net.ex01;
+package net.ex01;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
