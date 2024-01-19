@@ -1,5 +1,5 @@
 // Byte Stream - 텍스트 출력 하기
-package com.eomcs.io.ex02;
+package io.ex02;
 
 import java.io.FileOutputStream;
 

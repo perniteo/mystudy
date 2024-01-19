@@ -1,5 +1,5 @@
 // 서버와 입출력 테스트 - byte stream + buffer
-package com.eomcs.net.ex03;
+package net.ex03;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -12,8 +12,8 @@ public class Client0160 {
     Scanner keyScan = new Scanner(System.in);
 
     try (Socket socket = new Socket("localhost", 8888);
-        PrintStream out = new PrintStream(new BufferedOutputStream(socket.getOutputStream()));
-        Scanner in = new Scanner(new BufferedInputStream(socket.getInputStream()))) {
+        PrintStream out = new PrintStream(new BufferedOutputStream(socket.getOutputStream(), 14));
+        Scanner in = new Scanner(new BufferedInputStream(socket.getInputStream(), 14))) {
 
       System.out.println("서버와 연결되었음!");
 
@@ -22,7 +22,7 @@ public class Client0160 {
       keyScan.nextLine();
 
       out.println("ABC가각간");
-      out.flush();
+      // out.flush();
       // 버퍼를 사용할 때는
       // 데이터를 보내기 위해 반드시 flush()를 호출해야 한다.
       // => 버퍼에 남아 있는 데이터를 연결된 출력 스트림을 이용하여 내보낸다.

@@ -1,5 +1,5 @@
 // 람다로 FileFilter 만들기
-package com.eomcs.io.ex01;
+package io.ex01;
 
 import java.io.File;
 
@@ -16,10 +16,10 @@ public class Exam0650 {
     // lambda class
     // => 메서드가 한 개짜리인 경우 lambda 표현식을 사용할 수 있다.
     // => 문법:
-    //      (파라미터, 파라미터, ...) -> 문장 한개
-    //      (파라미터, 파라미터, ...) -> { 문장1; 문장2; 문장3;}
-    //      () -> 문장 한개
-    //      () -> {문장1; 문장2; 문장3;}
+    // (파라미터, 파라미터, ...) -> 문장 한개
+    // (파라미터, 파라미터, ...) -> { 문장1; 문장2; 문장3;}
+    // () -> 문장 한개
+    // () -> {문장1; 문장2; 문장3;}
     //
     File[] files = dir.listFiles(file -> {
       return file.isFile() && file.getName().endsWith(".java");

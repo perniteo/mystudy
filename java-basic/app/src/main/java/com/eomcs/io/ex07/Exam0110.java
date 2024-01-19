@@ -1,5 +1,5 @@
 // DataFileOutputStream을 이용하여 객체 출력
-package com.eomcs.io.ex07;
+package io.ex07;
 
 public class Exam0110 {
 

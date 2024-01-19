@@ -1,4 +1,4 @@
-package com.eomcs.io.ex08;
+package io.ex08;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -29,14 +29,14 @@ public class DataOutputStream {
   }
 
   public void writeLong(long value) throws Exception {
-    out.write((int)(value >> 56));
-    out.write((int)(value >> 48));
-    out.write((int)(value >> 40));
-    out.write((int)(value >> 32));
-    out.write((int)(value >> 24));
-    out.write((int)(value >> 16));
-    out.write((int)(value >> 8));
-    out.write((int)value);
+    out.write((int) (value >> 56));
+    out.write((int) (value >> 48));
+    out.write((int) (value >> 40));
+    out.write((int) (value >> 32));
+    out.write((int) (value >> 24));
+    out.write((int) (value >> 16));
+    out.write((int) (value >> 8));
+    out.write((int) value);
   }
 
   public void writeBoolean(boolean value) throws Exception {
@@ -50,8 +50,5 @@ public class DataOutputStream {
     out.close();
   }
 }
-
-
-
 
 

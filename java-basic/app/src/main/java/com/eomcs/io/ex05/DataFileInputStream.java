@@ -1,4 +1,4 @@
-package com.eomcs.io.ex05;
+package io.ex05;
 
 import java.io.FileInputStream;
 

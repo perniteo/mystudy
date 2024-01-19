@@ -1,5 +1,5 @@
 // Byte Stream - 바이트 배열 출력하기
-package com.eomcs.io.ex02;
+package io.ex02;
 
 import java.io.FileOutputStream;
 

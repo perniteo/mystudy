@@ -1,5 +1,5 @@
 // 디렉토리에 들어있는 파일(디렉토리) 목록을 꺼낼 때 필터 적용하기
-package com.eomcs.io.ex01;
+package io.ex01;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -7,7 +7,9 @@ import java.io.FilenameFilter;
 public class Exam0610 {
 
 
+
   public static void main(String[] args) throws Exception {
+
 
     class JavaFilter implements FilenameFilter {
       @Override
@@ -24,6 +26,7 @@ public class Exam0610 {
         return name.endsWith(".java");
       }
     }
+
 
     File dir = new File(".");
 
@@ -43,7 +46,7 @@ public class Exam0610 {
     // - 현재의 필터는 파일 이름으로만 검사한다.
     // - 파일인지 디렉토리인지 여부는 검사하지 않는다.
     // - 해결책?
-    //   다음 예제를 보라!
+    // 다음 예제를 보라!
   }
 
 }

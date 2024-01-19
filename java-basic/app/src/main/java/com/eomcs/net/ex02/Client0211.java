@@ -1,5 +1,5 @@
 // 대기열의 제한 확인하기
-package com.eomcs.net.ex02;
+package net.ex02;
 
 import java.net.Socket;
 import java.util.Scanner;
@@ -13,7 +13,7 @@ public class Client0211 {
     int count = 0;
     while (true) {
       try {
-        Socket socket = new Socket("localhost", 8888);
+        Socket socket = new Socket("localhost", 9999);
         System.out.printf("서버에 연결됨! - %d\n", ++count);
         // 서버의 대기열에 접속 순서대로 대기한다.
         // 서버에서 연결이 승인되면, 비로서 입출력을 할 수 있다.

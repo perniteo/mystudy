@@ -1,5 +1,5 @@
 // BufferedInputStream과 BufferedOutputStream을 사용하여 파일 복사 및 시간 측정
-package com.eomcs.io.ex09.step3;
+package io.ex09.step3;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -7,11 +7,9 @@ import java.io.FileOutputStream;
 public class Exam0220 {
 
   public static void main(String[] args) throws Exception {
-    BufferedInputStream in = new BufferedInputStream(
-        new FileInputStream("temp/jls11.pdf"));
+    BufferedInputStream in = new BufferedInputStream(new FileInputStream("temp/jls11.pdf"));
 
-    BufferedOutputStream out = new BufferedOutputStream(
-        new FileOutputStream("temp/jls11_5.pdf"));
+    BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream("temp/jls11_5.pdf"));
 
     int b;
 

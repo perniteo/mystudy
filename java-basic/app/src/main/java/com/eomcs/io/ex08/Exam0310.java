@@ -1,5 +1,5 @@
 // 포함 관계로 기능 확장하기 - FileOutputStream + DataOutputStream + 대량 데이터 출력
-package com.eomcs.io.ex08;
+package io.ex08;
 
 import java.io.FileOutputStream;
 

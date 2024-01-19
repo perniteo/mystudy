@@ -1,5 +1,5 @@
 // 서버와 입출력 테스트 - character stream
-package com.eomcs.net.ex03;
+package net.ex03;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

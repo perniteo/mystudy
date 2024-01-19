@@ -1,5 +1,5 @@
 // 데이터 읽기 - int 값 읽기
-package com.eomcs.io.ex04;
+package io.ex04;
 
 import java.io.FileInputStream;
 

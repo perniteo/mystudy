@@ -1,5 +1,5 @@
 // 클라이언트와 입출력 테스트 - byte stream + buffer
-package com.eomcs.net.ex03;
+package net.ex03;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -16,8 +16,9 @@ public class Server0160 {
       System.out.println("클라이언트의 연결을 기다리고 있음.");
 
       try (Socket socket = serverSocket.accept();
-          Scanner in = new Scanner(new BufferedInputStream(socket.getInputStream()));
-          PrintStream out = new PrintStream(new BufferedOutputStream(socket.getOutputStream()))) {
+          Scanner in = new Scanner(new BufferedInputStream(socket.getInputStream(), 14));
+          PrintStream out =
+              new PrintStream(new BufferedOutputStream(socket.getOutputStream(), 14))) {
 
         System.out.println("클라이언트가 보낸 한 줄의 문자열을 기다리고 있음!");
 
@@ -30,7 +31,7 @@ public class Server0160 {
         keyboard.nextLine();
 
         out.println(str);
-        out.flush();
+        // out.flush();
         // 버퍼를 사용할 때는
         // 데이터를 보내기 위해 반드시 flush()를 호출해야 한다.
         // => 버퍼에 남아 있는 데이터를 연결된 출력 스트림을 이용하여 내보낸다.

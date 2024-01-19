@@ -1,5 +1,5 @@
 // 서버의 승인 테스트
-package com.eomcs.net.ex02;
+package net.ex02;
 
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -15,7 +15,7 @@ public class Client0410 {
     Socket socket = new Socket();
     System.out.println("소켓 생성됨.");
 
-    SocketAddress socketAddress = new InetSocketAddress("localhost", 8888);
+    SocketAddress socketAddress = new InetSocketAddress("localhost", 9999);
 
     System.out.println("서버와 연결 중...");
     socket.connect(socketAddress, 10000);

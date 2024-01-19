@@ -1,4 +1,4 @@
-package com.eomcs.io.ex07;
+package io.ex07;
 
 import java.io.ByteArrayInputStream;
 

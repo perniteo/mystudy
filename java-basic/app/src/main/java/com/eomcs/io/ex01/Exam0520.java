@@ -1,5 +1,5 @@
 // 디렉토리에 들어 있는 파일이나 하위 디렉토리 정보 알아내기 II
-package com.eomcs.io.ex01;
+package io.ex01;
 
 import java.io.File;
 import java.sql.Date;
@@ -16,11 +16,8 @@ public class Exam0520 {
     File[] files = dir.listFiles();
 
     for (File file : files) {
-      System.out.printf("%s   %s %12d %s\n",
-          file.isDirectory() ? "d" : "-",
-              new Date(file.lastModified()),
-              file.length(),
-              file.getName());
+      System.out.printf("%s   %s %12d %s\n", file.isDirectory() ? "d" : "-",
+          new Date(file.lastModified()), file.length(), file.getName());
     }
 
   }

@@ -1,5 +1,5 @@
 // 포함 관계로 기능 확장하기 - 현재 구조의 문제점
-package com.eomcs.io.ex08;
+package io.ex08;
 
 import java.io.FileOutputStream;
 
@@ -19,11 +19,11 @@ public class Exam0410 {
     // FileOutputStream + BufferedOutputStream + DataOutputStream
     // - 문자열이나 자바 기본 타입의 데이터를 좀 더 쉽게 출력하기
     // - 그러나 안타깝게도 이런 식으로 기능을 확장할 수 없다.
-    //   왜?
-    //   - DataOutputStream 생성자에는 InputStream 객체만 넘겨줄 수 있다.
-    //   - 즉 DataOutputStream은 OutputStream 객체에만 연결할 수 있다.
-    //   - BufferedOutputStream은 OutputStream 의 자식이 아니기 때문에
-    //     DataOutputStream에 연결할 수 없다.
+    // 왜?
+    // - DataOutputStream 생성자에는 InputStream 객체만 넘겨줄 수 있다.
+    // - 즉 DataOutputStream은 OutputStream 객체에만 연결할 수 있다.
+    // - BufferedOutputStream은 OutputStream 의 자식이 아니기 때문에
+    // DataOutputStream에 연결할 수 없다.
     DataOutputStream out3 = new DataOutputStream(out2); // 컴파일 오류!
 
     Member member = new Member();
@@ -48,8 +48,8 @@ public class Exam0410 {
 
     // 해결책?
     // => 이렇게 상속이 아닌 포함 관계를 통해 기능을 확장하는 방식인 경우
-    //    Decorator 패턴으로 구조화시키면
-    //    좀 더 기능 확장이 쉬워진다.
+    // Decorator 패턴으로 구조화시키면
+    // 좀 더 기능 확장이 쉬워진다.
     // => ex09 예제를 확인하라!
   }
 

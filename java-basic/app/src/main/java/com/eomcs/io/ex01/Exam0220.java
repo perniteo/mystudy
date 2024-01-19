@@ -1,5 +1,5 @@
 // 파일 정보 조회 - java.io.File 클래스
-package com.eomcs.io.ex01;
+package io.ex01;
 
 import java.io.File;
 
@@ -12,7 +12,7 @@ public class Exam0220 {
 
     // 존재하지 않는 파일 정보 조회
     //
-    File file1 = new File("./src/main/java/Hello100.java");
+    File file1 = new File("java-basic/app/src/main/java/Hello.java");
     System.out.printf("파일명: %s\n", file1.getName());
     System.out.printf("파일크기: %d\n", file1.length());
     System.out.printf("경로: %s\n", file1.getPath());

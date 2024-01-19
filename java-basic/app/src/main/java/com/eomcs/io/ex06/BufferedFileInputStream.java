@@ -1,4 +1,4 @@
-package com.eomcs.io.ex06;
+package io.ex06;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -32,10 +32,10 @@ public class BufferedFileInputStream extends FileInputStream {
     return buf[cursor++] & 0x000000ff;
 
     // 위의 리턴 문장은 컴파일 할 때 아래의 문장으로 바뀐다.
-    //    int temp;
-    //    temp = buf[cursor];
-    //    cursor++;
-    //    return temp & 0x000000ff;
+    // int temp;
+    // temp = buf[cursor];
+    // cursor++;
+    // return temp & 0x000000ff;
 
   }
 }

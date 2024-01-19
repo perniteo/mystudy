@@ -1,5 +1,5 @@
 // FileOutputStream: float, double 값 출력
-package com.eomcs.io.ex04;
+package io.ex04;
 
 import java.io.FileOutputStream;
 
@@ -10,6 +10,8 @@ public class Exam0510 {
 
     float f = 12.375f; // hex: 41460000
     double d = 12.375; // hex: 4028c00000000000
+    System.out.println(Float.floatToIntBits(f));
+    System.out.println(Double.doubleToLongBits(d));
 
     // f 출력
     out.write(Float.floatToIntBits(f) >> 24);
@@ -18,14 +20,14 @@ public class Exam0510 {
     out.write(Float.floatToIntBits(f));
 
     // d 출력
-    out.write((int)(Double.doubleToLongBits(d) >> 56));
-    out.write((int)(Double.doubleToLongBits(d) >> 48));
-    out.write((int)(Double.doubleToLongBits(d) >> 40));
-    out.write((int)(Double.doubleToLongBits(d) >> 32));
-    out.write((int)(Double.doubleToLongBits(d) >> 24));
-    out.write((int)(Double.doubleToLongBits(d) >> 16));
-    out.write((int)(Double.doubleToLongBits(d) >> 8));
-    out.write((int)(Double.doubleToLongBits(d)));
+    out.write((int) (Double.doubleToLongBits(d) >> 56));
+    out.write((int) (Double.doubleToLongBits(d) >> 48));
+    out.write((int) (Double.doubleToLongBits(d) >> 40));
+    out.write((int) (Double.doubleToLongBits(d) >> 32));
+    out.write((int) (Double.doubleToLongBits(d) >> 24));
+    out.write((int) (Double.doubleToLongBits(d) >> 16));
+    out.write((int) (Double.doubleToLongBits(d) >> 8));
+    out.write((int) (Double.doubleToLongBits(d)));
 
     out.close();
 

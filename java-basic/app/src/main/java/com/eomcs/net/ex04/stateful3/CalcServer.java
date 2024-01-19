@@ -1,11 +1,16 @@
 // stateful 방식 - 다중 클라이언트의 요청 처리 시 문제점과 해결책
-package com.eomcs.net.ex04.stateful3;
+package net.ex04.stateful3;
 
 import java.io.DataInputStream;
 import java.io.PrintStream;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 public class CalcServer {
 
@@ -68,6 +73,40 @@ public class CalcServer {
   }
 
   public static void main(String[] args) throws Exception {
+    Set<String> hashSet = new HashSet<>();
+    hashSet.add("Apple");
+    hashSet.add("Banana");
+    hashSet.add("Orange");
+
+    Iterator<String> iterator = hashSet.iterator();
+    while (iterator.hasNext()) {
+      System.out.println(iterator.next());
+    }
+
+    List<Integer> vector = new ArrayList<>();
+    new Thread(() -> {
+      System.out.println("Run Thread");
+      synchronized (vector) {
+        for (int i = 0; i < 10; i++) {
+          System.out.println(i);
+          vector.add(i);
+        }
+      }
+    }).start();
+    new Thread(() -> {
+      System.out.println("Run Thread");
+      synchronized (vector) {
+        for (int i = 0; i < 10; i++) {
+          System.out.println(i);
+          vector.add(i);
+        }
+      }
+    }).start();
+    new Thread(() -> System.out.println("hi")).start();
+    System.out.println(vector.size());
+    for (int i = 0; i < vector.size(); i++) {
+      System.out.println(vector.get(i));
+    }
     System.out.println("서버 실행 중...");
 
     ServerSocket ss = new ServerSocket(8888);

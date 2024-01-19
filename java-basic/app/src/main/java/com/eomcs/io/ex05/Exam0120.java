@@ -1,5 +1,5 @@
-// 객체 읽기 - 파일이 데이터를 읽어 인스턴스로 만들기 
-package com.eomcs.io.ex05;
+// 객체 읽기 - 파일이 데이터를 읽어 인스턴스로 만들기
+package io.ex05;
 
 import java.io.FileInputStream;
 
@@ -25,9 +25,9 @@ public class Exam0120 {
     member.age += in.read();
 
     // 3) 성별 읽기
-    if (in.read() == 1) 
+    if (in.read() == 1)
       member.gender = true;
-    else 
+    else
       member.gender = false;
 
     in.close();
@@ -35,9 +35,5 @@ public class Exam0120 {
     System.out.printf("%s\n", member);
   }
 }
-
-
-
-
 
 

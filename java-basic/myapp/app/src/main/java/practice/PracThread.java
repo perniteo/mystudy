@@ -1,4 +1,9 @@
-public Class Thread {
+package practice;
+
+import java.awt.Toolkit;
+
+public class PracThread {
+
   public static void main(String[] args) {
     Thread thread = new Thread(() -> {
       Toolkit toolkit = Toolkit.getDefaultToolkit();

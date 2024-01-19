@@ -1,5 +1,5 @@
 // FileInputStream 활용 - JPEG 파일 읽기 : 위도/경도 알아내기
-package com.eomcs.io.ex02;
+package io.ex02;
 
 import java.io.File;
 import com.drew.imaging.ImageMetadataReader;

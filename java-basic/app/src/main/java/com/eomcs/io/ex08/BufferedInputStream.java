@@ -1,4 +1,4 @@
-package com.eomcs.io.ex08;
+package io.ex08;
 
 import java.io.IOException;
 import java.io.InputStream;

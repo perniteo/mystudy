@@ -1,5 +1,5 @@
 // Character Stream - char[] ==> String 변환하기
-package com.eomcs.io.ex03;
+package io.ex03;
 
 import java.io.FileReader;
 
@@ -19,7 +19,5 @@ public class Exam0221 {
   }
 
 }
-
-
 
 

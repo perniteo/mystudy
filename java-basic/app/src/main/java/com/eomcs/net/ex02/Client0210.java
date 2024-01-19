@@ -1,5 +1,5 @@
 // 대기열의 제한 확인하기
-package com.eomcs.net.ex02;
+package net.ex02;
 
 import java.net.Socket;
 import java.util.Scanner;

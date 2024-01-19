@@ -1,5 +1,5 @@
 // 버퍼 사용 전 - 파일 복사 및 시간 측정
-package com.eomcs.io.ex06;
+package io.ex06;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

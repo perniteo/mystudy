@@ -1,5 +1,5 @@
 // 디렉토리 생성
-package com.eomcs.io.ex01;
+package io.ex01;
 
 import java.io.File;
 

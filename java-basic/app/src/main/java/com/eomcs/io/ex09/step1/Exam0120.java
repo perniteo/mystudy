@@ -1,5 +1,5 @@
 // 포함 관계로 기능 확장하기 - FileInputStream + DataInputStream + 대량 데이터 읽기
-package com.eomcs.io.ex09.step1;
+package io.ex09.step1;
 
 import java.io.FileInputStream;
 

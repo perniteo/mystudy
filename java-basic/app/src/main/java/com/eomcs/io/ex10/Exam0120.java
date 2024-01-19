@@ -1,5 +1,5 @@
 // Java I/O API 사용하기 - BufferedOutputStream
-package com.eomcs.io.ex10;
+package io.ex10;
 
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;

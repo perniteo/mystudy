@@ -1,4 +1,4 @@
-package com.eomcs.io.ex08;
+package io.ex08;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,7 +12,7 @@ public class DataInputStream {
   }
 
   public String readUTF() throws Exception {
-    // 생성자에서 받은 InputStream 객체의 read() 메서드를 사용하여 문자열  값을 읽어서 리턴한다.
+    // 생성자에서 받은 InputStream 객체의 read() 메서드를 사용하여 문자열 값을 읽어서 리턴한다.
     int size = in.read();
     byte[] bytes = new byte[size];
     in.read(bytes); // 배열 개수 만큼 바이트를 읽어 배열에 저장한다.

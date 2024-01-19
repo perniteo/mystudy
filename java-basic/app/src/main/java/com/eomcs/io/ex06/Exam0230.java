@@ -1,4 +1,4 @@
-package com.eomcs.io.ex06;
+package io.ex06;
 
 public class Exam0230 {
   public static void main(String[] args) throws Exception {

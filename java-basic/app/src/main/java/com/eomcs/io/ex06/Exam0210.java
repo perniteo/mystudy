@@ -1,4 +1,4 @@
-package com.eomcs.io.ex06;
+package io.ex06;
 
 import java.io.FileOutputStream;
 

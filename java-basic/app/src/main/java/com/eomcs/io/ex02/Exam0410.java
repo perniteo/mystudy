@@ -1,5 +1,5 @@
 // FileInputStream 활용 - JPEG 파일 읽기
-package com.eomcs.io.ex02;
+package io.ex02;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,11 +18,11 @@ public class Exam0410 {
     int b1 = in.read(); // 00 00 00 ff
     int b2 = in.read(); // 00 00 00 d8
     int soi = b1 << 8 | b2;
-    //   00 00 00 ff <== b1
-    //   00 00 ff 00 <== b1 << 8
+    // 00 00 00 ff <== b1
+    // 00 00 ff 00 <== b1 << 8
     // | 00 00 00 d8 <== b2
     // ------------------
-    //   00 00 ff d8
+    // 00 00 ff d8
     System.out.printf("SOI: %x\n", soi);
 
     // => JFIF-APP0 Segment Marker 읽기: 2바이트

@@ -1,5 +1,5 @@
 // 서버와 입출력 테스트 - byte stream
-package com.eomcs.net.ex03;
+package net.ex03;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -33,7 +33,7 @@ public class Client0110 {
       // 서버에게 데이터 보내기
       // - 보통 클라이언트 쪽에서 먼저 서버로 데이터를 보낸다.
       // - 실제 write()는 소켓의 내부 버퍼로 출력한다.
-      //   따라서 write() 호출 후 즉시 리턴될 것이다.
+      // 따라서 write() 호출 후 즉시 리턴될 것이다.
       // - 즉 상대편에서 읽을 때까지 기다리는 것이 아니다.
       // - 보낼 데이터를 랜카드의 메모리에 올려 놓으면 바로 리턴한다.
       out.write(100);
@@ -52,9 +52,18 @@ public class Client0110 {
       e.printStackTrace();
 
     } finally {
-      try {out.close();} catch (Exception e) {}
-      try {in.close();} catch (Exception e) {}
-      try {socket.close();} catch (Exception e) {}
+      try {
+        out.close();
+      } catch (Exception e) {
+      }
+      try {
+        in.close();
+      } catch (Exception e) {
+      }
+      try {
+        socket.close();
+      } catch (Exception e) {
+      }
     }
 
     keyScan.close();

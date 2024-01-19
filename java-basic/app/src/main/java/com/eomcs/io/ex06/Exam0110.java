@@ -1,5 +1,5 @@
 // 버퍼 사용 전 - 데이터 읽는데 걸린 시간 측정
-package com.eomcs.io.ex06;
+package io.ex06;
 
 import java.io.FileInputStream;
 

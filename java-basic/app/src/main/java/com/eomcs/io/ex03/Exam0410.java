@@ -1,5 +1,5 @@
 // Character Stream - String 출력하기
-package com.eomcs.io.ex03;
+package io.ex03;
 
 import java.io.FileWriter;
 
@@ -10,7 +10,7 @@ public class Exam0410 {
 
     String str = new String("AB가각");
 
-    out.write(str); 
+    out.write(str);
 
     out.close();
 

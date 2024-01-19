@@ -1,5 +1,5 @@
 // 서버와 입출력 테스트 - byte stream: 문자열 주고 받기
-package com.eomcs.net.ex03;
+package net.ex03;
 
 import java.io.PrintStream;
 import java.net.Socket;
