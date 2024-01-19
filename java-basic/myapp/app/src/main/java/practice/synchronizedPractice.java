@@ -22,7 +22,6 @@ public class synchronizedPractice {
     for (Integer num : treeSet) {
       System.out.println(num);
     }
-    treeSet.
 
     long timestamp = 1705565777543L;
 
