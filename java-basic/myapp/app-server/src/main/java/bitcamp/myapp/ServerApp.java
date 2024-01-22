@@ -109,7 +109,14 @@ public class ServerApp {
       System.out.println("ServerSocket");
 
       while (true) {
-        service(serverSocket.accept());
+        Socket socket = serverSocket.accept();
+        new Thread(() -> {
+          try {
+            service(socket);
+          } catch (IOException e) {
+            throw new RuntimeException(e);
+          }
+        }).start();
       }
 
     } catch (Exception e) {
