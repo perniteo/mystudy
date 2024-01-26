@@ -12,36 +12,36 @@ public class Exam0210 {
       this.balance = balance;
     }
 
-    public long withdraw(long money) {
+    synchronized public long withdraw(long money) {
 
-      // 이 메서드처럼 여러 스레드가 같은 메모리(balance 필드)의 값을 
-      // 동시에 변경할 때 문제가 발생할 수 있는 코드를 
-      // "크리티컬 섹션(임계영역; critical section)" 
+      // 이 메서드처럼 여러 스레드가 같은 메모리(balance 필드)의 값을
+      // 동시에 변경할 때 문제가 발생할 수 있는 코드를
+      // "크리티컬 섹션(임계영역; critical section)"
       // 또는 "크리티컬 리전(critical region)"
       // 이라 부른다.
 
       long b = this.balance;
 
-      delay();  // CPU를 뺏길 기회를 제공
+      delay(); // CPU를 뺏길 기회를 제공
 
       b -= money;
 
-      delay();  // CPU를 뺏길 기회를 제공
+      delay(); // CPU를 뺏길 기회를 제공
 
       if (b < 0)
         return 0;
 
-      delay();  // CPU를 뺏길 기회를 제공
+      delay(); // CPU를 뺏길 기회를 제공
 
       this.balance = b;
 
-      delay();  // CPU를 뺏길 기회를 제공
+      delay(); // CPU를 뺏길 기회를 제공
 
       return money;
     }
 
     private void delay() {
-      int delayCount = (int)(Math.random() * 1000);
+      int delayCount = (int) (Math.random() * 1000);
       for (int i = 0; i < delayCount; i++)
         Math.asin(45.765); // CPU를 뺏길 기회를 제공
     }
@@ -91,19 +91,19 @@ public class Exam0210 {
     // 이처럼 여러 스레드가 동시에 실행할 때 문제를 일으키는 코드를
     // "임계 구역(Critical Section; Critical Region)"이라 부른다.
     // 이 예제에서는 여러 스레드가 동시에 호출하고,
-    // 같은 인스턴스의 변수 값을 변경하는 메서드인 
+    // 같은 인스턴스의 변수 값을 변경하는 메서드인
     // "withdraw()"가 critical section이다.
   }
 }
 
 // 용어정리!
-// 
+//
 // 임계 구역(critical section)
 // - 여러 스레드가 동시에 실행할 때 문제가 발생하는 코드 블록을 말한다.
 // - critical region 이라고도 부른다.
 // - 같은 메모리에 여러 스레드가 동시에 접근하여 값을 변경하려 할 때 문제가 발생하는 것이다.
-//   즉 다른 스레드가 사용하는 변수의 값을 임의로 변경하면 그 스레드는 원래의 의도대로 
-//   동작하지 않을 것이다.
+// 즉 다른 스레드가 사용하는 변수의 값을 임의로 변경하면 그 스레드는 원래의 의도대로
+// 동작하지 않을 것이다.
 // - "스레드 안전(thread safe)하지 않다"라고 말한다.
 
 

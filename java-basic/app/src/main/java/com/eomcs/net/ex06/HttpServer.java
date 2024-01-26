@@ -1,5 +1,5 @@
 // HTTP 서버 만들기
-package net.ex06;
+package com.eomcs.net.ex06;
 
 import java.io.PrintStream;
 import java.net.ServerSocket;

@@ -13,7 +13,7 @@ import java.util.TreeSet;
 public class synchronizedPractice {
 
   public static void main(String[] args) {
-    TreeSet<Integer> treeSet = new TreeSet<>();
+    TreeSet<Integer> treeSet = new TreeSet<>((o1, o2) -> Integer.compare(o2, o1));
     treeSet.add(87);
     treeSet.add(98);
     treeSet.add(75);
@@ -21,6 +21,7 @@ public class synchronizedPractice {
     treeSet.add(80);
     for (Integer num : treeSet) {
       System.out.println(num);
+      System.out.println(num.compareTo(87));
     }
 
     long timestamp = 1705565777543L;

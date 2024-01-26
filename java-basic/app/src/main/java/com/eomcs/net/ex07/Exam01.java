@@ -1,26 +1,12 @@
 // URL(Uniform Resource Locator) - URL을 다루는 클래스
-package net.ex07;
+package com.eomcs.net.ex07;
 
+import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class Exam01 {
 
   public static void main(String[] args) throws Exception {
-    List<Integer> numbers = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
-    for (int i = 11; i < 5000000; i++) {
-      numbers.add(i);
-    }
-    List<Integer> arr = new ArrayList<>();
-    // 순차 스트림
-    long start = System.currentTimeMillis();
-    numbers.parallelStream().forEach(arr::add);
-    System.out.println(System.currentTimeMillis() - start);
-
-    // 병렬 스트림
-    // numbers.parallelStream().forEach(System.out::println);
     // 웹 상에서 자원의 위치를 표현하는 방법
     // => [프로토콜]://서버주소:포트번호/자원의경로?파라미터명=값&파라미터명=값
     // - 프로토콜: http(80), https(443), ftp(21/20) 등
@@ -38,8 +24,12 @@ public class Exam01 {
     // - 메일 조회, 게시물 변경, 주문 등의 웹 프로그램을 가리킨다.
     // - 예) index.php, index.jsp, /board/list 등
     //
-    URL url = new URL(
+    URI uri = new URI(
         "https://search.naver.com:443/search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=bitcamp");
+
+    URL url = uri.toURL();
+
+
 
     // URL 분석
     System.out.printf("프로토콜: %s\n", url.getProtocol());

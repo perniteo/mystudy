@@ -1,5 +1,5 @@
 // connectionless 클라이언트 - 연결없이 데이터 수신
-package net.ex05;
+package com.eomcs.net.ex05;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -41,6 +41,15 @@ public class Server0210 {
     socket.receive(emptyPacket);
     System.out.println("데이터를 받았음!");
 
+    String responseMessage = "Hello Client I received your message!";
+    byte[] sendData = responseMessage.getBytes();
+
+    DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length,
+        emptyPacket.getAddress(), emptyPacket.getPort());
+    System.out.println(emptyPacket.getPort());
+
+    socket.send(sendPacket);
+
     socket.close();
     keyScan.close();
 
@@ -57,7 +66,7 @@ public class Server0210 {
     int len = emptyPacket.getLength();
 
     // 3) 클라이언트에서 받은 바이트 배열을 가지고 String 객체를 생성한다.
-    String message = new String(bytes, 0, len, "UTF-8");
+    String message = new String(buf, 0, buf.length, "UTF-8");
 
     // 실무에서는 다음과 같이 로컬 변수를 사용하지 않고 직접 패킷 객체를 사용하는 방식으로 코딩한다.
     // String message = new String(//

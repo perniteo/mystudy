@@ -1,3 +1,5 @@
+package practice;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -14,8 +16,7 @@ public class Lotto {
     }
     while (win.size() < 6) {
       int randomIdx = random.nextInt(balls.size());
-      int ball = balls.remove(randomIdx);
-      win.add(ball);
+      win.add(balls.remove(randomIdx));
     }
     System.out.println(win);
   }

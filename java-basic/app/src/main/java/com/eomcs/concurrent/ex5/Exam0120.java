@@ -7,21 +7,21 @@ public class Exam0120 {
     int[] values = new int[100];
     int size;
 
-    // Critical Section에 오직 한 개의 스레드만 접근하게 하면 
+    // Critical Section에 오직 한 개의 스레드만 접근하게 하면
     // 비동기로 인한 문제가 발생하지 않는다.
     // => 즉 동기화로 처리한다.
-    // => 동기화? 
-    //    - 여러 스레드가 동시에 실행하는 것이 아니고
-    //      여러 스레드가 순차적으로 접근하는 것.
-    //    - 단 순차적으로 실행한다는 것은 동시 실행의 이점을 버리는 것이기 때문에
-    //      스레드를 사용하기 전의 상태와 같다.
-    //      기존의 실행 방식 처럼 실행 시간이 많이 걸린다.
-    // 
+    // => 동기화?
+    // - 여러 스레드가 동시에 실행하는 것이 아니고
+    // 여러 스레드가 순차적으로 접근하는 것.
+    // - 단 순차적으로 실행한다는 것은 동시 실행의 이점을 버리는 것이기 때문에
+    // 스레드를 사용하기 전의 상태와 같다.
+    // 기존의 실행 방식 처럼 실행 시간이 많이 걸린다.
+    //
     // 다음 메서드를 동기화 처리해 보자.
     // => synchronized
-    //    - 크리티컬 섹션 구간에 이 키워드를 붙이면 오직 한 번에 한 개의 스레드만이 접근할 수 있다.
-    //    - 먼저 접근한 스레드가 나가야만 다음 스레드가 진입할 수 있다.
-    //    - 즉 크리티컬 섹션을 뮤텍스 구간으로 설정한다.
+    // - 크리티컬 섹션 구간에 이 키워드를 붙이면 오직 한 번에 한 개의 스레드만이 접근할 수 있다.
+    // - 먼저 접근한 스레드가 나가야만 다음 스레드가 진입할 수 있다.
+    // - 즉 크리티컬 섹션을 뮤텍스 구간으로 설정한다.
     //
     synchronized public void add(int value) {
       if (size >= values.length) {
@@ -42,7 +42,7 @@ public class Exam0120 {
     }
 
     public void delay() {
-      int count = (int)(Math.random() * 1000);
+      int count = (int) (Math.random() * 1000);
       for (int i = 0; i < count; i++) {
         Math.atan(34.1234);
       }
@@ -55,7 +55,7 @@ public class Exam0120 {
 
     public Worker(MyList list, int value) {
       this.list = list;
-      this.value =  value;
+      this.value = value;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class Exam0120 {
         list.add(value);
 
         // add() 호출 후 다른 스레드에게 CPU 사용권을 뺏길 기회를 만들자!
-        int count = (int)(Math.random() * 1000);
+        int count = (int) (Math.random() * 1000);
         for (int x = 0; x < count; x++) {
           Math.atan(34.1234);
         }
@@ -83,7 +83,9 @@ public class Exam0120 {
     w2.start();
     w3.start();
 
-    Thread.sleep(10000);
+    w1.join();
+    w2.join();
+    w3.join();
 
     list.print();
   }

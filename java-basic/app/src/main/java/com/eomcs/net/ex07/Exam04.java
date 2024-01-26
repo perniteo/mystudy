@@ -1,5 +1,5 @@
 // URL(Uniform Resource Locator) - 부가 데이터 지정
-package net.ex07;
+package com.eomcs.net.ex07;
 
 import java.net.URL;
 

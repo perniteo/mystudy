@@ -15,7 +15,7 @@ public class Exam0310 {
   static void print1(String threadName, Counter counter) {
     System.out.printf("[%s] 출력 시작 ----------\n", threadName);
 
-    for (int i= 0; i < counter.value; i++) {
+    for (int i = 0; i < counter.value; i++) {
       System.out.printf("%s ==> %d\n", threadName, i);
     }
 
@@ -27,7 +27,7 @@ public class Exam0310 {
   synchronized static void print2(String threadName, Counter counter) {
     System.out.printf("[%s] 출력 시작 ----------\n", threadName);
 
-    for (int i  = 0; i < counter.value; i++) {
+    for (int i = 0; i < counter.value; i++) {
       System.out.printf("%s ==> %d\n", threadName, i);
     }
 
@@ -41,7 +41,7 @@ public class Exam0310 {
 
     synchronized (counter) {
       System.out.printf("[%s] $$$$$$$$$$$$$$$$$$$$$$\n", threadName);
-      for (int i  = 0; i < 1000; i++) {
+      for (int i = 0; i < counter.value; i++) {
         System.out.printf("%s ==> %d\n", threadName, i);
       }
     }

@@ -10,24 +10,19 @@ public class Exam0120 {
 
   public static void main(String[] args) throws Exception {
     File file = new File("./sample/test1.jpg");
+    System.out.println(file.getCanonicalPath());
 
     FileInputStream in = new FileInputStream(file);
     byte[] bytes = in.readAllBytes();
+    System.out.println(bytes.length);
     in.close();
 
     Encoder encoder = Base64.getEncoder();
     byte[] encodedBytes = encoder.encode(bytes);
     System.out.println(new String(encodedBytes));
+    System.out.println(encodedBytes.length);
   }
 
 }
-
-
-
-
-
-
-
-
 
 

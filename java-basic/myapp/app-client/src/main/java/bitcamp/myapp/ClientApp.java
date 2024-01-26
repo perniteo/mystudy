@@ -3,8 +3,10 @@ package bitcamp.myapp;
 import bitcamp.menu.MenuGroup;
 import bitcamp.myapp.dao.AssignmentDao;
 import bitcamp.myapp.dao.BoardDao;
-import bitcamp.myapp.dao.DaoProxyGenerator;
 import bitcamp.myapp.dao.MemberDao;
+import bitcamp.myapp.dao.mysql.AssignmentDaoImpl;
+import bitcamp.myapp.dao.mysql.BoardDaoImpl;
+import bitcamp.myapp.dao.mysql.MemberDaoImpl;
 import bitcamp.myapp.handler.HelpHandler;
 import bitcamp.myapp.handler.assignment.AssignAddHandler;
 import bitcamp.myapp.handler.assignment.AssignDeleteHandler;
@@ -22,6 +24,8 @@ import bitcamp.myapp.handler.member.MemberListHandler;
 import bitcamp.myapp.handler.member.MemberModifyHandler;
 import bitcamp.myapp.handler.member.MemberViewHandler;
 import bitcamp.util.Prompt;
+import java.sql.Connection;
+import java.sql.DriverManager;
 
 public class ClientApp {
 
@@ -34,7 +38,7 @@ public class ClientApp {
   MenuGroup mainMenu;
 
   ClientApp() throws Exception {
-    prepareNetwork();
+    prepareDatabase();
     prepareMenu();
   }
 
@@ -42,16 +46,22 @@ public class ClientApp {
     new ClientApp().run();
   }
 
-  void prepareNetwork() {
+  void prepareDatabase() {
     try {
+      //Driver Class에서 static 블록으로 등록함
+//      Driver driver = new com.mysql.cj.jdbc.Driver();
+//      DriverManager.registerDriver(driver);
+      Connection connection = DriverManager.getConnection(
+          "jdbc:mysql://localhost/studydb", "study", "bitcamp!@#123");
+
       System.out.println("loading");
-      DaoProxyGenerator daoProxyGenerator = new DaoProxyGenerator("localhost", 7777);
+//      DaoProxyGenerator daoProxyGenerator = new DaoProxyGenerator("localhost", 7777);
       System.out.println("success");
 
-      boardDao = daoProxyGenerator.create(BoardDao.class, "board");
-      assignmentDao = daoProxyGenerator.create(AssignmentDao.class, "assignment");
-      memberDao = daoProxyGenerator.create(MemberDao.class, "member");
-      greetingDao = daoProxyGenerator.create(BoardDao.class, "greeting");
+      boardDao = new BoardDaoImpl(connection, 1);
+      assignmentDao = new AssignmentDaoImpl(connection);
+      memberDao = new MemberDaoImpl(connection);
+      greetingDao = new BoardDaoImpl(connection, 2);
 
     } catch (Exception e) {
       System.out.println("Error");

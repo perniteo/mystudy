@@ -1,5 +1,5 @@
 // 통신 방식 - Stateless
-package net.ex04;
+package com.eomcs.net.ex04;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

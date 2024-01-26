@@ -1,9 +1,10 @@
 // connectionless 클라이언트 - 연결없이 데이터 송신
-package net.ex05;
+package com.eomcs.net.ex05;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.Scanner;
 
 // Connectionless
 // => 서버와 연결없이 데이터를 보내고 받을 수 있다.
@@ -13,6 +14,7 @@ import java.net.InetAddress;
 //
 public class Client0210 {
   public static void main(String[] args) throws Exception {
+    Scanner keyScan = new Scanner(System.in);
     // connectionless 방식으로 통신을 수행할 소켓 생성
     // - 클라이언트 쪽은 포트 번호를 지정하지 않는다.
     // - 물론 OS가 자동으로 부여할 것이다.
@@ -39,6 +41,16 @@ public class Client0210 {
     // 데이터 전송
     socket.send(packet);
     System.out.println("데이터 전송 완료!");
+
+    byte[] receiveData = new byte[1024];
+
+    DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+
+    socket.receive(receivePacket);
+
+    String receivedMessage = new String(receivePacket.getData(), 0, receivePacket.getLength());
+
+    System.out.println("Received from Server : " + receivedMessage);
 
     // 자원해제
     socket.close();

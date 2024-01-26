@@ -17,9 +17,11 @@ repositories {
 }
 
 dependencies {
-    implementation project(':app-common')
+//    implementation project(':app-common')
 
-    implementation project(':app-api')
+    implementation 'com.mysql:mysql-connector-j:8.3.0'
+
+//    implementation project(':app-api')
     // Use JUnit Jupiter for testing.
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
 

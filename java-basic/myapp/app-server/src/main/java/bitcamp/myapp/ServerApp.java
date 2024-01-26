@@ -15,11 +15,14 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ServerApp {
 
   Map<String, Object> daoMap = new HashMap<>();
   Gson gson;
+  ExecutorService executorService = Executors.newFixedThreadPool(5);
 
   public ServerApp() {
     daoMap.put("board", new BoardDaoImpl("board.json"));
@@ -89,10 +92,10 @@ public class ServerApp {
 
   }
 
-  private void service(Socket socket) throws IOException {
+  private void service(Socket socket) {
     try (Socket s = socket;
         DataInputStream in = new DataInputStream(socket.getInputStream());
-        DataOutputStream out = new DataOutputStream(socket.getOutputStream());) {
+        DataOutputStream out = new DataOutputStream(socket.getOutputStream())) {
       System.out.println("Accept socket");
 
       System.out.println("---------------------");
@@ -110,18 +113,14 @@ public class ServerApp {
 
       while (true) {
         Socket socket = serverSocket.accept();
-        new Thread(() -> {
-          try {
-            service(socket);
-          } catch (IOException e) {
-            throw new RuntimeException(e);
-          }
-        }).start();
+        executorService.execute(() -> service(socket));
+//        customThreadPool.get().setWorker(() -> service(socket));
       }
-
     } catch (Exception e) {
       e.printStackTrace();
       System.out.println("Error");
+    } finally {
+      executorService.shutdown();
     }
 //    System.out.println("Current working directory: " + System.getProperty("user.dir"));
 //    System.out.println("board.json exists: " + new File("board.json").exists());
