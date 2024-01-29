@@ -16,7 +16,7 @@ public class BoardViewHandler extends AbstractMenuHandler {
 
   @Override
   protected void action() throws Exception {
-    int key = this.prompt.inputInt("몇 번을 조회?(0 ~)");
+    int key = this.prompt.inputInt("몇 번을 조회?(1 ~)");
 
     Board board = this.boardDao.findBy(key);
     if (board == null) {

@@ -16,7 +16,7 @@ public class BoardDeleteHandler extends AbstractMenuHandler {
   @Override
   protected void action() throws Exception {
 
-    int key = this.prompt.inputInt("몇 번을 삭제?(0 ~)");
+    int key = this.prompt.inputInt("몇 번을 삭제?(1 ~)");
 
     if (this.boardDao.delete(key) == 0) {
       System.out.println("Wrong input");

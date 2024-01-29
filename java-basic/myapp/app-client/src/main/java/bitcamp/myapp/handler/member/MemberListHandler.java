@@ -17,7 +17,7 @@ public class MemberListHandler extends AbstractMenuHandler {
   @Override
   protected void action() {
 
-    System.out.printf("%-4s\t%-18s%s\t%s\n", "Key", "이메일", "이름", "가입일");
+    System.out.printf("%-4s\t%-18s%s\t\t\t%s\n", "Key", "이메일", "이름", "가입일");
 
     for (Member member : this.memberDao.findAll()) {
       System.out.printf("%-4s\t%-20s%s\t\t%s\n", member.getNo(),

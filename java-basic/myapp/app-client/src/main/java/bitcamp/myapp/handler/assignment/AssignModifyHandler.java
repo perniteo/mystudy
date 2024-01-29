@@ -17,7 +17,7 @@ public class AssignModifyHandler extends AbstractMenuHandler {
   @Override
   protected void action() throws Exception {
 
-    int key = prompt.inputInt("몇 번을 수정?(0~ ) ");
+    int key = prompt.inputInt("몇 번을 수정?(1~ ) ");
 
     Assignment oldAssignment = this.assignmentDao.findBy(key);
 
@@ -30,7 +30,7 @@ public class AssignModifyHandler extends AbstractMenuHandler {
     assignment.setNo(oldAssignment.getNo());
     assignment.setTitle(this.prompt.input("제목(%s): ", oldAssignment.getTitle()));
     assignment.setContent(this.prompt.input("내용(%s): ", oldAssignment.getContent()));
-    assignment.setDeadline(oldAssignment.getDeadline());
+    assignment.setDeadline(this.prompt.inputDate("제출 기한(%s): ", oldAssignment.getDeadline()));
 
     if (this.assignmentDao.update(assignment) == 0) {
       System.out.println("Wrong input");

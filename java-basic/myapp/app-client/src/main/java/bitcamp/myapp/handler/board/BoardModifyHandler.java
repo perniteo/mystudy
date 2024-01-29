@@ -16,7 +16,7 @@ public class BoardModifyHandler extends AbstractMenuHandler {
 
   @Override
   protected void action() throws Exception {
-    int key = this.prompt.inputInt("몇 번을 변경?(0 ~)");
+    int key = this.prompt.inputInt("몇 번을 변경?(1 ~) ");
     Board oldBoard = this.boardDao.findBy(key);
     if (oldBoard == null) {
       System.out.println("Wrong input number");

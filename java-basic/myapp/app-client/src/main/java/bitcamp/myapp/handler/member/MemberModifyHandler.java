@@ -17,7 +17,7 @@ public class MemberModifyHandler extends AbstractMenuHandler {
   @Override
   protected void action() throws Exception {
 
-    int index = this.prompt.inputInt("몇 번을 변경?(0 ~");
+    int index = this.prompt.inputInt("몇 번을 변경?(1 ~) ");
 
     Member oldMember = this.memberDao.findBy(index);
 

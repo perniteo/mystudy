@@ -2,6 +2,7 @@ package practice;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,6 +14,14 @@ import java.util.TreeSet;
 public class synchronizedPractice {
 
   public static void main(String[] args) {
+    // hash collection 순서 보장 안 함, 중복 없음(hashCode 비교 후 equals 값 비교)
+    // tree collection 순서 보장 안 함, 이진 트리(레드 블랙)을 사용하기 때문에 생성자에 정렬이 구현 돼 있음
+    // 재정의를 통해 역순으로 가능
+    // map collection (k, v) 구조 k 부분은 중복 없음(set)
+    Comparator<Integer> comparator = (o1, o2) -> Integer.compare(o2, o1);
+    System.out.println(comparator.compare(3, 4));
+    System.out.println(Integer.compare(3, 4));
+    System.out.println("Fucker".compareTo("Hello"));
     TreeSet<Integer> treeSet = new TreeSet<>((o1, o2) -> Integer.compare(o2, o1));
     treeSet.add(87);
     treeSet.add(98);
@@ -36,17 +45,23 @@ public class synchronizedPractice {
     System.out.println("Timestamp: " + timestamp);
     System.out.println("Formatted Date: " + formattedDate);
     Map<Object, String> kv = new HashMap<>();
+    // 순서 보장 가능
+//    Map<Object, String> kv = new LinkedHashMap<>();
     kv.put("a", "1");
     kv.put(1, "s");
     kv.put(2, "e");
     kv.put(3, "x");
     kv.put("b", "2");
     kv.forEach((Object, String) -> System.out.printf("%s%s \t", Object, String));
+    System.out.println();
 
     Set<String> hashSet = new HashSet<>();
     hashSet.add("Apple");
     hashSet.add("Banana");
     hashSet.add("Orange");
+    hashSet.add(null);
+
+    System.out.println("set size : " + hashSet.size());
 
     for (String str : hashSet) {
       System.out.println(str);

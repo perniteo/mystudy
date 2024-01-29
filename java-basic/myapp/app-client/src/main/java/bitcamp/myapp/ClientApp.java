@@ -48,7 +48,7 @@ public class ClientApp {
 
   void prepareDatabase() {
     try {
-      //Driver Class에서 static 블록으로 등록함
+      //Driver Class 에서 static 블록으로 등록함 (mySql jar 파일에 포함 돼 있음)
 //      Driver driver = new com.mysql.cj.jdbc.Driver();
 //      DriverManager.registerDriver(driver);
       Connection connection = DriverManager.getConnection(

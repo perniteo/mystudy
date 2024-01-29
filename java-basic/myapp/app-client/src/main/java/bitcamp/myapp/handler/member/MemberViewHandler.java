@@ -16,7 +16,7 @@ public class MemberViewHandler extends AbstractMenuHandler {
 
   protected void action() throws Exception {
 
-    int index = this.prompt.inputInt("몇 번을 조회?(0 ~)");
+    int index = this.prompt.inputInt("몇 번을 조회?(1 ~)");
 
     Member member = memberDao.findBy(index);
     if (member == null) {

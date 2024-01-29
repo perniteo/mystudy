@@ -17,7 +17,6 @@ public class AssignDeleteHandler extends AbstractMenuHandler {
 
     int key = prompt.inputInt("몇 번을 삭제? ");
 
-    this.assignmentDao.delete(key);
     if (this.assignmentDao.delete(key) == 0) {
       System.out.println("Wrong input");
     } else {

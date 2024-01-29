@@ -17,7 +17,7 @@ public class MemberDeleteHandler extends AbstractMenuHandler {
   protected void action() throws Exception {
 //    System.out.printf("[%s]", menu.getTitle());
 
-    int key = this.prompt.inputInt("몇 번을 삭제?(0 ~)");
+    int key = this.prompt.inputInt("몇 번을 삭제?(1 ~)");
 
     if (this.memberDao.delete(key) == 0) {
       System.out.println("Wrong input");
