@@ -26,9 +26,9 @@ public class BoardDaoImpl implements BoardDao {
       Statement statement = connection.createStatement();
       statement.executeUpdate(String.format(
           "insert into "
-              + "boards(title, content, writer) "
-              + "values('%s', '%s', '%s')",
-          board.getTitle(), board.getContent(), board.getWriter()));
+              + "boards(title, content, writer, category) "
+              + "values('%s', '%s', '%s', '%d')",
+          board.getTitle(), board.getContent(), board.getWriter(), this.category));
     } catch (Exception e) {
       throw new DaoException("Data Loading Error", e);
     }
@@ -53,7 +53,8 @@ public class BoardDaoImpl implements BoardDao {
       Statement statement = connection.createStatement();
       ResultSet resultSet = statement.executeQuery(
           "select * "
-              + "from boards");
+              + "from boards "
+              + "where category = " + this.category);
       while (resultSet.next()) {
         Board board = new Board();
         board.setNo(resultSet.getInt("board_no"));
