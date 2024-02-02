@@ -52,10 +52,11 @@ public class ClientApp {
 //      Driver driver = new com.mysql.cj.jdbc.Driver();
 //      DriverManager.registerDriver(driver);
       Connection connection = DriverManager.getConnection(
-          "jdbc:mysql://localhost/studydb", "study", "bitcamp!@#123");
+          "jdbc:mysql://db-ld250-kr.vpc-pub-cdb.ntruss.com/studydb", "study", "bitcamp!@#123"
+//          "jdbc:mysql://localhost/studydb", "study", "bitcamp!@#123"
+      );
 
       System.out.println("loading");
-//      DaoProxyGenerator daoProxyGenerator = new DaoProxyGenerator("localhost", 7777);
       System.out.println("success");
 
       boardDao = new BoardDaoImpl(connection, 1);

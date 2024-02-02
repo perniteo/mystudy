@@ -25,6 +25,7 @@ public class AssignAddHandler extends AbstractMenuHandler {
 
       assignmentDao.add(assignment);
     } catch (Exception e) {
+      e.printStackTrace();
       System.err.println("Wrong input");
     }
   }

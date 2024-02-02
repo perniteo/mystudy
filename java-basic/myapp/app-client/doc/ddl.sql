@@ -15,6 +15,10 @@ writer varchar(30) not null,
 created_date datetime null default now()
 );
 
+alter table boards add column category int not null;
+
+update boards set category = 1;
+
 create table members(
 member_no int primary key auto_increment,
 email varchar(255) not null,
@@ -22,3 +26,4 @@ name varchar(255) not null,
 password varchar(100) not null,
 join_date datetime null default now()
 );
+

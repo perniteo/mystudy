@@ -1,5 +1,11 @@
 package practice;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -13,7 +19,18 @@ import java.util.TreeSet;
 
 public class synchronizedPractice {
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws URISyntaxException, IOException {
+
+    URL url = new URI("https://trace.cjlogistics.com/web/detail.jsp?slipno=577453451342").toURL();
+
+    InputStreamReader inputStreamReader = new InputStreamReader(url.openStream());
+    BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+    String str1;
+    while ((str1 = bufferedReader.readLine()) != null) {
+      System.out.println(str1);
+    }
+
     // hash collection 순서 보장 안 함, 중복 없음(hashCode 비교 후 equals 값 비교)
     // tree collection 순서 보장 안 함, 이진 트리(레드 블랙)을 사용하기 때문에 생성자에 정렬이 구현 돼 있음
     // 재정의를 통해 역순으로 가능
