@@ -24,6 +24,7 @@ public class Main {
   }
 
   public static void main(String[] args) throws IOException, InsufficientException {
+
     try {
       error1();
     } catch (InsufficientException e) {

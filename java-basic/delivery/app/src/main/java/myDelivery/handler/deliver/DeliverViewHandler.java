@@ -20,13 +20,13 @@ public class DeliverViewHandler extends AbstractMenuHandler {
   @Override
   protected void action() throws Exception {
 
-    int key = this.prompt.inputInt("몇 번을 조회?(1 ~)");
+    int key = this.prompt.inputInt("몇 번을 조회? : ");
 
     Deliver deliver = this.deliverDao.findBy(key);
 
     System.out.printf("물품 : %s\n", deliver.getTitle());
     System.out.printf("택배사 : %s\n", deliver.getCarrierName());
-    System.out.printf("운송장 번호 : %s\n", deliver.getTrackId());
+    System.out.printf("운송장 번호 : %s\n\n", deliver.getTrackId());
 
     List<DetailInfo> list = deliver.getDetailInfos();
 

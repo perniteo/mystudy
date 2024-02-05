@@ -53,10 +53,10 @@ public class HelpHandler extends AbstractMenuHandler {
         nameIdMap.put(name, id);
       }
 
-      // 결과 출력
-      for (Map.Entry<String, String> entry : nameIdMap.entrySet()) {
-        System.out.println("Name: " + entry.getKey() + ", ID: " + entry.getValue());
-      }
+//      // 결과 출력
+//      for (Map.Entry<String, String> entry : nameIdMap.entrySet()) {
+//        System.out.println("Name: " + entry.getKey() + ", ID: " + entry.getValue());
+//      }
 
     } catch (IOException e) {
       e.printStackTrace();

@@ -26,8 +26,8 @@ public class DeliverAddHandler extends AbstractMenuHandler {
       deliver.setCarrierName(this.prompt.input("택배사(도움말 참조) : "));
       deliver.setTrackId(this.prompt.input("운송장 번호 : "));
       deliver.setDetailInfos(callLogAPI(deliver.getCarrierName(), deliver.getTrackId()));
-      System.out.println(deliver.getTitle());
-      System.out.println(deliver.getTrackId());
+//      System.out.println(deliver.getTitle());
+//      System.out.println(deliver.getTrackId());
 
       deliverDao.add(deliver);
     } catch (Exception e) {

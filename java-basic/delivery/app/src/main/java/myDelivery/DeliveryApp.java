@@ -62,9 +62,7 @@ public class DeliveryApp {
   }
 
   private static String GETMethod(String apiUrl) {
-
-    System.out.println(apiUrl);
-
+//    System.out.println(apiUrl);
     try {
 
       URL url = new URL(apiUrl);
@@ -114,7 +112,7 @@ public class DeliveryApp {
     JSONObject carrierJson;
     JSONArray progressJson;
 
-    System.out.println(statusJson);
+//    System.out.println(statusJson);
 
     String mess = statusJson.has("message") ? statusJson.get("message").toString() : "";
 
@@ -134,16 +132,17 @@ public class DeliveryApp {
 
     //Tracker API 결과값 확인
     carrierJson = new JSONObject(statusJson.get("carrier").toString());
-    System.out.println(carrierJson);
+//    System.out.println(carrierJson);
     progressJson = new JSONArray(statusJson.get("progresses").toString());
-    System.out.println(progressJson);
+//    System.out.println(progressJson);
     statusJson = new JSONObject(statusJson.get("state").toString());
-    System.out.println(statusJson);
+//    System.out.println(statusJson);
+    String latest = statusJson.getJSONObject("state").getString("text");
 
     for (int i = 0; i < progressJson.length(); i++) {
       JSONObject initJson = progressJson.getJSONObject(i);
       JSONObject stat = initJson.getJSONObject("status");
-      System.out.println(progressJson.getJSONObject(i));
+//      System.out.println(progressJson.getJSONObject(i));
 
       try {
         DetailInfo detailInfo2 = new DetailInfo();

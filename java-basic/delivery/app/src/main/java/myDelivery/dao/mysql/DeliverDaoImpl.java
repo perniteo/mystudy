@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import myDelivery.DeliveryApp;
 import myDelivery.dao.DaoException;
 import myDelivery.dao.DeliverDao;
 import myDelivery.vo.Deliver;
@@ -85,6 +86,9 @@ public class DeliverDaoImpl implements DeliverDao {
         deliver.setTitle(resultSet.getString("title"));
         deliver.setCarrierName(resultSet.getString("carrierName"));
         deliver.setTrackId(resultSet.getString("trackId"));
+        deliver.setDetailInfos(
+            DeliveryApp.callLogAPI(deliver.getCarrierName(), deliver.getTrackId()));
+        update(deliver);
         JSONArray detail = new JSONArray(resultSet.getString("detail"));
 
         for (int i = 0; i < detail.length(); i++) {
