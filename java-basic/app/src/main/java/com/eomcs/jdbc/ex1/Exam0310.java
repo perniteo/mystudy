@@ -1,9 +1,10 @@
 // JDBC 프로그래밍 - DBMS에 SQL문 보내기 : insert
-package com.eomcs.jdbc.ex1;
+package jdbc.ex1;
 
 public class Exam0310 {
 
   public static void main(String[] args) throws Exception {
+    System.out.println(Character.MIN_VALUE);
 
     try (java.sql.Connection con = java.sql.DriverManager.getConnection(
         "jdbc:mysql://localhost:3306/studydb?user=study&password=1111");
