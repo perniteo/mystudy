@@ -137,7 +137,7 @@ public class DeliveryApp {
 //    System.out.println(progressJson);
     statusJson = new JSONObject(statusJson.get("state").toString());
 //    System.out.println(statusJson);
-    String latest = statusJson.getJSONObject("state").getString("text");
+//    String latest = statusJson.getJSONObject("state").getString("text");
 
     for (int i = 0; i < progressJson.length(); i++) {
       JSONObject initJson = progressJson.getJSONObject(i);

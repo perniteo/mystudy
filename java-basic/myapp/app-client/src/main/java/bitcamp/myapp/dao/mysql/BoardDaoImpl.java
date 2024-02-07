@@ -4,8 +4,8 @@ import bitcamp.myapp.dao.BoardDao;
 import bitcamp.myapp.dao.DaoException;
 import bitcamp.myapp.vo.Board;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,13 +22,21 @@ public class BoardDaoImpl implements BoardDao {
 
   @Override
   public void add(Board board) {
-    try {
-      Statement statement = connection.createStatement();
-      statement.executeUpdate(String.format(
-          "insert into "
-              + "boards(title, content, writer, category) "
-              + "values('%s', '%s', '%s', '%d')",
-          board.getTitle(), board.getContent(), board.getWriter(), this.category));
+    try (PreparedStatement preparedStatement = connection.prepareStatement(
+        "insert into boards(title, content, writer, category) "
+            + "values(?, ?, ?, ?)"
+    )) {
+      preparedStatement.setString(1, board.getTitle());
+      preparedStatement.setString(2, board.getContent());
+      preparedStatement.setString(3, board.getWriter());
+      preparedStatement.setInt(4, this.category);
+//      Statement statement = connection.createStatement();
+//      statement.executeUpdate(String.format(
+//          "insert into "
+//              + "boards(title, content, writer, category) "
+//              + "values('%s', '%s', '%s', '%d')",
+//          board.getTitle(), board.getContent(), board.getWriter(), this.category));
+      preparedStatement.executeUpdate();
     } catch (Exception e) {
       throw new DaoException("Data Loading Error", e);
     }
@@ -37,10 +45,13 @@ public class BoardDaoImpl implements BoardDao {
 
   @Override
   public int delete(int key) {
-    try {
-      Statement statement = connection.createStatement();
-      return statement.executeUpdate("delete from boards "
-          + "where board_no = " + key);
+    try (PreparedStatement preparedStatement = connection.prepareStatement(
+        "delete from boards where board_no = ?"
+    )) {
+      preparedStatement.setInt(1, key);
+
+      return preparedStatement.executeUpdate();
+
     } catch (Exception e) {
       throw new DaoException("Data Loading Error", e);
     }
@@ -49,12 +60,11 @@ public class BoardDaoImpl implements BoardDao {
   @Override
   public List<Board> findAll() {
     List<Board> boards = new ArrayList<>();
-    try {
-      Statement statement = connection.createStatement();
-      ResultSet resultSet = statement.executeQuery(
-          "select * "
-              + "from boards "
-              + "where category = " + this.category);
+    try (PreparedStatement preparedStatement = connection.prepareStatement(
+        "select * from boards where category = ? order by board_no desc"
+    )) {
+      preparedStatement.setInt(1, this.category);
+      ResultSet resultSet = preparedStatement.executeQuery();
       while (resultSet.next()) {
         Board board = new Board();
         board.setNo(resultSet.getInt("board_no"));
@@ -74,12 +84,13 @@ public class BoardDaoImpl implements BoardDao {
 
   @Override
   public Board findBy(int key) {
-    try {
-      Statement statement = connection.createStatement();
-      ResultSet resultSet = statement.executeQuery(
-          "select * "
-              + "from boards "
-              + "where board_no = " + key);
+    try (PreparedStatement preparedStatement = connection.prepareStatement(
+        "select * from boards where board_no = ?"
+    )) {
+      preparedStatement.setInt(1, key);
+
+      ResultSet resultSet = preparedStatement.getResultSet();
+
       if (resultSet.next()) {
         Board board = new Board();
         board.setNo(resultSet.getInt("board_no"));
@@ -98,13 +109,17 @@ public class BoardDaoImpl implements BoardDao {
 
   @Override
   public int update(Board board) {
-    try {
-      Statement statement = connection.createStatement();
-      return statement.executeUpdate(String.format(
-          "update boards "
-              + "set title = '%s', content = '%s', writer = '%s' "
-              + "where board_no = %d",
-          board.getTitle(), board.getContent(), board.getWriter(), board.getNo()));
+    try (PreparedStatement preparedStatement = connection.prepareStatement(
+        "update boards set title = ?, content = ?, writer = ?"
+            + "where board_no = ?"
+    )) {
+      preparedStatement.setString(1, board.getTitle());
+      preparedStatement.setString(2, board.getContent());
+      preparedStatement.setString(3, board.getWriter());
+      preparedStatement.setInt(4, board.getNo());
+
+      return preparedStatement.executeUpdate();
+
     } catch (Exception e) {
       throw new DaoException("Data Loading Error", e);
     }

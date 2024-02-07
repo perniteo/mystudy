@@ -4,8 +4,8 @@ import bitcamp.myapp.dao.DaoException;
 import bitcamp.myapp.dao.MemberDao;
 import bitcamp.myapp.vo.Member;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,11 +20,15 @@ public class MemberDaoImpl implements MemberDao {
   @Override
   public void add(Member member) {
 
-    try (Statement statement = connection.createStatement()) {
-      statement.executeUpdate(String.format("insert into "
-              + "members(email, name, password) "
-              + "values('%s', '%s', sha2('%s', 256))", member.getEmail(), member.getName(),
-          member.getPassword()));
+    try (PreparedStatement preparedStatement = connection.prepareStatement(
+        "insert into members(email, name, password)"
+            + "values(?, ?, sha2(?, 256))"
+    )) {
+      preparedStatement.setString(1, member.getEmail());
+      preparedStatement.setString(2, member.getName());
+      preparedStatement.setString(3, member.getPassword());
+
+      preparedStatement.executeUpdate();
     } catch (Exception e) {
       throw new DaoException("Data loading error", e);
     }
@@ -34,9 +38,12 @@ public class MemberDaoImpl implements MemberDao {
   @Override
   public int delete(int key) {
 
-    try (Statement statement = connection.createStatement()) {
-      return statement.executeUpdate("delete from members " +
-          "where member_no = " + key);
+    try (PreparedStatement preparedStatement = connection.prepareStatement(
+        "delete from member where member_no = ?"
+    )) {
+      preparedStatement.setInt(1, key);
+
+      return preparedStatement.executeUpdate();
 
     } catch (Exception e) {
       throw new DaoException("Data loading Error", e);
@@ -46,11 +53,16 @@ public class MemberDaoImpl implements MemberDao {
   @Override
   public int update(Member member) {
 
-    try (Statement statement = connection.createStatement()) {
-      return statement.executeUpdate(String.format("update members " +
-              "set email = '%s', name = '%s', password = sha2('%s', 256) " +
-              "where member_no = %d", member.getEmail(), member.getName(), member.getPassword(),
-          member.getNo()));
+    try (PreparedStatement preparedStatement = connection.prepareStatement(
+        "update members set email = ?, name = ?, password = sha2(?, 256)"
+            + "where member_no = ?"
+    )) {
+      preparedStatement.setString(1, member.getEmail());
+      preparedStatement.setString(2, member.getName());
+      preparedStatement.setString(3, member.getPassword());
+      preparedStatement.setInt(4, member.getNo());
+
+      return preparedStatement.executeUpdate();
 
     } catch (Exception e) {
       throw new DaoException("Data loading err", e);
@@ -62,9 +74,10 @@ public class MemberDaoImpl implements MemberDao {
 
     List<Member> members = new ArrayList<>();
 
-    try (Statement statement = connection.createStatement()) {
-      ResultSet resultSet = statement.executeQuery("select * "
-          + "from members");
+    try (PreparedStatement preparedStatement = connection.prepareStatement(
+        "select * from members order by member_no desc"
+    )) {
+      ResultSet resultSet = preparedStatement.executeQuery();
 
       while (resultSet.next()) {
         Member member = new Member();
@@ -87,10 +100,12 @@ public class MemberDaoImpl implements MemberDao {
   @Override
   public Member findBy(int key) {
 
-    try (Statement statement = connection.createStatement()) {
-      ResultSet resultSet = statement.executeQuery("select * " +
-          "from members " +
-          "where member_no = " + key);
+    try (PreparedStatement preparedStatement = connection.prepareStatement(
+        "select * from where member_no = ?"
+    )) {
+      preparedStatement.setInt(1, key);
+
+      ResultSet resultSet = preparedStatement.executeQuery();
 
       if (resultSet.next()) {
         Member member = new Member();

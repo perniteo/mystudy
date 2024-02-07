@@ -2,8 +2,8 @@ package myDelivery.dao.mysql;
 
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import myDelivery.DeliveryApp;
@@ -24,12 +24,21 @@ public class DeliverDaoImpl implements DeliverDao {
 
   @Override
   public void add(Deliver deliver) {
-    try (Statement statement = connection.createStatement()) {
-      statement.executeUpdate(String.format("insert into "
-              + "delivers(title, carrierName, trackId, detail) "
-              + "values('%s', '%s', '%s', '%s')"
-          , deliver.getTitle(), deliver.getCarrierName(), deliver.getTrackId(),
-          new JSONArray(deliver.getDetailInfos())));
+    try (PreparedStatement preparedStatement = connection.prepareStatement(
+        "insert into delivers(title, carrierName, trackId, detail)"
+            + "values(?, ?, ?, ?)"
+    )) {
+      preparedStatement.setString(1, deliver.getTitle());
+      preparedStatement.setString(2, deliver.getCarrierName());
+      preparedStatement.setString(3, deliver.getTrackId());
+      preparedStatement.setString(4, new JSONArray(deliver.getDetailInfos()).toString());
+
+      preparedStatement.executeUpdate();
+//      statement.executeUpdate(String.format("insert into "
+//              + "delivers(title, carrierName, trackId, detail) "
+//              + "values('%s', '%s', '%s', '%s')"
+//          , deliver.getTitle(), deliver.getCarrierName(), deliver.getTrackId(),
+//          new JSONArray(deliver.getDetailInfos())));
     } catch (Exception e) {
       throw new DaoException("Data Loading Error", e);
     }
@@ -38,9 +47,11 @@ public class DeliverDaoImpl implements DeliverDao {
 
   @Override
   public int delete(int key) {
-    try (Statement statement = connection.createStatement()) {
-      return statement.executeUpdate("delete from delivers "
-          + "where deliver_no = " + key);
+    try (PreparedStatement preparedStatement = connection.prepareStatement(
+        "delete from delivers where deliver_no = ?"
+    )) {
+      preparedStatement.setInt(1, key);
+      return preparedStatement.executeUpdate();
     } catch (Exception e) {
       throw new DaoException("Data Loading Error", e);
     }
@@ -51,9 +62,11 @@ public class DeliverDaoImpl implements DeliverDao {
 
     List<Deliver> delivers = new ArrayList<>();
 
-    try (Statement statement = connection.createStatement()) {
-      ResultSet resultSet = statement.executeQuery("select * "
-          + "from delivers");
+    try (PreparedStatement preparedStatement = connection.prepareStatement(
+        "select * from delivers order by deliver_no desc"
+    )) {
+      ResultSet resultSet = preparedStatement.executeQuery();
+
       while (resultSet.next()) {
         Deliver deliver = new Deliver();
         deliver.setNo(resultSet.getInt("deliver_no"));
@@ -72,10 +85,12 @@ public class DeliverDaoImpl implements DeliverDao {
 
   @Override
   public Deliver findBy(int key) {
-    try (Statement statement = connection.createStatement()) {
-      ResultSet resultSet = statement.executeQuery("select * "
-          + "from delivers "
-          + "where deliver_no = " + key);
+    try (PreparedStatement preparedStatement = connection.prepareStatement(
+        "select * from delivers where deliver_no = ?"
+    )) {
+      preparedStatement.setInt(1, key);
+
+      ResultSet resultSet = preparedStatement.executeQuery();
 
       if (resultSet.next()) {
         Deliver deliver = new Deliver();
@@ -117,13 +132,18 @@ public class DeliverDaoImpl implements DeliverDao {
   @Override
   public int update(Deliver deliver) {
 
-    try (Statement statement = connection.createStatement()) {
-      return statement.executeUpdate(String.format("update delivers " +
-              "set title = '%s', carrierName = '%s', trackId = '%s', detail = '%s' " +
-              "where deliver_no = '%d'",
-          deliver.getTitle(), deliver.getCarrierName(), deliver.getTrackId(),
-          new JSONArray(deliver.getDetailInfos()),
-          deliver.getNo()));
+    try (PreparedStatement preparedStatement = connection.prepareStatement(
+        "update delivers set title = ?, carrierName = ?, trackId = ?, detail = ?"
+            + "where deliver_no = ?"
+    )) {
+      preparedStatement.setString(1, deliver.getTitle());
+      preparedStatement.setString(2, deliver.getCarrierName());
+      preparedStatement.setString(3, deliver.getTrackId());
+      preparedStatement.setString(4, new JSONArray(deliver.getDetailInfos()).toString());
+      preparedStatement.setInt(5, deliver.getNo());
+
+      return preparedStatement.executeUpdate();
+      
     } catch (Exception e) {
       throw new DaoException("Data Loading Error", e);
     }
