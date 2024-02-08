@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.Date;
 
-public class Prompt {
+public class Prompt implements AutoCloseable {
 
   private final BufferedReader keyIn;
 

@@ -1,133 +1,164 @@
 package bitcamp.myapp;
 
-import bitcamp.RequestException;
-import bitcamp.myapp.dao.json.AssignmentDaoImpl;
-import bitcamp.myapp.dao.json.BoardDaoImpl;
-import bitcamp.myapp.dao.json.MemberDaoImpl;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import bitcamp.menu.MenuGroup;
+import bitcamp.myapp.dao.AssignmentDao;
+import bitcamp.myapp.dao.BoardDao;
+import bitcamp.myapp.dao.MemberDao;
+import bitcamp.myapp.dao.mysql.AssignmentDaoImpl;
+import bitcamp.myapp.dao.mysql.BoardDaoImpl;
+import bitcamp.myapp.dao.mysql.MemberDaoImpl;
+import bitcamp.myapp.handler.AboutHandler;
+import bitcamp.myapp.handler.HelpHandler;
+import bitcamp.myapp.handler.assignment.AssignAddHandler;
+import bitcamp.myapp.handler.assignment.AssignDeleteHandler;
+import bitcamp.myapp.handler.assignment.AssignListHandler;
+import bitcamp.myapp.handler.assignment.AssignModifyHandler;
+import bitcamp.myapp.handler.assignment.AssignViewHandler;
+import bitcamp.myapp.handler.board.BoardAddHandler;
+import bitcamp.myapp.handler.board.BoardDeleteHandler;
+import bitcamp.myapp.handler.board.BoardListHandler;
+import bitcamp.myapp.handler.board.BoardModifyHandler;
+import bitcamp.myapp.handler.board.BoardViewHandler;
+import bitcamp.myapp.handler.member.MemberAddHandler;
+import bitcamp.myapp.handler.member.MemberDeleteHandler;
+import bitcamp.myapp.handler.member.MemberListHandler;
+import bitcamp.myapp.handler.member.MemberModifyHandler;
+import bitcamp.myapp.handler.member.MemberViewHandler;
+import bitcamp.util.Prompt;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ServerApp {
 
-  Map<String, Object> daoMap = new HashMap<>();
-  Gson gson;
+  BoardDao boardDao;
+  AssignmentDao assignmentDao;
+  MemberDao memberDao;
+  BoardDao greetingDao;
+  MenuGroup mainMenu;
   ExecutorService executorService = Executors.newFixedThreadPool(5);
 
-  public ServerApp() {
-    daoMap.put("board", new BoardDaoImpl("board.json"));
-    daoMap.put("assignment", new AssignmentDaoImpl("assignment.json"));
-    daoMap.put("member", new MemberDaoImpl("member.json"));
-    daoMap.put("greeting", new BoardDaoImpl("greeting.json"));
-
-    gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+  ServerApp() throws Exception {
+    prepareDatabase();
+    prepareMenu();
   }
 
   public static void main(String[] args) throws Exception {
     new ServerApp().run();
   }
 
-  private Method findMethod(Class<?> clazz, String name) {
-    Method[] methods = clazz.getDeclaredMethods();
-    for (Method m : methods) {
-      if (m.getName().equals(name)) {
-        return m;
-      }
-    }
-    throw new RequestException("Not exist method");
-  }
-
-  private Object[] getArguments(Method m, String json) {
-    Parameter[] params = m.getParameters();
-
-    Object[] args = new Object[params.length];
-
-    if (params.length > 0) {
-      Class<?> paramType = params[0].getType();
-      Object paramValue = gson.fromJson(json, paramType);
-      args[0] = paramValue;
-    }
-    return args;
-  }
-
-  private void processRequest(DataInputStream in, DataOutputStream out) throws IOException {
-    String dataName = in.readUTF();
-    String command = in.readUTF();
-    String value = in.readUTF();
+  void prepareDatabase() {
     try {
-      Object dao = daoMap.get(dataName);
-      if (dao == null) {
-        throw new RequestException("Not exist data");
-      }
+      //Driver Class 에서 static 블록으로 등록함 (mySql jar 파일에 포함 돼 있음)
+//      Driver driver = new com.mysql.cj.jdbc.Driver();
+//      DriverManager.registerDriver(driver);
+      Connection connection = DriverManager.getConnection(
+          "jdbc:mysql://db-ld250-kr.vpc-pub-cdb.ntruss.com/studydb", "study", "bitcamp!@#123"
+//          "jdbc:mysql://localhost/studydb", "study", "bitcamp!@#123"
+      );
 
-      Method commandHandler = findMethod(dao.getClass(), command);
+      System.out.println("loading");
+      System.out.println("success");
 
-      Object[] args = getArguments(commandHandler, value);
+      boardDao = new BoardDaoImpl(connection, 1);
+      assignmentDao = new AssignmentDaoImpl(connection);
+      memberDao = new MemberDaoImpl(connection);
+      greetingDao = new BoardDaoImpl(connection, 2);
 
-      Class<?> returnType = commandHandler.getReturnType();
-      System.out.printf("ReturnType : %s\n", returnType);
-
-      Object returnValue = commandHandler.invoke(dao, args);
-
-      out.writeUTF("200");
-      out.writeUTF(gson.toJson(returnValue));
-
-    } catch (RequestException e) {
-      out.writeUTF("400");
-      out.writeUTF(gson.toJson(e.getMessage()));
     } catch (Exception e) {
-      out.writeUTF("500");
-      out.writeUTF(gson.toJson(e.getMessage()));
+      System.out.println("Error");
+      e.printStackTrace();
     }
 
   }
 
-  private void service(Socket socket) {
-    try (Socket s = socket;
-        DataInputStream in = new DataInputStream(socket.getInputStream());
-        DataOutputStream out = new DataOutputStream(socket.getOutputStream())) {
-      System.out.println("Accept socket");
+  void prepareMenu() {
+    mainMenu = MenuGroup.getInstance("메인");
 
-      System.out.println("---------------------");
-      processRequest(in, out);
+    MenuGroup assignmentMenu = mainMenu.addGroup("과제");
+    assignmentMenu.addItem("등록", new AssignAddHandler(assignmentDao));
+    assignmentMenu.addItem("조회", new AssignViewHandler(assignmentDao));
+    assignmentMenu.addItem("변경", new AssignModifyHandler(assignmentDao));
+    assignmentMenu.addItem("삭제", new AssignDeleteHandler(assignmentDao));
+    assignmentMenu.addItem("목록", new AssignListHandler(assignmentDao));
 
-    } catch (Exception e) {
-      System.out.println("Connect Error");
-    }
+    MenuGroup boardMenu = mainMenu.addGroup("게시글");
+    boardMenu.addItem("등록", new BoardAddHandler(boardDao));
+    boardMenu.addItem("조회", new BoardViewHandler(boardDao));
+    boardMenu.addItem("변경", new BoardModifyHandler(boardDao));
+    boardMenu.addItem("삭제", new BoardDeleteHandler(boardDao));
+    boardMenu.addItem("목록", new BoardListHandler(boardDao));
+
+    MenuGroup memberMenu = mainMenu.addGroup("회원");
+    memberMenu.addItem("등록", new MemberAddHandler(memberDao));
+    memberMenu.addItem("조회", new MemberViewHandler(memberDao));
+    memberMenu.addItem("변경", new MemberModifyHandler(memberDao));
+    memberMenu.addItem("삭제", new MemberDeleteHandler(memberDao));
+    memberMenu.addItem("목록", new MemberListHandler(memberDao));
+
+    MenuGroup greetingMenu = mainMenu.addGroup("가입인사");
+    greetingMenu.addItem("등록", new BoardAddHandler(greetingDao));
+    greetingMenu.addItem("조회", new BoardViewHandler(greetingDao));
+    greetingMenu.addItem("변경", new BoardModifyHandler(greetingDao));
+    greetingMenu.addItem("삭제", new BoardDeleteHandler(greetingDao));
+    greetingMenu.addItem("목록", new BoardListHandler(greetingDao));
+
+    mainMenu.addItem("도움말", new HelpHandler());
+    mainMenu.addItem("About", new AboutHandler());
   }
 
   void run() throws Exception {
-    System.out.println("[Server System]");
     try (ServerSocket serverSocket = new ServerSocket(7777)) {
-      System.out.println("ServerSocket");
 
       while (true) {
         Socket socket = serverSocket.accept();
-        executorService.execute(() -> service(socket));
-//        customThreadPool.get().setWorker(() -> service(socket));
+        executorService.execute(() -> processRequest(socket));
       }
+
     } catch (Exception e) {
+      System.out.println("Server socket err");
       e.printStackTrace();
-      System.out.println("Error");
-    } finally {
-      executorService.shutdown();
     }
-//    System.out.println("Current working directory: " + System.getProperty("user.dir"));
-//    System.out.println("board.json exists: " + new File("board.json").exists());
-//    System.out.println("assignment.json exists: " + new File("assignment.json").exists());
-//    System.out.println("member.json exists: " + new File("member.json").exists());
-//    System.out.println("greeting.json exists: " + new File("greeting.json").exists());
   }
 
+  void processRequest(Socket socket) {
+    try (Socket s = socket;
+        DataInputStream in = new DataInputStream(s.getInputStream());
+        DataOutputStream out = new DataOutputStream(s.getOutputStream());
+        Prompt prompt = new Prompt(in, out)) {
+
+      while (true) {
+        try {
+          mainMenu.execute(prompt);
+          prompt.print("[[quit!]]");
+          prompt.end();
+          break;
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+
+    } catch (Exception e) {
+      System.out.println();
+      e.printStackTrace();
+    }
+  }
+
+//  void run() throws Exception {
+//    while (true) {
+//      try {
+//        mainMenu.execute(prompt);
+//        prompt.close();
+//        break;
+//      } catch (Exception e) {
+//        System.err.println("Exception !");
+//      }
+//    }
+//  }
 }
 

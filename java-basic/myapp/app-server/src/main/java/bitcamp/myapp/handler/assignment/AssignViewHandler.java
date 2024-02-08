@@ -9,22 +9,26 @@ public class AssignViewHandler extends AbstractMenuHandler {
 
   AssignmentDao assignmentDao;
 
+  public AssignViewHandler(AssignmentDao assignmentDao) {
+    this.assignmentDao = assignmentDao;
+  }
+
   public AssignViewHandler(AssignmentDao assignmentDao, Prompt prompt) {
     super(prompt);
     this.assignmentDao = assignmentDao;
   }
 
   @Override
-  protected void action() throws Exception {
+  protected void action(Prompt prompt) throws Exception {
 
-    int key = this.prompt.inputInt("몇 번을 조회?(1 ~)");
+    int key = prompt.inputInt("몇 번을 조회?(1 ~)");
 
     Assignment assignment = this.assignmentDao.findBy(key);
 
-    System.out.printf("Key: %s\n", assignment.getNo());
-    System.out.printf("제목: %s\n", assignment.getTitle());
-    System.out.printf("내용: %s\n", assignment.getContent());
-    System.out.printf("마감기한: %s\n", assignment.getDeadline());
+    prompt.printf("Key: %s\n", assignment.getNo());
+    prompt.printf("제목: %s\n", assignment.getTitle());
+    prompt.printf("내용: %s\n", assignment.getContent());
+    prompt.printf("마감기한: %s\n", assignment.getDeadline());
 
   }
 }

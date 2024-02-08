@@ -9,17 +9,21 @@ public class BoardListHandler extends AbstractMenuHandler {
 
   private final BoardDao boardDao;
 
+  public BoardListHandler(BoardDao boardDao) {
+    this.boardDao = boardDao;
+  }
+
   public BoardListHandler(BoardDao boardDao, Prompt prompt) {
     super(prompt);
     this.boardDao = boardDao;
   }
 
   @Override
-  protected void action() {
-    System.out.printf("%-4s\t%-18s%s\t%s\n", "Key", "제목", "작성자", "작성일");
+  protected void action(Prompt prompt) {
+    prompt.printf("%-4s\t%-18s%s\t%s\n", "Key", "제목", "작성자", "작성일");
 
-    for (Board board : this.boardDao.findAll()) {
-      System.out.printf("%-4s\t%-20s%s\t\t%s\n",
+    for (Board board : boardDao.findAll()) {
+      prompt.printf("%-4s\t%-20s%s\t\t%s\n",
           board.getNo(),
           board.getTitle(),
           board.getWriter(),
