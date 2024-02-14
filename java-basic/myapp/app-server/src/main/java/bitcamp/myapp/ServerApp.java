@@ -2,9 +2,11 @@ package bitcamp.myapp;
 
 import bitcamp.menu.MenuGroup;
 import bitcamp.myapp.dao.AssignmentDao;
+import bitcamp.myapp.dao.AttachedFileDao;
 import bitcamp.myapp.dao.BoardDao;
 import bitcamp.myapp.dao.MemberDao;
 import bitcamp.myapp.dao.mysql.AssignmentDaoImpl;
+import bitcamp.myapp.dao.mysql.AttachedFileDaoImpl;
 import bitcamp.myapp.dao.mysql.BoardDaoImpl;
 import bitcamp.myapp.dao.mysql.MemberDaoImpl;
 import bitcamp.myapp.handler.AboutHandler;
@@ -24,13 +26,13 @@ import bitcamp.myapp.handler.member.MemberDeleteHandler;
 import bitcamp.myapp.handler.member.MemberListHandler;
 import bitcamp.myapp.handler.member.MemberModifyHandler;
 import bitcamp.myapp.handler.member.MemberViewHandler;
+import bitcamp.util.DBConnectionPool;
 import bitcamp.util.Prompt;
+import bitcamp.util.TransactionManager;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -41,7 +43,10 @@ public class ServerApp {
   MemberDao memberDao;
   BoardDao greetingDao;
   MenuGroup mainMenu;
-  ExecutorService executorService = Executors.newFixedThreadPool(5);
+  ExecutorService executorService = Executors.newCachedThreadPool();
+  DBConnectionPool dbConnectionPool;
+  TransactionManager txManager;
+  AttachedFileDao attachedFileDao;
 
   ServerApp() throws Exception {
     prepareDatabase();
@@ -57,18 +62,25 @@ public class ServerApp {
       //Driver Class 에서 static 블록으로 등록함 (mySql jar 파일에 포함 돼 있음)
 //      Driver driver = new com.mysql.cj.jdbc.Driver();
 //      DriverManager.registerDriver(driver);
-      Connection connection = DriverManager.getConnection(
-          "jdbc:mysql://db-ld250-kr.vpc-pub-cdb.ntruss.com/studydb", "study", "bitcamp!@#123"
+//      Connection connection = DriverManager.getConnection(
+//          "jdbc:mysql://db-ld250-kr.vpc-pub-cdb.ntruss.com/studydb", "study", "bitcamp!@#123"
 //          "jdbc:mysql://localhost/studydb", "study", "bitcamp!@#123"
-      );
+//      );
+      dbConnectionPool = new DBConnectionPool(
+          "jdbc:mysql://db-ld250-kr.vpc-pub-cdb.ntruss.com/studydb",
+          "study", "bitcamp!@#123");
+
+      txManager = new TransactionManager(dbConnectionPool);
 
       System.out.println("loading");
       System.out.println("success");
 
-      boardDao = new BoardDaoImpl(connection, 1);
-      assignmentDao = new AssignmentDaoImpl(connection);
-      memberDao = new MemberDaoImpl(connection);
-      greetingDao = new BoardDaoImpl(connection, 2);
+      boardDao = new BoardDaoImpl(dbConnectionPool, 1);
+      assignmentDao = new AssignmentDaoImpl(dbConnectionPool);
+      memberDao = new MemberDaoImpl(dbConnectionPool);
+      greetingDao = new BoardDaoImpl(dbConnectionPool, 2);
+      attachedFileDao = new AttachedFileDaoImpl(dbConnectionPool);
+
 
     } catch (Exception e) {
       System.out.println("Error");
@@ -81,15 +93,15 @@ public class ServerApp {
     mainMenu = MenuGroup.getInstance("메인");
 
     MenuGroup assignmentMenu = mainMenu.addGroup("과제");
-    assignmentMenu.addItem("등록", new AssignAddHandler(assignmentDao));
+    assignmentMenu.addItem("등록", new AssignAddHandler(txManager, assignmentDao));
     assignmentMenu.addItem("조회", new AssignViewHandler(assignmentDao));
     assignmentMenu.addItem("변경", new AssignModifyHandler(assignmentDao));
     assignmentMenu.addItem("삭제", new AssignDeleteHandler(assignmentDao));
     assignmentMenu.addItem("목록", new AssignListHandler(assignmentDao));
 
     MenuGroup boardMenu = mainMenu.addGroup("게시글");
-    boardMenu.addItem("등록", new BoardAddHandler(boardDao));
-    boardMenu.addItem("조회", new BoardViewHandler(boardDao));
+    boardMenu.addItem("등록", new BoardAddHandler(txManager, boardDao, attachedFileDao));
+    boardMenu.addItem("조회", new BoardViewHandler(boardDao, attachedFileDao));
     boardMenu.addItem("변경", new BoardModifyHandler(boardDao));
     boardMenu.addItem("삭제", new BoardDeleteHandler(boardDao));
     boardMenu.addItem("목록", new BoardListHandler(boardDao));
@@ -102,8 +114,8 @@ public class ServerApp {
     memberMenu.addItem("목록", new MemberListHandler(memberDao));
 
     MenuGroup greetingMenu = mainMenu.addGroup("가입인사");
-    greetingMenu.addItem("등록", new BoardAddHandler(greetingDao));
-    greetingMenu.addItem("조회", new BoardViewHandler(greetingDao));
+    greetingMenu.addItem("등록", new BoardAddHandler(txManager, greetingDao, attachedFileDao));
+    greetingMenu.addItem("조회", new BoardViewHandler(greetingDao, attachedFileDao));
     greetingMenu.addItem("변경", new BoardModifyHandler(greetingDao));
     greetingMenu.addItem("삭제", new BoardDeleteHandler(greetingDao));
     greetingMenu.addItem("목록", new BoardListHandler(greetingDao));

@@ -3,6 +3,7 @@ package bitcamp.myapp.dao.mysql;
 import bitcamp.myapp.dao.DaoException;
 import bitcamp.myapp.dao.MemberDao;
 import bitcamp.myapp.vo.Member;
+import bitcamp.util.DBConnectionPool;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,19 +12,20 @@ import java.util.List;
 
 public class MemberDaoImpl implements MemberDao {
 
-  Connection connection;
+  DBConnectionPool dbConnectionPool;
 
-  public MemberDaoImpl(Connection connection) {
-    this.connection = connection;
+  public MemberDaoImpl(DBConnectionPool dbConnectionPool) {
+    this.dbConnectionPool = dbConnectionPool;
   }
 
   @Override
   public void add(Member member) {
 
-    try (PreparedStatement preparedStatement = connection.prepareStatement(
-        "insert into members(email, name, password)"
-            + "values(?, ?, sha2(?, 256))"
-    )) {
+    try (Connection connection = dbConnectionPool.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(
+            "insert into members(email, name, password)"
+                + "values(?, ?, sha2(?, 256))"
+        )) {
       preparedStatement.setString(1, member.getEmail());
       preparedStatement.setString(2, member.getName());
       preparedStatement.setString(3, member.getPassword());
@@ -38,9 +40,10 @@ public class MemberDaoImpl implements MemberDao {
   @Override
   public int delete(int key) {
 
-    try (PreparedStatement preparedStatement = connection.prepareStatement(
-        "delete from member where member_no = ?"
-    )) {
+    try (Connection connection = dbConnectionPool.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(
+            "delete from member where member_no = ?"
+        )) {
       preparedStatement.setInt(1, key);
 
       return preparedStatement.executeUpdate();
@@ -53,10 +56,11 @@ public class MemberDaoImpl implements MemberDao {
   @Override
   public int update(Member member) {
 
-    try (PreparedStatement preparedStatement = connection.prepareStatement(
-        "update members set email = ?, name = ?, password = sha2(?, 256)"
-            + "where member_no = ?"
-    )) {
+    try (Connection connection = dbConnectionPool.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(
+            "update members set email = ?, name = ?, password = sha2(?, 256)"
+                + "where member_no = ?"
+        )) {
       preparedStatement.setString(1, member.getEmail());
       preparedStatement.setString(2, member.getName());
       preparedStatement.setString(3, member.getPassword());
@@ -74,9 +78,10 @@ public class MemberDaoImpl implements MemberDao {
 
     List<Member> members = new ArrayList<>();
 
-    try (PreparedStatement preparedStatement = connection.prepareStatement(
-        "select * from members order by member_no desc"
-    )) {
+    try (Connection connection = dbConnectionPool.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(
+            "select * from members order by member_no desc"
+        )) {
       ResultSet resultSet = preparedStatement.executeQuery();
 
       while (resultSet.next()) {
@@ -100,9 +105,10 @@ public class MemberDaoImpl implements MemberDao {
   @Override
   public Member findBy(int key) {
 
-    try (PreparedStatement preparedStatement = connection.prepareStatement(
-        "select * from where member_no = ?"
-    )) {
+    try (Connection connection = dbConnectionPool.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(
+            "select * from where member_no = ?"
+        )) {
       preparedStatement.setInt(1, key);
 
       ResultSet resultSet = preparedStatement.executeQuery();

@@ -4,12 +4,15 @@ import bitcamp.menu.AbstractMenuHandler;
 import bitcamp.myapp.dao.AssignmentDao;
 import bitcamp.myapp.vo.Assignment;
 import bitcamp.util.Prompt;
+import bitcamp.util.TransactionManager;
 
 public class AssignAddHandler extends AbstractMenuHandler {
 
   private final AssignmentDao assignmentDao;
+  private TransactionManager txManager;
 
-  public AssignAddHandler(AssignmentDao assignmentDao) {
+  public AssignAddHandler(TransactionManager txManager, AssignmentDao assignmentDao) {
+    this.txManager = txManager;
     this.assignmentDao = assignmentDao;
   }
 
@@ -20,12 +23,23 @@ public class AssignAddHandler extends AbstractMenuHandler {
 
   @Override
   protected void action(Prompt prompt) throws Exception {
-    Assignment assignment = new Assignment();
-    assignment.setTitle(prompt.input("과제명? "));
-    assignment.setContent(prompt.input("내용? "));
-    assignment.setDeadline(prompt.inputDate("제출 마감일? (ex: 2023-12-28) : "));
+    try {
+      Assignment assignment = new Assignment();
+      assignment.setTitle(prompt.input("과제명? "));
+      assignment.setContent(prompt.input("내용? "));
+      assignment.setDeadline(prompt.inputDate("제출 마감일? (ex: 2023-12-28) : "));
 
-    assignmentDao.add(assignment);
+      txManager.startTransaction();
+
+      assignmentDao.add(assignment);
+      assignmentDao.add(assignment);
+
+      txManager.rollback();
+    } catch (Exception e) {
+      e.printStackTrace();
+      System.out.println("과제 입력 중 오류 발생");
+    }
+
   }
 
 }

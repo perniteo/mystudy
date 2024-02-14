@@ -3,6 +3,7 @@ package bitcamp.myapp.dao.mysql;
 import bitcamp.myapp.dao.AssignmentDao;
 import bitcamp.myapp.dao.DaoException;
 import bitcamp.myapp.vo.Assignment;
+import bitcamp.util.DBConnectionPool;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,21 +12,19 @@ import java.util.List;
 
 public class AssignmentDaoImpl implements AssignmentDao {
 
-  Connection connection;
+  DBConnectionPool dbConnectionPool;
 
-  public AssignmentDaoImpl(Connection connection) {
-    this.connection = connection;
+  public AssignmentDaoImpl(DBConnectionPool dbConnectionPool) {
+    this.dbConnectionPool = dbConnectionPool;
   }
 
   @Override
   public void add(Assignment assignment) {
-    try (PreparedStatement preparedstatement = connection.prepareStatement(
-        "insert into assignments(title, content, deadline "
-            + "values(?, ?, ?)")) {
-//      statement.executeUpdate(String.format("insert into "
-//              + "assignments(title, content, deadline) "
-//              + "values('%s', '%s', '%s')"
-//          , assignment.getTitle(), assignment.getContent(), assignment.getDeadline()));
+    try (Connection connection = dbConnectionPool.getConnection();
+        PreparedStatement preparedstatement = connection.prepareStatement(
+            "insert into assignments(title, content, deadline) "
+                + "values(?, ?, ?)")) {
+
       preparedstatement.setString(1, assignment.getTitle());
       preparedstatement.setString(2, assignment.getContent());
       preparedstatement.setDate(3, assignment.getDeadline());
@@ -40,9 +39,10 @@ public class AssignmentDaoImpl implements AssignmentDao {
 
   @Override
   public int delete(int key) {
-    try (PreparedStatement preparedstatement = connection.prepareStatement(
-        "delete from assignments where assignment_no = ?"
-    )) {
+    try (Connection connection = dbConnectionPool.getConnection();
+        PreparedStatement preparedstatement = connection.prepareStatement(
+            "delete from assignments where assignment_no = ?"
+        )) {
       preparedstatement.setInt(1, key);
       return preparedstatement.executeUpdate();
     } catch (Exception e) {
@@ -55,9 +55,10 @@ public class AssignmentDaoImpl implements AssignmentDao {
 
     List<Assignment> assignments = new ArrayList<>();
 
-    try (PreparedStatement preparedstatement = connection.prepareStatement(
-        "select * from assignments order by assignment_no desc"
-    )) {
+    try (Connection connection = dbConnectionPool.getConnection();
+        PreparedStatement preparedstatement = connection.prepareStatement(
+            "select * from assignments order by assignment_no desc"
+        )) {
       ResultSet resultSet = preparedstatement.executeQuery();
       while (resultSet.next()) {
         Assignment assignment = new Assignment();
@@ -77,9 +78,10 @@ public class AssignmentDaoImpl implements AssignmentDao {
 
   @Override
   public Assignment findBy(int key) {
-    try (PreparedStatement preparedstatement = connection.prepareStatement(
-        "select * from assignments where assignment_no = ? "
-    )) {
+    try (Connection connection = dbConnectionPool.getConnection();
+        PreparedStatement preparedstatement = connection.prepareStatement(
+            "select * from assignments where assignment_no = ? "
+        )) {
       preparedstatement.setInt(1, key);
       ResultSet resultSet = preparedstatement.executeQuery();
       if (resultSet.next()) {
@@ -100,11 +102,11 @@ public class AssignmentDaoImpl implements AssignmentDao {
 
   @Override
   public int update(Assignment assignment) {
-
-    try (PreparedStatement preparedstatement = connection.prepareStatement(
-        "update assignments set title = ?, content = ?, deadline = ?"
-            + "where assignment_no = ?"
-    )) {
+    try (Connection connection = dbConnectionPool.getConnection();
+        PreparedStatement preparedstatement = connection.prepareStatement(
+            "update assignments set title = ?, content = ?, deadline = ?"
+                + "where assignment_no = ?"
+        )) {
       preparedstatement.setString(1, assignment.getTitle());
       preparedstatement.setString(2, assignment.getContent());
       preparedstatement.setDate(3, assignment.getDeadline());
@@ -114,6 +116,5 @@ public class AssignmentDaoImpl implements AssignmentDao {
     } catch (Exception e) {
       throw new DaoException("Data Loading Error", e);
     }
-
   }
 }
