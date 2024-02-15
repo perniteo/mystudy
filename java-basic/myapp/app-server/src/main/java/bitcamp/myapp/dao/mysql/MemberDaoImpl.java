@@ -107,7 +107,7 @@ public class MemberDaoImpl implements MemberDao {
 
     try (Connection connection = dbConnectionPool.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(
-            "select * from where member_no = ?"
+            "select * from members where member_no = ?"
         )) {
       preparedStatement.setInt(1, key);
 
@@ -125,6 +125,34 @@ public class MemberDaoImpl implements MemberDao {
       }
     } catch (Exception e) {
       throw new DaoException("data Loading err", e);
+    }
+    return null;
+  }
+
+  @Override
+  public Member findByEmailAndPassword(String email, String password) {
+
+    try (Connection connection = dbConnectionPool.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(
+            "select member_no, email, name, join_date from members "
+                + "where email = ? and password = sha2(?, 256)"
+        )) {
+      preparedStatement.setString(1, email);
+      preparedStatement.setString(2, password);
+
+      ResultSet rs = preparedStatement.executeQuery();
+
+      if (rs.next()) {
+        Member member = new Member();
+        member.setNo(rs.getInt("member_no"));
+        member.setEmail(rs.getString("email"));
+        member.setName(rs.getString("name"));
+        member.setCreatedDate(rs.getDate("join_date"));
+        return member;
+      }
+
+    } catch (Exception e) {
+      throw new DaoException("error");
     }
     return null;
   }

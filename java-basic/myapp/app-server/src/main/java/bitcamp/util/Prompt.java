@@ -13,6 +13,7 @@ public class Prompt implements AutoCloseable {
   private final DataOutputStream out;
   private final StringWriter stringWriter = new StringWriter();
   private final PrintWriter writer = new PrintWriter(stringWriter);
+  private final Session session = new Session();
   Stack<String> stack = new Stack<>();
 
   public Prompt(DataInputStream in, DataOutputStream out) {
@@ -110,4 +111,9 @@ public class Prompt implements AutoCloseable {
     writer.close();
     stringWriter.close();
   }
+
+  public Session getSession() {
+    return this.session;
+  }
+
 }

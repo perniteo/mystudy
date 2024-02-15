@@ -1,5 +1,10 @@
 -- DDL (Data Definition Language)
 
+drop table if exists boards restrict;
+drop table if exists board_files restrict;
+drop table if exists assignments restrict;
+drop table if exists members restrict;
+
 create table assignments(
 assignment_no int primary key auto_increment,
 title varchar(255) not null,
@@ -11,7 +16,7 @@ create table boards(
 board_no int primary key auto_increment,
 title varchar(255) not null,
 content text not null,
-writer varchar(30) not null,
+writer int not null,
 category int not null,
 created_date datetime null default now()
 );
@@ -38,10 +43,18 @@ password varchar(100) not null,
 join_date datetime null default now()
 );
 
-select b.board_no, b.title, b.writer, b.created_date, count(file_no) as fileCount
-from boards b
-left join board_files f
-on b.board_no = f.board_no
-where b.category = 1
-group by board_no
-order by board_no desc;
+alter table members
+  add constraint primary key (member_no),
+  modify column member_no int not null auto_increment;
+
+
+--select b.board_no, b.title, b.writer, b.created_date, count(file_no) as fileCount
+--from boards b
+--left join board_files f
+--on b.board_no = f.board_no
+--where b.category = 1
+--group by board_no
+--order by board_no desc;
+
+alter table boards
+  add constraint boards_fk foreign key (writer) references members(member_no);

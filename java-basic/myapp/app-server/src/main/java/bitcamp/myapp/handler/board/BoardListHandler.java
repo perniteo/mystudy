@@ -26,7 +26,7 @@ public class BoardListHandler extends AbstractMenuHandler {
       prompt.printf("%-4s\t%-17s%s\t\t%s\t%5$d\n",
           board.getNo(),
           board.getTitle(),
-          board.getWriter(),
+          board.getWriter().getName(),
           board.getCreatedDate(),
           board.getFileCount());
 

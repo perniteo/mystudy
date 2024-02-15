@@ -58,6 +58,11 @@ public class MemberDaoImpl extends AbstractDao<Member> implements MemberDao {
     return this.list.get(index);
   }
 
+  @Override
+  public Member findByEmailAndPassword(String email, String password) {
+    return null;
+  }
+
   public int indexOf(int key) {
     for (int i = 0; i < list.size(); i++) {
       if (list.get(i).getNo() == key) {

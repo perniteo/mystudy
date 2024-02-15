@@ -11,7 +11,7 @@ public class Board implements Serializable {
   private static final long serialVersionUID = 1L;
   private String title;
   private String content;
-  private String writer;
+  private Member writer;
   private Date createdDate;
   private int no;
   private List<AttachedFile> files;
@@ -62,11 +62,11 @@ public class Board implements Serializable {
     this.content = content;
   }
 
-  public String getWriter() {
+  public Member getWriter() {
     return writer;
   }
 
-  public void setWriter(String writer) {
+  public void setWriter(Member writer) {
     this.writer = writer;
   }
 

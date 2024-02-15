@@ -3,6 +3,7 @@ package bitcamp.myapp.dao.mysql;
 import bitcamp.myapp.dao.BoardDao;
 import bitcamp.myapp.dao.DaoException;
 import bitcamp.myapp.vo.Board;
+import bitcamp.myapp.vo.Member;
 import bitcamp.util.DBConnectionPool;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,7 +30,7 @@ public class BoardDaoImpl implements BoardDao {
         )) {
       preparedStatement.setString(1, board.getTitle());
       preparedStatement.setString(2, board.getContent());
-      preparedStatement.setString(3, board.getWriter());
+      preparedStatement.setInt(3, board.getWriter().getNo());
       preparedStatement.setInt(4, category);
 //      Statement statement = connection.createStatement();
 //      statement.executeUpdate(String.format(
@@ -75,11 +76,13 @@ public class BoardDaoImpl implements BoardDao {
             "select\n"
                 + "  b.board_no,\n"
                 + "  b.title,\n"
-                + "  b.writer,\n"
                 + "  b.created_date,\n"
-                + "  count(file_no) file_count\n"
+                + "  count(file_no) file_count,\n"
+                + "  m.member_no,\n"
+                + "  m.name\n"
                 + "from\n"
-                + "  boards b left outer join board_files bf on b.board_no=bf.board_no\n"
+                + "  boards b left outer join board_files bf on b.board_no = bf.board_no\n"
+                + "  inner join members m on b.writer = m.member_no\n"
                 + "where\n"
                 + "  b.category=?\n"
                 + "group by\n"
@@ -95,9 +98,14 @@ public class BoardDaoImpl implements BoardDao {
           Board board = new Board();
           board.setNo(rs.getInt("board_no"));
           board.setTitle(rs.getString("title"));
-          board.setWriter(rs.getString("writer"));
           board.setCreatedDate(rs.getDate("created_date"));
           board.setFileCount(rs.getInt("file_count"));
+
+          Member writer = new Member();
+          writer.setNo(rs.getInt("member_no"));
+          writer.setName("name");
+
+          board.setWriter(writer);
 
           boards.add(board);
         }
@@ -113,7 +121,16 @@ public class BoardDaoImpl implements BoardDao {
   public Board findBy(int key) {
     try (Connection connection = dbConnectionPool.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(
-            "select * from boards where board_no = ?"
+            "select"
+                + "  b.board_no,\n"
+                + "  b.title,\n"
+                + "  b.content,"
+                + "  b.created_date,\n"
+                + "  m.member_no,\n"
+                + "  m.name\n"
+                + " from "
+                + "  boards b inner join members m on b.writer=m.member_no\n"
+                + " where board_no=?"
         )) {
       preparedStatement.setInt(1, key);
 
@@ -123,8 +140,13 @@ public class BoardDaoImpl implements BoardDao {
         board.setNo(resultSet.getInt("board_no"));
         board.setTitle(resultSet.getString("title"));
         board.setContent(resultSet.getString("content"));
-        board.setWriter(resultSet.getString("writer"));
         board.setCreatedDate(resultSet.getDate("created_date"));
+
+        Member writer = new Member();
+        writer.setNo(resultSet.getInt("member_no"));
+        writer.setName(resultSet.getString("name"));
+
+        board.setWriter(writer);
 
         return board;
       }
@@ -138,13 +160,12 @@ public class BoardDaoImpl implements BoardDao {
   public int update(Board board) {
     try (Connection connection = dbConnectionPool.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(
-            "update boards set title = ?, content = ?, writer = ?"
+            "update boards set title = ?, content = ? "
                 + "where board_no = ?"
         )) {
       preparedStatement.setString(1, board.getTitle());
       preparedStatement.setString(2, board.getContent());
-      preparedStatement.setString(3, board.getWriter());
-      preparedStatement.setInt(4, board.getNo());
+      preparedStatement.setInt(3, board.getNo());
 
       return preparedStatement.executeUpdate();
 

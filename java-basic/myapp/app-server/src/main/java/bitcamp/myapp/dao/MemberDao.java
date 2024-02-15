@@ -14,4 +14,6 @@ public interface MemberDao {
   List<Member> findAll();
 
   Member findBy(int key);
+
+  Member findByEmailAndPassword(String email, String password);
 }

@@ -2,10 +2,9 @@ package bitcamp.menu;
 
 import bitcamp.util.Prompt;
 
-
 public class MenuItem extends AbstractMenu {
 
-  MenuHandler menuHandler;
+  private MenuHandler menuHandler;
 
   public MenuItem(String title) {
     super(title);

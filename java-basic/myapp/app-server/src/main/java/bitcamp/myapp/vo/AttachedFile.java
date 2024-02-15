@@ -2,9 +2,9 @@ package bitcamp.myapp.vo;
 
 public class AttachedFile {
 
+  private int boardNo;
   private int no;
   private String filePath;
-  private int boardNo;
 
   public int getNo() {
     return no;
@@ -33,5 +33,10 @@ public class AttachedFile {
 
   public void setBoardNo(int boardNo) {
     this.boardNo = boardNo;
+  }
+
+  public AttachedFile boardNo(int boardNo) {
+    this.boardNo = boardNo;
+    return this;
   }
 }

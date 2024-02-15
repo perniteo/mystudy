@@ -1,6 +1,8 @@
 package bitcamp.menu;
 
 
+import bitcamp.myapp.vo.Member;
+import bitcamp.util.AnsiEscape;
 import bitcamp.util.Prompt;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -31,6 +33,17 @@ public class MenuGroup extends AbstractMenu {
     return menuGroup;
   }
 
+  private String getLoginUsername(Prompt prompt) {
+//    Member loginUser = prompt.getLoginUser();
+//    Member loginUser = (Member) prompt.getAttribute("loginUser");
+    Member loginUser = (Member) prompt.getSession().getAttr("loginUser");
+    if (loginUser != null) {
+      return AnsiEscape.ANSI_BOLD_RED + loginUser.getName() + ":" + AnsiEscape.ANSI_CLEAR;
+    } else {
+      return "";
+    }
+  }
+
   @Override
   public void execute(Prompt prompt) throws Exception {
 
@@ -39,7 +52,7 @@ public class MenuGroup extends AbstractMenu {
     this.printMenu(prompt);
 
     while (true) {
-      String input = prompt.input("%s> ", prompt.getMenuPath());
+      String input = prompt.input("%s%s>", getLoginUsername(prompt), prompt.getMenuPath());
 
       if (input.equals("menu")) {
         this.printMenu(prompt);
@@ -50,20 +63,20 @@ public class MenuGroup extends AbstractMenu {
 
       try {
         int menuNum = Integer.parseInt(input);
-//        if (menuNum < 1 || menuNum > menus.size()) {
-//          System.out.println("wrong input");
-//          continue;
-//        }
+        if (menuNum < 1 || menuNum > menus.size()) {
+          System.out.println("wrong input");
+          continue;
+        }
 
         this.menus.get(menuNum - 1).execute(prompt);
 
       } catch (Exception e) {
         System.out.println("wrong input");
+        e.printStackTrace();
       }
-
     }
-    prompt.popPath();
 
+    prompt.popPath();
   }
 
   private void printMenu(Prompt prompt) {
