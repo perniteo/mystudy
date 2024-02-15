@@ -3,10 +3,10 @@ package bitcamp.myapp.handler;
 import bitcamp.menu.AbstractMenuHandler;
 import bitcamp.util.Prompt;
 
-public class HelpHandler extends AbstractMenuHandler {
+public class AboutHandler extends AbstractMenuHandler {
 
   @Override
   protected void action(Prompt prompt) {
-    prompt.println("아무 도움을 줄 수 없음");
+    prompt.println("비트캠프 네이버 데브옵스 과정 5기");
   }
 }

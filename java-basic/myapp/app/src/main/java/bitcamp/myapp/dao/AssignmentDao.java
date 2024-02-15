@@ -14,6 +14,4 @@ public interface AssignmentDao {
   Assignment findBy(int key);
 
   int update(Assignment assignment);
-
-  int indexOf(int key);
 }

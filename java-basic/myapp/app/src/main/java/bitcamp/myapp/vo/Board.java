@@ -3,6 +3,7 @@ package bitcamp.myapp.vo;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class Board implements Serializable {
 
@@ -10,19 +11,39 @@ public class Board implements Serializable {
   private static final long serialVersionUID = 1L;
   private String title;
   private String content;
-  private String writer;
-  private Date createDate;
+  private Member writer;
+  private Date createdDate;
   private int no;
+  private List<AttachedFile> files;
+  private int fileCount;
 
-  public static Board createFromCsv(String csv) {
-    String[] values = csv.split(",");
-    Board obj = new Board();
-    obj.setTitle(values[0]);
-    obj.setContent(values[1]);
-    obj.setWriter(values[2]);
-    obj.setCreatedDate(new Date(Long.parseLong(values[3])));
-//    obj.setNo(values[4]);
-    return obj;
+  public List<AttachedFile> getFiles() {
+    return files;
+  }
+
+  public void setFiles(List<AttachedFile> files) {
+    this.files = files;
+  }
+
+  public int getFileCount() {
+    return fileCount;
+  }
+
+  public void setFileCount(int fileCount) {
+    this.fileCount = fileCount;
+  }
+
+  @Override
+  public String toString() {
+    return "Board{" +
+        "no=" + no +
+        ", title='" + title + '\'' +
+        ", content='" + content + '\'' +
+        ", writer='" + writer + '\'' +
+        ", createdDate=" + createdDate +
+        ", files=" + files +
+        ", fileCount=" + fileCount +
+        '}';
   }
 
   public String getTitle() {
@@ -41,20 +62,20 @@ public class Board implements Serializable {
     this.content = content;
   }
 
-  public String getWriter() {
+  public Member getWriter() {
     return writer;
   }
 
-  public void setWriter(String writer) {
+  public void setWriter(Member writer) {
     this.writer = writer;
   }
 
   public Date getCreatedDate() {
-    return createDate;
+    return createdDate;
   }
 
   public void setCreatedDate(Date createdDate) {
-    this.createDate = createdDate;
+    this.createdDate = createdDate;
   }
 
   public int getNo() {

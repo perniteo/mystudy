@@ -15,6 +15,5 @@ public interface MemberDao {
 
   Member findBy(int key);
 
-  int indexOf(int key);
-
+  Member findByEmailAndPassword(String email, String password);
 }

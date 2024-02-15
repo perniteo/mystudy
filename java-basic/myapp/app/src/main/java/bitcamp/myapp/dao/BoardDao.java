@@ -14,6 +14,4 @@ public interface BoardDao {
   Board findBy(int key);
 
   int update(Board board);
-
-  int indexOf(int key);
 }

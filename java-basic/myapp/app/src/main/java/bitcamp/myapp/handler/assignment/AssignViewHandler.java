@@ -8,7 +8,10 @@ import bitcamp.util.Prompt;
 public class AssignViewHandler extends AbstractMenuHandler {
 
   AssignmentDao assignmentDao;
-//  Prompt prompt;
+
+  public AssignViewHandler(AssignmentDao assignmentDao) {
+    this.assignmentDao = assignmentDao;
+  }
 
   public AssignViewHandler(AssignmentDao assignmentDao, Prompt prompt) {
     super(prompt);
@@ -16,20 +19,16 @@ public class AssignViewHandler extends AbstractMenuHandler {
   }
 
   @Override
-  protected void action() throws Exception {
-//    System.out.printf("[%s]", menu.getTitle());
-    int key = this.prompt.inputInt("몇 번을 조회?(0 ~)");
+  protected void action(Prompt prompt) throws Exception {
+
+    int key = prompt.inputInt("몇 번을 조회?(1 ~)");
 
     Assignment assignment = this.assignmentDao.findBy(key);
 
-//    if (assignment == null) {
-//      System.out.println("유효하지 않은 입력입니다.");
-//      return;
-//    }
-    System.out.printf("Key: %s\n", assignment.getNo());
-    System.out.printf("제목: %s\n", assignment.getTitle());
-    System.out.printf("내용: %s\n", assignment.getContent());
-    System.out.printf("마감기한: %s\n", assignment.getDeadline());
+    prompt.printf("Key: %s\n", assignment.getNo());
+    prompt.printf("제목: %s\n", assignment.getTitle());
+    prompt.printf("내용: %s\n", assignment.getContent());
+    prompt.printf("마감기한: %s\n", assignment.getDeadline());
 
   }
 }

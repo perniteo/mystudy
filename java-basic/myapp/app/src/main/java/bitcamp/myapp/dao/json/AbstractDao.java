@@ -14,7 +14,6 @@ public abstract class AbstractDao<T> {
 
   private final String filepath;
   protected ArrayList<T> list;
-  private int lastKey;
 
   public AbstractDao(String filepath) {
     this.filepath = filepath;
@@ -22,17 +21,10 @@ public abstract class AbstractDao<T> {
   }
 
   protected void loadData() {
-//    Class<?> clazz = this.getClass();
-//    ParameterizedType type = (ParameterizedType) clazz.getGenericSuperclass();
-//    Type[] types = type.getActualTypeArguments();
-//    for (Type t : types) {
-//      System.out.println(t.getTypeName());
-//    }\
+
     long start = 0;
 
     try (BufferedReader in = new BufferedReader((new FileReader(filepath)))) {
-//      List<E> list = (List<E>) in.readObject();
-//      dataList.addAll((List<E>) in.readObject());
       start = System.currentTimeMillis();
 
       StringBuilder sb = new StringBuilder();

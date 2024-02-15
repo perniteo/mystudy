@@ -23,6 +23,10 @@ dependencies {
 
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+    implementation 'com.mysql:mysql-connector-j:8.3.0'
+
+    implementation 'com.oracle.database.jdbc:ojdbc11:21.11.0.0'
+
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:32.1.1-jre'
 
@@ -31,6 +35,8 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.15.3'
 
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.1'
+
+    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:9.0.85'
 }
 
 // Apply a specific Java toolchain to ease working on different environments.

@@ -14,15 +14,6 @@ public class Assignment implements Serializable {
   private String content;
   private Date deadline;
 
-  public static Assignment createFromCsv(String csv) {
-    String[] values = csv.split(",");
-    Assignment obj = new Assignment();
-    obj.setTitle(values[0]);
-    obj.setContent(values[1]);
-    obj.setDeadline(Date.valueOf(values[2]));
-    return obj;
-  }
-
   public String getTitle() {
     return title;
   }
@@ -55,13 +46,4 @@ public class Assignment implements Serializable {
     this.no = no;
   }
 
-//  @Override
-//  public String toCsvString() {
-//    return String.format("%s,%s,%s", this.title, this.content, this.deadline);
-//  }
-//  public void assingment(String title, String content, String deadline) {
-//    this.title = title;
-//    this.content = content;
-//    this.deadline = deadline;
-//  }
 }

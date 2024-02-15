@@ -8,23 +8,24 @@ public class MemberDeleteHandler extends AbstractMenuHandler {
 
   private final MemberDao memberDao;
 
+  public MemberDeleteHandler(MemberDao memberDao) {
+    this.memberDao = memberDao;
+  }
+
   public MemberDeleteHandler(MemberDao memberDao, Prompt prompt) {
     super(prompt);
     this.memberDao = memberDao;
   }
 
   @Override
-  protected void action() throws Exception {
-//    System.out.printf("[%s]", menu.getTitle());
+  protected void action(Prompt prompt) throws Exception {
 
-    int key = this.prompt.inputInt("몇 번을 삭제?(0 ~)");
-//    if (objectRepository.remove(index) == null) {
-//      System.out.println("유효하지 않은 입력입니다.");
-//    }
+    int key = prompt.inputInt("몇 번을 삭제?(1 ~)");
+
     if (this.memberDao.delete(key) == 0) {
-      System.out.println("Wrong input");
+      prompt.println("Wrong input");
     } else {
-      System.out.println("Delete success");
+      prompt.println("Delete success");
     }
 
   }

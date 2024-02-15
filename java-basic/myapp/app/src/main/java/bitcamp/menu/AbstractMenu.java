@@ -1,16 +1,12 @@
 package bitcamp.menu;
 
 
-import java.util.Stack;
-
 public abstract class AbstractMenu implements Menu {
 
-  protected Stack<String> breadcrumb;
   private String title;
 
-  public AbstractMenu(String title, Stack<String> breadcrumb) {
+  public AbstractMenu(String title) {
     this.title = title;
-    this.breadcrumb = breadcrumb;
   }
 
   @Override
@@ -22,7 +18,4 @@ public abstract class AbstractMenu implements Menu {
     this.title = title;
   }
 
-  public String getMenuPath() {
-    return String.join("/", breadcrumb.toArray(new String[0]));
-  }
 }

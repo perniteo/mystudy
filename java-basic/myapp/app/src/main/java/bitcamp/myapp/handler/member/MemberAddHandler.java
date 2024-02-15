@@ -8,8 +8,11 @@ import java.util.Date;
 
 public class MemberAddHandler extends AbstractMenuHandler {
 
-  //  Prompt prompt;
   private final MemberDao memberDao;
+
+  public MemberAddHandler(MemberDao memberDao) {
+    this.memberDao = memberDao;
+  }
 
   public MemberAddHandler(MemberDao memberDao, Prompt prompt) {
     super(prompt);
@@ -17,13 +20,12 @@ public class MemberAddHandler extends AbstractMenuHandler {
   }
 
   @Override
-  protected void action() throws Exception {
-//    System.out.printf("[%s]", menu.getTitle());
+  protected void action(Prompt prompt) throws Exception {
     Member member = new Member();
 
-    member.setEmail(this.prompt.input("이메일: "));
-    member.setName(this.prompt.input("이름: "));
-    member.setPassword(this.prompt.input("암호: "));
+    member.setEmail(prompt.input("이메일: "));
+    member.setName(prompt.input("이름: "));
+    member.setPassword(prompt.input("암호: "));
     member.setCreatedDate(new Date());
 
     this.memberDao.add(member);

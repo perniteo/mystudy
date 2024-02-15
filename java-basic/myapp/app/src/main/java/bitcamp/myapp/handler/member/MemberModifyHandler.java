@@ -8,7 +8,10 @@ import bitcamp.util.Prompt;
 public class MemberModifyHandler extends AbstractMenuHandler {
 
   private final MemberDao memberDao;
-//  Prompt prompt;
+
+  public MemberModifyHandler(MemberDao memberDao) {
+    this.memberDao = memberDao;
+  }
 
   public MemberModifyHandler(MemberDao memberDao, Prompt prompt) {
     super(prompt);
@@ -16,33 +19,28 @@ public class MemberModifyHandler extends AbstractMenuHandler {
   }
 
   @Override
-  protected void action() throws Exception {
-//    System.out.printf("[%s]", menu.getTitle());
+  protected void action(Prompt prompt) throws Exception {
 
-    int index = this.prompt.inputInt("몇 번을 변경?(0 ~");
+    int index = prompt.inputInt("몇 번을 변경?(1 ~) ");
 
     Member oldMember = this.memberDao.findBy(index);
 
     if (oldMember == null) {
-      System.out.println("Wrong input key");
+      prompt.println("Wrong input key");
       return;
     }
-//    if (oldMember == null) {
-//      System.out.println("유효하지 않은 입력입니다.");
-//      return;
-//    }
 
     Member member = new Member();
     member.setNo(oldMember.getNo());
-    member.setEmail(this.prompt.input("이메일(%s) :", member.getEmail()));
-    member.setName(this.prompt.input("이름(%s) :", member.getName()));
-    member.setPassword(this.prompt.input("암호(%s) :", member.getPassword()));
+    member.setEmail(prompt.input("이메일(%s) :", oldMember.getEmail()));
+    member.setName(prompt.input("이름(%s) :", oldMember.getName()));
+    member.setPassword(prompt.input("암호(%s) :", oldMember.getPassword()));
     member.setCreatedDate(oldMember.getCreatedDate());
 
     if (this.memberDao.update(member) == 0) {
-      System.out.println("Wrong input");
+      prompt.println("Wrong input");
     } else {
-      System.out.println("Update success");
+      prompt.println("Update success");
     }
   }
 

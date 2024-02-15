@@ -1,7 +1,10 @@
 package bitcamp.menu;
 
+import bitcamp.util.Prompt;
+
 public interface MenuHandler {
 
-  public abstract void action(Menu menu) throws Exception;
+  default void action(Menu menu, Prompt prompt) throws Exception {
 
+  }
 }

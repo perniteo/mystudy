@@ -1,31 +1,44 @@
 package bitcamp.myapp.handler.board;
 
 import bitcamp.menu.AbstractMenuHandler;
+import bitcamp.myapp.dao.AttachedFileDao;
 import bitcamp.myapp.dao.BoardDao;
+import bitcamp.myapp.vo.Board;
+import bitcamp.myapp.vo.Member;
 import bitcamp.util.Prompt;
 
 public class BoardDeleteHandler extends AbstractMenuHandler {
 
   private final BoardDao boardDao;
-//  Prompt prompt;
+  private final AttachedFileDao attachedFileDao;
 
-  public BoardDeleteHandler(BoardDao boardDao, Prompt prompt) {
-    super(prompt);
+  public BoardDeleteHandler(BoardDao boardDao, AttachedFileDao attachedFileDao) {
     this.boardDao = boardDao;
+    this.attachedFileDao = attachedFileDao;
   }
 
   @Override
-  protected void action() throws Exception {
-//    System.out.printf("[%s]", menu.getTitle());
+  protected void action(Prompt prompt) throws Exception {
 
-    int key = this.prompt.inputInt("몇 번을 삭제?(0 ~)");
-//    if (this.objectRepository.remove(index) == null) {
-//      System.out.println("유효하지 않은 입력입니다.");
-//    }
+    Member loginUser = (Member) prompt.getSession().getAttr("loginUser");
+
+    int key = prompt.inputInt("몇 번을 삭제?(1 ~)");
+    Board board = boardDao.findBy(key);
+
+    if (loginUser == null) {
+      prompt.println("로그인 후 사용 가능");
+      return;
+    } else if (board.getWriter().getNo() != loginUser.getNo()) {
+      prompt.println("접근 권한이 없습니다");
+      return;
+    }
+
+    attachedFileDao.deleteAll(key);
+
     if (this.boardDao.delete(key) == 0) {
-      System.out.println("Wrong input");
+      prompt.println("Wrong input");
     } else {
-      System.out.println("Delete success");
+      prompt.println("Delete success");
     }
   }
 
