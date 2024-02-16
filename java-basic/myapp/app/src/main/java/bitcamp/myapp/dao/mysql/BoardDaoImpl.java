@@ -103,7 +103,7 @@ public class BoardDaoImpl implements BoardDao {
 
           Member writer = new Member();
           writer.setNo(rs.getInt("member_no"));
-          writer.setName("name");
+          writer.setName(rs.getString("name"));
 
           board.setWriter(writer);
 

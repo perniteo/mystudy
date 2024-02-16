@@ -18,6 +18,7 @@ public class AttachedFileDaoImpl implements AttachedFileDao {
     this.dbConnectionPool = dbConnectionPool;
   }
 
+
   @Override
   public void add(AttachedFile file) {
     try (Connection connection = dbConnectionPool.getConnection();
@@ -108,7 +109,32 @@ public class AttachedFileDaoImpl implements AttachedFileDao {
         files.add(file);
       }
       return files;
-      
+
+    } catch (Exception e) {
+      throw new DaoException("Data Loading Error", e);
+    }
+  }
+
+  @Override
+  public AttachedFile findByNo(int no) {
+    try (Connection connection = dbConnectionPool.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(
+            "select file_no, file_path, board_no "
+                + "from board_files where file_no = ?"
+        )) {
+      preparedStatement.setInt(1, no);
+
+      ResultSet resultSet = preparedStatement.executeQuery();
+
+      if (resultSet.next()) {
+        AttachedFile file = new AttachedFile();
+        file.setNo(resultSet.getInt("file_no"));
+        file.setFilePath(resultSet.getString("file_path"));
+        file.setBoardNo(resultSet.getInt("board_no"));
+
+        return file;
+      }
+      return null;
     } catch (Exception e) {
       throw new DaoException("Data Loading Error", e);
     }

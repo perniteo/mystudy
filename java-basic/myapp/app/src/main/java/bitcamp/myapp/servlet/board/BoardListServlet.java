@@ -1,4 +1,4 @@
-package bitcamp.myapp.servlet;
+package bitcamp.myapp.servlet.board;
 
 import bitcamp.myapp.dao.BoardDao;
 import bitcamp.myapp.dao.mysql.BoardDaoImpl;
@@ -43,8 +43,8 @@ public class BoardListServlet extends GenericServlet {
     printWriter.println("</head>");
     printWriter.println("<body>");
     printWriter.println("<h1>게시글</h1>");
-    printWriter.println("</body>");
-    printWriter.println("</html>");
+
+    printWriter.println("<a href ='/board/form.html'>새 글</a>");
 
     try {
       printWriter.println("<table border='1'>");
@@ -58,7 +58,7 @@ public class BoardListServlet extends GenericServlet {
 
       for (Board board : list) {
         printWriter.printf(
-            "<tr> <td>%d</td> <td>%s</td> <td>%s</td> <td>%s</td> <td>%d</td> </tr>\n",
+            "<tr> <td>%d</td> <td><a href = '/board/view?no=%1$d'>%s</td> <td>%s</td> <td>%s</td> <td>%d</td> </tr>\n",
             board.getNo(),
             board.getTitle(),
             board.getWriter().getName(),
