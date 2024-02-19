@@ -42,7 +42,7 @@ public class MemberDaoImpl implements MemberDao {
 
     try (Connection connection = dbConnectionPool.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(
-            "delete from member where member_no = ?"
+            "delete from members where member_no = ?"
         )) {
       preparedStatement.setInt(1, key);
 
@@ -88,7 +88,7 @@ public class MemberDaoImpl implements MemberDao {
         Member member = new Member();
         member.setNo(resultSet.getInt("member_no"));
         member.setEmail(resultSet.getString("email"));
-        member.setName("name");
+        member.setName(resultSet.getString("name"));
         member.setPassword(resultSet.getString("password"));
         member.setCreatedDate(resultSet.getDate("join_date"));
 
