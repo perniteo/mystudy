@@ -13,12 +13,10 @@ import java.util.List;
 
 public class BoardDaoImpl implements BoardDao {
 
-  private final int category;
   DBConnectionPool dbConnectionPool;
 
-  public BoardDaoImpl(DBConnectionPool dbConnectionPool, int category) {
+  public BoardDaoImpl(DBConnectionPool dbConnectionPool) {
     this.dbConnectionPool = dbConnectionPool;
-    this.category = category;
   }
 
   @Override
@@ -31,7 +29,7 @@ public class BoardDaoImpl implements BoardDao {
       preparedStatement.setString(1, board.getTitle());
       preparedStatement.setString(2, board.getContent());
       preparedStatement.setInt(3, board.getWriter().getNo());
-      preparedStatement.setInt(4, category);
+      preparedStatement.setInt(4, board.getCategory());
 //      Statement statement = connection.createStatement();
 //      statement.executeUpdate(String.format(
 //          "insert into "
@@ -67,7 +65,7 @@ public class BoardDaoImpl implements BoardDao {
   }
 
   @Override
-  public List<Board> findAll() {
+  public List<Board> findAll(int category) {
 
     List<Board> boards = new ArrayList<>();
 

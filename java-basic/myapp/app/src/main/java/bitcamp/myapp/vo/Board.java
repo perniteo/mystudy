@@ -7,8 +7,9 @@ import java.util.List;
 
 public class Board implements Serializable {
 
-  @Serial
   private static final long serialVersionUID = 1L;
+  @Serial
+  private int category;
   private String title;
   private String content;
   private Member writer;
@@ -16,6 +17,14 @@ public class Board implements Serializable {
   private int no;
   private List<AttachedFile> files;
   private int fileCount;
+
+  public int getCategory() {
+    return category;
+  }
+
+  public void setCategory(int category) {
+    this.category = category;
+  }
 
   public List<AttachedFile> getFiles() {
     return files;
@@ -36,11 +45,12 @@ public class Board implements Serializable {
   @Override
   public String toString() {
     return "Board{" +
-        "no=" + no +
+        "category=" + category +
         ", title='" + title + '\'' +
         ", content='" + content + '\'' +
-        ", writer='" + writer + '\'' +
+        ", writer=" + writer +
         ", createdDate=" + createdDate +
+        ", no=" + no +
         ", files=" + files +
         ", fileCount=" + fileCount +
         '}';

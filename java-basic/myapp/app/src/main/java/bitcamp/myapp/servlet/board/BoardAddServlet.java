@@ -31,13 +31,17 @@ public class BoardAddServlet extends HttpServlet {
         "study", "bitcamp!@#123"
     );
     this.txManager = new TransactionManager(connectionPool);
-    this.boardDao = new BoardDaoImpl(connectionPool, 1);
+    this.boardDao = new BoardDaoImpl(connectionPool);
     this.attachedFileDao = new AttachedFileDaoImpl(connectionPool);
   }
 
   @Override
   protected void service(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
       throws ServletException, IOException {
+
+    int category = Integer.parseInt(servletRequest.getParameter("category"));
+
+    String title = category == 1 ? "게시글" : "가입인사";
 
     servletResponse.setContentType("text/html;charset=UTF-8");
 
@@ -50,7 +54,7 @@ public class BoardAddServlet extends HttpServlet {
     printWriter.println("  <title>비트캠프 데브옵스 5기</title>");
     printWriter.println("</head>");
     printWriter.println("<body>");
-    printWriter.println("<h1>게시글</h1>");
+    printWriter.printf("<h1>%s</h1>\n", title);
 
     Member loginUser = (Member) servletRequest.getSession().getAttribute("loginUser");
     if (loginUser == null) {
@@ -61,6 +65,7 @@ public class BoardAddServlet extends HttpServlet {
     }
 
     Board board = new Board();
+    board.setCategory(category);
     board.setTitle(servletRequest.getParameter("title"));
     board.setContent(servletRequest.getParameter("content"));
     board.setWriter(loginUser);
@@ -89,13 +94,13 @@ public class BoardAddServlet extends HttpServlet {
         }
         txManager.commit();
 
-        printWriter.println("<p>게시글 등록 완료</p>");
+        printWriter.println("<p>등록 완료</p>");
 
       } catch (Exception e) {
         try {
           txManager.rollback();
         } catch (Exception e1) {
-          printWriter.println("<p>게시들 등록 실패</p>");
+          printWriter.println("<p>등록 실패</p>");
         }
       }
       printWriter.println("</body>");

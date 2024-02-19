@@ -9,25 +9,6 @@ import bitcamp.myapp.dao.mysql.AssignmentDaoImpl;
 import bitcamp.myapp.dao.mysql.AttachedFileDaoImpl;
 import bitcamp.myapp.dao.mysql.BoardDaoImpl;
 import bitcamp.myapp.dao.mysql.MemberDaoImpl;
-import bitcamp.myapp.handler.AboutHandler;
-import bitcamp.myapp.handler.HelpHandler;
-import bitcamp.myapp.handler.assignment.AssignAddHandler;
-import bitcamp.myapp.handler.assignment.AssignDeleteHandler;
-import bitcamp.myapp.handler.assignment.AssignListHandler;
-import bitcamp.myapp.handler.assignment.AssignModifyHandler;
-import bitcamp.myapp.handler.assignment.AssignViewHandler;
-import bitcamp.myapp.handler.auth.LoginHandler;
-import bitcamp.myapp.handler.auth.LogoutHandler;
-import bitcamp.myapp.handler.board.BoardAddHandler;
-import bitcamp.myapp.handler.board.BoardDeleteHandler;
-import bitcamp.myapp.handler.board.BoardListHandler;
-import bitcamp.myapp.handler.board.BoardModifyHandler;
-import bitcamp.myapp.handler.board.BoardViewHandler;
-import bitcamp.myapp.handler.member.MemberAddHandler;
-import bitcamp.myapp.handler.member.MemberDeleteHandler;
-import bitcamp.myapp.handler.member.MemberListHandler;
-import bitcamp.myapp.handler.member.MemberModifyHandler;
-import bitcamp.myapp.handler.member.MemberViewHandler;
 import bitcamp.util.DBConnectionPool;
 import bitcamp.util.Prompt;
 import bitcamp.util.TransactionManager;
@@ -59,7 +40,7 @@ public class App {
 
   App() throws Exception {
     prepareDatabase();
-    prepareMenu();
+//    prepareMenu();
   }
 
   public static void main(String[] args) throws Exception {
@@ -127,10 +108,10 @@ public class App {
       System.out.println("loading");
       System.out.println("success");
 
-      boardDao = new BoardDaoImpl(dbConnectionPool, 1);
+      boardDao = new BoardDaoImpl(dbConnectionPool);
       assignmentDao = new AssignmentDaoImpl(dbConnectionPool);
       memberDao = new MemberDaoImpl(dbConnectionPool);
-      greetingDao = new BoardDaoImpl(dbConnectionPool, 2);
+      greetingDao = new BoardDaoImpl(dbConnectionPool);
       attachedFileDao = new AttachedFileDaoImpl(dbConnectionPool);
 
 
@@ -141,43 +122,43 @@ public class App {
 
   }
 
-  void prepareMenu() {
-    mainMenu = MenuGroup.getInstance("메인");
-
-    mainMenu.addItem("로그인", new LoginHandler(memberDao));
-    mainMenu.addItem("로그아웃", new LogoutHandler());
-
-    MenuGroup assignmentMenu = mainMenu.addGroup("과제");
-    assignmentMenu.addItem("등록", new AssignAddHandler(txManager, assignmentDao));
-    assignmentMenu.addItem("조회", new AssignViewHandler(assignmentDao));
-    assignmentMenu.addItem("변경", new AssignModifyHandler(assignmentDao));
-    assignmentMenu.addItem("삭제", new AssignDeleteHandler(assignmentDao));
-    assignmentMenu.addItem("목록", new AssignListHandler(assignmentDao));
-
-    MenuGroup boardMenu = mainMenu.addGroup("게시글");
-    boardMenu.addItem("등록", new BoardAddHandler(txManager, boardDao, attachedFileDao));
-    boardMenu.addItem("조회", new BoardViewHandler(boardDao, attachedFileDao));
-    boardMenu.addItem("변경", new BoardModifyHandler(boardDao, attachedFileDao));
-    boardMenu.addItem("삭제", new BoardDeleteHandler(boardDao, attachedFileDao));
-    boardMenu.addItem("목록", new BoardListHandler(boardDao));
-
-    MenuGroup memberMenu = mainMenu.addGroup("회원");
-    memberMenu.addItem("등록", new MemberAddHandler(memberDao));
-    memberMenu.addItem("조회", new MemberViewHandler(memberDao));
-    memberMenu.addItem("변경", new MemberModifyHandler(memberDao));
-    memberMenu.addItem("삭제", new MemberDeleteHandler(memberDao));
-    memberMenu.addItem("목록", new MemberListHandler(memberDao));
-
-    MenuGroup greetingMenu = mainMenu.addGroup("가입인사");
-    greetingMenu.addItem("등록", new BoardAddHandler(txManager, greetingDao, attachedFileDao));
-    greetingMenu.addItem("조회", new BoardViewHandler(greetingDao, attachedFileDao));
-    greetingMenu.addItem("변경", new BoardModifyHandler(greetingDao, attachedFileDao));
-    greetingMenu.addItem("삭제", new BoardDeleteHandler(greetingDao, attachedFileDao));
-    greetingMenu.addItem("목록", new BoardListHandler(greetingDao));
-
-    mainMenu.addItem("도움말", new HelpHandler());
-    mainMenu.addItem("About", new AboutHandler());
-  }
+//  void prepareMenu() {
+//    mainMenu = MenuGroup.getInstance("메인");
+//
+//    mainMenu.addItem("로그인", new LoginHandler(memberDao));
+//    mainMenu.addItem("로그아웃", new LogoutHandler());
+//
+//    MenuGroup assignmentMenu = mainMenu.addGroup("과제");
+//    assignmentMenu.addItem("등록", new AssignAddHandler(txManager, assignmentDao));
+//    assignmentMenu.addItem("조회", new AssignViewHandler(assignmentDao));
+//    assignmentMenu.addItem("변경", new AssignModifyHandler(assignmentDao));
+//    assignmentMenu.addItem("삭제", new AssignDeleteHandler(assignmentDao));
+//    assignmentMenu.addItem("목록", new AssignListHandler(assignmentDao));
+//
+//    MenuGroup boardMenu = mainMenu.addGroup("게시글");
+//    boardMenu.addItem("등록", new BoardAddHandler(txManager, boardDao, attachedFileDao));
+//    boardMenu.addItem("조회", new BoardViewHandler(boardDao, attachedFileDao));
+//    boardMenu.addItem("변경", new BoardModifyHandler(boardDao, attachedFileDao));
+//    boardMenu.addItem("삭제", new BoardDeleteHandler(boardDao, attachedFileDao));
+//    boardMenu.addItem("목록", new BoardListHandler(boardDao));
+//
+//    MenuGroup memberMenu = mainMenu.addGroup("회원");
+//    memberMenu.addItem("등록", new MemberAddHandler(memberDao));
+//    memberMenu.addItem("조회", new MemberViewHandler(memberDao));
+//    memberMenu.addItem("변경", new MemberModifyHandler(memberDao));
+//    memberMenu.addItem("삭제", new MemberDeleteHandler(memberDao));
+//    memberMenu.addItem("목록", new MemberListHandler(memberDao));
+//
+//    MenuGroup greetingMenu = mainMenu.addGroup("가입인사");
+//    greetingMenu.addItem("등록", new BoardAddHandler(txManager, greetingDao, attachedFileDao));
+//    greetingMenu.addItem("조회", new BoardViewHandler(greetingDao, attachedFileDao));
+//    greetingMenu.addItem("변경", new BoardModifyHandler(greetingDao, attachedFileDao));
+//    greetingMenu.addItem("삭제", new BoardDeleteHandler(greetingDao, attachedFileDao));
+//    greetingMenu.addItem("목록", new BoardListHandler(greetingDao));
+//
+//    mainMenu.addItem("도움말", new HelpHandler());
+//    mainMenu.addItem("About", new AboutHandler());
+//  }
 
   void run() throws Exception {
     try (ServerSocket serverSocket = new ServerSocket(7777)) {

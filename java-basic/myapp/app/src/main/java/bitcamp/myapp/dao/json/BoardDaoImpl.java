@@ -35,7 +35,7 @@ public class BoardDaoImpl extends AbstractDao<Board> implements BoardDao {
     return 1;
   }
 
-  public List<Board> findAll() {
+  public List<Board> findAll(int category) {
     return this.list.subList(0, list.size());
   }
 

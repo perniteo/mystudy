@@ -25,7 +25,7 @@ public class BoardFileDeleteServlet extends HttpServlet {
     DBConnectionPool dbConnectionPool = new DBConnectionPool(
         "jdbc:mysql://db-ld250-kr.vpc-pub-cdb.ntruss.com/studydb",
         "study", "bitcamp!@#123");
-    this.boardDao = new BoardDaoImpl(dbConnectionPool, 1);
+    this.boardDao = new BoardDaoImpl(dbConnectionPool);
     this.attachedFileDao = new AttachedFileDaoImpl(dbConnectionPool);
   }
 
@@ -34,6 +34,9 @@ public class BoardFileDeleteServlet extends HttpServlet {
       throws ServletException, IOException {
 
     System.out.println("service() 호출");
+    int category = Integer.parseInt(servletRequest.getParameter("category"));
+
+    String title = category == 1 ? "게시글" : "가입인사";
 
     servletResponse.setContentType("text/html;charset=UTF-8");
 
@@ -46,7 +49,7 @@ public class BoardFileDeleteServlet extends HttpServlet {
     printWriter.println("  <title>비트캠프 데브옵스 5기</title>");
     printWriter.println("</head>");
     printWriter.println("<body>");
-    printWriter.println("<h1>게시글</h1>");
+    printWriter.printf("<h1>%s</h1>", title);
 
     Member loginUser = (Member) servletRequest.getSession().getAttribute("loginUser");
     if (loginUser == null) {

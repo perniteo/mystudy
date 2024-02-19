@@ -22,7 +22,7 @@ public class BoardListServlet extends GenericServlet {
     DBConnectionPool dbConnectionPool = new DBConnectionPool(
         "jdbc:mysql://db-ld250-kr.vpc-pub-cdb.ntruss.com/studydb",
         "study", "bitcamp!@#123");
-    this.boardDao = new BoardDaoImpl(dbConnectionPool, 1);
+    this.boardDao = new BoardDaoImpl(dbConnectionPool);
   }
 
 
@@ -30,6 +30,10 @@ public class BoardListServlet extends GenericServlet {
   public void service(ServletRequest servletRequest, ServletResponse servletResponse)
       throws ServletException, IOException {
     System.out.println("service() 호출");
+
+    int category = Integer.parseInt(servletRequest.getParameter("category"));
+
+    String title = category == 1 ? "게시글" : "가입인사";
 
     servletResponse.setContentType("text/html;charset=UTF-8");
 
@@ -42,9 +46,9 @@ public class BoardListServlet extends GenericServlet {
     printWriter.println("  <title>비트캠프 데브옵스 5기</title>");
     printWriter.println("</head>");
     printWriter.println("<body>");
-    printWriter.println("<h1>게시글</h1>");
+    printWriter.printf("<h1>%s</h1>\n", title);
 
-    printWriter.println("<a href ='/board/form.html'>새 글</a>");
+    printWriter.printf("<a href ='/board/form?category=%d'>새 글</a>\n", category);
 
     try {
       printWriter.println("<table border='1'>");
@@ -54,12 +58,13 @@ public class BoardListServlet extends GenericServlet {
       printWriter.println("    </thead>");
       printWriter.println("    <tbody>");
 
-      List<Board> list = boardDao.findAll();
+      List<Board> list = boardDao.findAll(category);
 
       for (Board board : list) {
         printWriter.printf(
-            "<tr> <td>%d</td> <td><a href = '/board/view?no=%1$d'>%s</td> <td>%s</td> <td>%s</td> <td>%d</td> </tr>\n",
+            "<tr> <td>%d</td> <td><a href = '/board/view?category=%d&no=%1$d'>%s</td> <td>%s</td> <td>%s</td> <td>%d</td> </tr>\n",
             board.getNo(),
+            category,
             board.getTitle(),
             board.getWriter().getName(),
             board.getCreatedDate(),
