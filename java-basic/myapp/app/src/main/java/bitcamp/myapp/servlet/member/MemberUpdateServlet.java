@@ -1,9 +1,7 @@
 package bitcamp.myapp.servlet.member;
 
 import bitcamp.myapp.dao.MemberDao;
-import bitcamp.myapp.dao.mysql.MemberDaoImpl;
 import bitcamp.myapp.vo.Member;
-import bitcamp.util.DBConnectionPool;
 import bitcamp.util.TransactionManager;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -16,15 +14,13 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/member/update")
 public class MemberUpdateServlet extends HttpServlet {
 
-  private final MemberDao memberDao;
-  private final TransactionManager txManager;
+  private MemberDao memberDao;
+  private TransactionManager txManager;
 
-  public MemberUpdateServlet() {
-    DBConnectionPool dbConnectionPool = new DBConnectionPool(
-        "jdbc:mysql://db-ld250-kr.vpc-pub-cdb.ntruss.com/studydb",
-        "study", "bitcamp!@#123");
-    this.memberDao = new MemberDaoImpl(dbConnectionPool);
-    this.txManager = new TransactionManager(dbConnectionPool);
+  @Override
+  public void init() {
+    txManager = (TransactionManager) this.getServletContext().getAttribute("txManager");
+    memberDao = (MemberDao) this.getServletContext().getAttribute("memberDao");
   }
 
   @Override

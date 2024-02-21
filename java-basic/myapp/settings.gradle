@@ -14,5 +14,6 @@ rootProject.name = 'myapp'
 include('app')
 include('app-client')
 include('app-server')
+include('practice')
 //include('app-common')
 //include('app-api')

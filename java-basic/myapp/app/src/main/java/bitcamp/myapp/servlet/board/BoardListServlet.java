@@ -1,9 +1,7 @@
 package bitcamp.myapp.servlet.board;
 
 import bitcamp.myapp.dao.BoardDao;
-import bitcamp.myapp.dao.mysql.BoardDaoImpl;
 import bitcamp.myapp.vo.Board;
-import bitcamp.util.DBConnectionPool;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -16,13 +14,11 @@ import javax.servlet.annotation.WebServlet;
 @WebServlet("/board/list")
 public class BoardListServlet extends GenericServlet {
 
-  private final BoardDao boardDao;
+  private BoardDao boardDao;
 
-  public BoardListServlet() {
-    DBConnectionPool dbConnectionPool = new DBConnectionPool(
-        "jdbc:mysql://db-ld250-kr.vpc-pub-cdb.ntruss.com/studydb",
-        "study", "bitcamp!@#123");
-    this.boardDao = new BoardDaoImpl(dbConnectionPool);
+  @Override
+  public void init() {
+    boardDao = (BoardDao) this.getServletContext().getAttribute("boardDao");
   }
 
 

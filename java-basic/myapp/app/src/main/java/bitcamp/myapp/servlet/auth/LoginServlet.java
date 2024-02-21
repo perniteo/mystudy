@@ -1,45 +1,35 @@
 package bitcamp.myapp.servlet.auth;
 
 import bitcamp.myapp.dao.MemberDao;
-import bitcamp.myapp.dao.mysql.MemberDaoImpl;
 import bitcamp.myapp.vo.Member;
-import bitcamp.util.DBConnectionPool;
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.GenericServlet;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/auth/login")
-public class LoginServlet extends GenericServlet {
+public class LoginServlet extends HttpServlet {
 
   MemberDao memberDao;
 
-  public LoginServlet() {
-    DBConnectionPool connectionPool = new DBConnectionPool(
-        "jdbc:mysql://db-ld250-kr.vpc-pub-cdb.ntruss.com/studydb",
-        "study", "bitcamp!@#123"
-    );
-    this.memberDao = new MemberDaoImpl(connectionPool);
+  @Override
+  public void init() {
+    memberDao = (MemberDao) this.getServletContext().getAttribute("memberDao");
   }
 
   @Override
-  public void service(ServletRequest servletRequest, ServletResponse servletResponse)
+  protected void service(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
       throws ServletException, IOException {
 
-    HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
-    HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
+    servletResponse.setContentType("text/html;charset=UTF-8");
 
-    httpServletResponse.setContentType("text/html;charset=UTF-8");
+    String email = servletRequest.getParameter("email");
+    String password = servletRequest.getParameter("password");
 
-    String email = httpServletRequest.getParameter("email");
-    String password = httpServletRequest.getParameter("password");
-
-    PrintWriter printWriter = httpServletResponse.getWriter();
+    PrintWriter printWriter = servletResponse.getWriter();
 
     printWriter.println("<!DOCTYPE html>");
     printWriter.println("<html lang='en'>");
@@ -54,7 +44,7 @@ public class LoginServlet extends GenericServlet {
     try {
       Member member = memberDao.findByEmailAndPassword(email, password);
       if (member != null) {
-        httpServletRequest.getSession().setAttribute("loginUser", member);
+        servletRequest.getSession().setAttribute("loginUser", member);
         printWriter.printf("<p>%s 님 환영합니다.</p>\n", member.getName());
 
       } else {

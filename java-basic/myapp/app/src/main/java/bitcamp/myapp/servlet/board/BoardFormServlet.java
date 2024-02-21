@@ -1,10 +1,5 @@
 package bitcamp.myapp.servlet.board;
 
-import bitcamp.myapp.dao.AttachedFileDao;
-import bitcamp.myapp.dao.BoardDao;
-import bitcamp.myapp.dao.mysql.AttachedFileDaoImpl;
-import bitcamp.myapp.dao.mysql.BoardDaoImpl;
-import bitcamp.util.DBConnectionPool;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -15,17 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/board/form")
 public class BoardFormServlet extends HttpServlet {
-
-  private final BoardDao boardDao;
-  private final AttachedFileDao attachedFileDao;
-
-  public BoardFormServlet() {
-    DBConnectionPool dbConnectionPool = new DBConnectionPool(
-        "jdbc:mysql://db-ld250-kr.vpc-pub-cdb.ntruss.com/studydb",
-        "study", "bitcamp!@#123");
-    this.boardDao = new BoardDaoImpl(dbConnectionPool);
-    this.attachedFileDao = new AttachedFileDaoImpl(dbConnectionPool);
-  }
 
   @Override
   protected void service(HttpServletRequest servletRequest, HttpServletResponse servletResponse)

@@ -1,10 +1,7 @@
 package bitcamp.myapp.servlet.assignment;
 
 import bitcamp.myapp.dao.AssignmentDao;
-import bitcamp.myapp.dao.mysql.AssignmentDaoImpl;
 import bitcamp.myapp.vo.Assignment;
-import bitcamp.util.DBConnectionPool;
-import bitcamp.util.TransactionManager;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -16,15 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/assignment/delete")
 public class AssignmentDeleteServlet extends HttpServlet {
 
-  private final AssignmentDao assignmentDao;
-  private final TransactionManager txManager;
+  private AssignmentDao assignmentDao;
 
-  public AssignmentDeleteServlet() {
-    DBConnectionPool dbConnectionPool = new DBConnectionPool(
-        "jdbc:mysql://db-ld250-kr.vpc-pub-cdb.ntruss.com/studydb",
-        "study", "bitcamp!@#123");
-    this.assignmentDao = new AssignmentDaoImpl(dbConnectionPool);
-    this.txManager = new TransactionManager(dbConnectionPool);
+  @Override
+  public void init() {
+    assignmentDao = (AssignmentDao) this.getServletContext().getAttribute("assignmentDao");
   }
 
   @Override
