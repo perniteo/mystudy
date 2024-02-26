@@ -5,22 +5,28 @@ import bitcamp.myapp.vo.Member;
 import bitcamp.util.TransactionManager;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.UUID;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
+@MultipartConfig(maxFileSize = 1024 * 1024 * 10)
 @WebServlet("/member/update")
 public class MemberUpdateServlet extends HttpServlet {
 
   private MemberDao memberDao;
   private TransactionManager txManager;
+  private String uploadDir;
 
   @Override
   public void init() {
     txManager = (TransactionManager) this.getServletContext().getAttribute("txManager");
     memberDao = (MemberDao) this.getServletContext().getAttribute("memberDao");
+    uploadDir = this.getServletContext().getRealPath("/upload");
   }
 
   @Override
@@ -72,21 +78,25 @@ public class MemberUpdateServlet extends HttpServlet {
     member.setEmail(servletRequest.getParameter("email"));
     member.setPassword(servletRequest.getParameter("password"));
 
+    Part photoPart = servletRequest.getPart("photo");
+    if (photoPart.getSize() > 0) {
+      String filename = UUID.randomUUID().toString();
+      member.setPhoto(filename);
+      photoPart.write(this.uploadDir + "/" + filename);
+    }
+
     try {
       txManager.startTransaction();
 
       memberDao.update(member);
 
       txManager.commit();
-
-      printWriter.println("<p>회원 정보를 변경했습니다.</p>");
-      servletResponse.setHeader("refresh", "2;url=list");
+      
+      servletResponse.sendRedirect("list");
     } catch (Exception e) {
-      printWriter.println("<p>회원 변경 오류!</p>");
-      printWriter.println("<pre>");
-      printWriter.println(member.getName() + member.getEmail() + member.getPassword());
-      e.printStackTrace(printWriter);
-      printWriter.println("</pre>");
+      servletRequest.setAttribute("message", "변경 오류!");
+      servletRequest.setAttribute("exception", e);
+      servletRequest.getRequestDispatcher("/error").forward(servletRequest, servletResponse);
     }
   }
 }

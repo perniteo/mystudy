@@ -62,7 +62,9 @@ public class BoardViewServlet extends HttpServlet {
 
       List<AttachedFile> list = attachedFileDao.findAllByBoardNo(key);
 
-      printWriter.printf("<form action='/board/update?category=%d' method='post'>", category);
+      printWriter.printf(
+          "<form action='/board/update?category=%d' method='post' enctype='multipart/form-data'>",
+          category);
       printWriter.printf("카테고리: <input name='category' type='text' value='%d'>\n", category);
       printWriter.println("<div>");
       printWriter.println("<label>");
@@ -89,7 +91,8 @@ public class BoardViewServlet extends HttpServlet {
       printWriter.println("</div>");
       printWriter.println("<ul>");
       for (AttachedFile file : list) {
-        printWriter.printf(" <li>%s<a href = '/board/file/delete?category=%d&no=%d'>삭제</a></li>\n",
+        printWriter.printf(
+            " <li><a href = '/upload/board/%s'>%1$s</a> [<a href = '/board/file/delete?category=%d&no=%d'>삭제</a>]</li>\n",
             file.getFilePath(), category, file.getNo());
       }
       printWriter.println("</ul>");

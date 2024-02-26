@@ -8,24 +8,31 @@ import bitcamp.myapp.vo.Member;
 import bitcamp.util.TransactionManager;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.UUID;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
+@MultipartConfig(maxFileSize = 1024 * 1024 * 10)
 @WebServlet("/board/update")
 public class BoardUpdateServlet extends HttpServlet {
 
   private BoardDao boardDao;
   private AttachedFileDao attachedFileDao;
   private TransactionManager txManager;
+  private String uploadDir;
 
   @Override
   public void init() {
     txManager = (TransactionManager) this.getServletContext().getAttribute("txManager");
     boardDao = (BoardDao) this.getServletContext().getAttribute("boardDao");
     attachedFileDao = (AttachedFileDao) this.getServletContext().getAttribute("attachedFileDao");
+    uploadDir = this.getServletContext().getRealPath("/upload/board");
   }
 
   @Override
@@ -59,15 +66,18 @@ public class BoardUpdateServlet extends HttpServlet {
       board.setContent(servletRequest.getParameter("content"));
 
       ArrayList<AttachedFile> attachedFiles = new ArrayList<>();
-      String[] files = servletRequest.getParameterValues("files");
-      if (files != null) {
-        for (String file : files) {
-          if (file.isEmpty()) {
-            continue;
-          }
-          attachedFiles.add(new AttachedFile().filePath(file));
+
+      Collection<Part> parts = servletRequest.getParts();
+
+      for (Part part : parts) {
+        if (!part.getName().equals("files") || part.getSize() == 0) {
+          continue;
         }
+        String filename = UUID.randomUUID().toString();
+        part.write(this.uploadDir + "/" + filename);
+        attachedFiles.add(new AttachedFile().filePath(filename));
       }
+
       txManager.startTransaction();
 
       boardDao.update(board);
@@ -81,7 +91,7 @@ public class BoardUpdateServlet extends HttpServlet {
 
       txManager.commit();
 
-      servletResponse.sendRedirect("/board/list?category=" + category);
+      servletResponse.sendRedirect("/board/view?category=" + category + "&no=" + key);
     } catch (Exception e) {
       try {
         txManager.rollback();

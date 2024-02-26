@@ -30,7 +30,7 @@ public class HeaderServlet extends HttpServlet {
     if (loginUser == null) {
       printWriter.println("  <a href='/auth/login'>로그인</a>");
     } else {
-      printWriter.printf("  <a href='/auth/logout'>%s 로그아웃</a>\n", loginUser.getName());
+      printWriter.printf("%s <a href='/auth/logout'>로그아웃</a>\n", loginUser.getName());
     }
     printWriter.println("</header>");
 

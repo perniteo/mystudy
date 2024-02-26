@@ -4,6 +4,7 @@ import bitcamp.myapp.dao.AttachedFileDao;
 import bitcamp.myapp.dao.BoardDao;
 import bitcamp.myapp.vo.AttachedFile;
 import bitcamp.myapp.vo.Member;
+import java.io.File;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,11 +17,13 @@ public class BoardFileDeleteServlet extends HttpServlet {
 
   private BoardDao boardDao;
   private AttachedFileDao attachedFileDao;
+  private String uploadDir;
 
   @Override
   public void init() {
     boardDao = (BoardDao) this.getServletContext().getAttribute("boardDao");
     attachedFileDao = (AttachedFileDao) this.getServletContext().getAttribute("attachedFileDao");
+    uploadDir = this.getServletContext().getRealPath("/upload/board");
   }
 
   @Override
@@ -56,6 +59,10 @@ public class BoardFileDeleteServlet extends HttpServlet {
       }
 
       attachedFileDao.delete(fileNo);
+
+      new File(this.uploadDir + "/" + file.getFilePath()).delete();
+
+      servletResponse.sendRedirect(servletRequest.getHeader("Referer"));
     } catch (Exception e) {
       servletRequest.setAttribute("message", String.format("%s 첨부파일 삭제 오류!", title));
       servletRequest.setAttribute("exception", e);

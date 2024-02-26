@@ -12,7 +12,28 @@ public class Member implements Serializable {
   private String email;
   private String name;
   private String password;
+  private String photo;
   private Date joinDate;
+
+  @Override
+  public String toString() {
+    return "Member{" +
+        "No=" + No +
+        ", email='" + email + '\'' +
+        ", name='" + name + '\'' +
+        ", password='" + password + '\'' +
+        ", photo='" + photo + '\'' +
+        ", joinDate=" + joinDate +
+        '}';
+  }
+
+  public String getPhoto() {
+    return photo;
+  }
+
+  public void setPhoto(String photo) {
+    this.photo = photo;
+  }
 
   public String getEmail() {
     return email;
@@ -53,5 +74,5 @@ public class Member implements Serializable {
   public void setNo(int no) {
     No = no;
   }
-  
+
 }

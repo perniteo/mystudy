@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,6 +25,14 @@ public class LoginServlet extends HttpServlet {
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
 
+    String email = "";
+    Cookie[] cookies = req.getCookies();
+    for (Cookie cookie : cookies) {
+      if (cookie.getName().equals("email")) {
+        email = cookie.getValue();
+      }
+    }
+
     resp.setContentType("text/html;charset=UTF-8");
 
     PrintWriter printWriter = resp.getWriter();
@@ -41,12 +50,17 @@ public class LoginServlet extends HttpServlet {
     printWriter.println("<h2>로그인</h2>");
     printWriter.println("<form action='/auth/login' method='post'>");
     printWriter.println(" <div>");
-    printWriter.println("  이메일: <input name='email' type='text'>");
+    printWriter.printf("  이메일: <input name='email' type='text' value='%s'>\n", email);
     printWriter.println(" </div>");
     printWriter.println("<div>");
     printWriter.println(" 암호: <input name='password' type='password'>");
     printWriter.println(" </div>");
     printWriter.println("<button>로그인</button>");
+    if (email != null) {
+      printWriter.println("<input name = 'saveEmail' type = 'checkbox' checked> 이메일 저장");
+    } else {
+      printWriter.println("<input name = 'saveEmail' type = 'checkbox'> 이메일 저장");
+    }
     printWriter.println("</form>");
 
     req.getRequestDispatcher("/footer").include(req, resp);
@@ -63,6 +77,17 @@ public class LoginServlet extends HttpServlet {
 
     String email = req.getParameter("email");
     String password = req.getParameter("password");
+    String saveEmail = req.getParameter("saveEmail");
+
+    if (saveEmail != null) {
+      Cookie cookie = new Cookie("email", email);
+      int DAY_SECOND = 86400;
+      cookie.setMaxAge(DAY_SECOND);
+      resp.addCookie(cookie);
+    } else {
+      Cookie cookie = new Cookie("email", "");
+      resp.addCookie(cookie);
+    }
 
     PrintWriter printWriter = resp.getWriter();
 

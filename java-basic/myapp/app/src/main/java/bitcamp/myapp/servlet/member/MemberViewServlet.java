@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 @WebServlet("/member/view")
 public class MemberViewServlet extends HttpServlet {
 
@@ -37,6 +38,9 @@ public class MemberViewServlet extends HttpServlet {
     printWriter.println("  <title>비트캠프 데브옵스 5기</title>");
     printWriter.println("</head>");
     printWriter.println("<body>");
+
+    servletRequest.getRequestDispatcher("/header").include(servletRequest, servletResponse);
+
     printWriter.println("<h1>회원</h1>");
 
     int key = Integer.parseInt(servletRequest.getParameter("no"));
@@ -51,7 +55,13 @@ public class MemberViewServlet extends HttpServlet {
 
 //    List<AttachedFile> list = attachedFileDao.findAllByBoardNo(key);
 
-    printWriter.println("<form action='/member/update' method='post'>");
+    printWriter.println(
+        "<form action='/member/update' method='post' enctype='multipart/form-data'>");
+    printWriter.println("<div>");
+    printWriter.printf(
+        "사진: <img src='/upload/%s' height = '150px'><br> <input name = 'photo' type = 'file'>\n",
+        member.getPhoto() == null ? "/img/default-photo.jpeg" : member.getPhoto());
+    printWriter.println("</div>");
     printWriter.println("<div>");
     printWriter.println("<label>");
     printWriter.printf("  번호: <input readonly name='no' type='text' value='%d'>\n",
@@ -74,19 +84,16 @@ public class MemberViewServlet extends HttpServlet {
     printWriter.printf(" 암호: <input name='password' type = 'password' value = '' required>\n");
     printWriter.println(" </div>");
     printWriter.println("<div>");
-    printWriter.printf("가입일: <input readonly type = 'text' value = '%s'>", member.getCreatedDate());
+    printWriter.printf("가입일: <input readonly type = 'text' value = '%s'>\n",
+        member.getCreatedDate());
     printWriter.println("</div>");
-//    printWriter.println("<ul>");
-//    for (AttachedFile file : list) {
-//      printWriter.printf(" <li>%s<a href = '/board/file/delete?no=%d'>삭제</a></li>\n",
-//          file.getFilePath(), file.getNo());
-//    }
-//    printWriter.println("</ul>");
     printWriter.println("<div>");
     printWriter.println("  <button>변경</button>");
     printWriter.printf("<a href = '/member/delete?no=%d'>[삭제]</a>\n", key);
     printWriter.println("</div>");
     printWriter.println("</form>");
+
+    servletRequest.getRequestDispatcher("/footer").include(servletRequest, servletResponse);
 
     printWriter.println("</body>");
     printWriter.println("</html>");

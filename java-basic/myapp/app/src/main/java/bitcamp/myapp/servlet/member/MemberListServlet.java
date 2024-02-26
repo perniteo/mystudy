@@ -38,9 +38,12 @@ public class MemberListServlet extends HttpServlet {
     printWriter.println("  <title>비트캠프 데브옵스 5기</title>");
     printWriter.println("</head>");
     printWriter.println("<body>");
+
+    servletRequest.getRequestDispatcher("/header").include(servletRequest, servletResponse);
+
     printWriter.println("<h1>회원</h1>");
 
-    printWriter.println("<a href ='/member/form.html'>회원 가입</a>");
+    printWriter.println("<a href ='/member/add'>회원 가입</a>");
 
     try {
       printWriter.println("<table border='1'>");
@@ -54,8 +57,9 @@ public class MemberListServlet extends HttpServlet {
 
       for (Member member : list) {
         printWriter.printf(
-            "<tr> <td>%d</td> <td><a href = '/member/view?no=%1$d'>%s</td> <td>%s</td> <td>%s</td> </tr>\n",
+            "<tr> <td>%d</td> <td><img src='/upload/%s' height='25px'><a href = '/member/view?no=%1$d'>%s</td> <td>%s</td> <td>%s</td> </tr>\n",
             member.getNo(),
+            member.getPhoto() == null ? "img/default-photo.jpeg" : member.getPhoto(),
             member.getName(),
             member.getEmail(),
             member.getCreatedDate());
@@ -65,11 +69,12 @@ public class MemberListServlet extends HttpServlet {
       printWriter.println("</table>");
 
     } catch (Exception e) {
-      printWriter.println("<p>목록 오류!</p>");
-      printWriter.println("<pre>");
-      e.printStackTrace(printWriter);
-      printWriter.println("</pre>");
+      servletRequest.setAttribute("message", "목록 오류!");
+      servletRequest.setAttribute("exception", e);
+      servletRequest.getRequestDispatcher("/error").forward(servletRequest, servletResponse);
     }
+
+    servletRequest.getRequestDispatcher("/footer").include(servletRequest, servletResponse);
 
     printWriter.println("</body>");
     printWriter.println("</html>");

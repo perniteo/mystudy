@@ -2,8 +2,8 @@ package bitcamp.myapp.servlet.member;
 
 import bitcamp.myapp.dao.MemberDao;
 import bitcamp.myapp.vo.Member;
+import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,10 +14,12 @@ import javax.servlet.http.HttpServletResponse;
 public class MemberDeleteServlet extends HttpServlet {
 
   private MemberDao memberDao;
+  private String uploadDir;
 
   @Override
   public void init() {
     memberDao = (MemberDao) this.getServletContext().getAttribute("memberDao");
+    uploadDir = this.getServletContext().getRealPath("/upload");
   }
 
   @Override
@@ -26,50 +28,37 @@ public class MemberDeleteServlet extends HttpServlet {
 
     System.out.println("service() 호출");
 
-    servletResponse.setContentType("text/html;charset=UTF-8");
-
-    PrintWriter printWriter = servletResponse.getWriter();
-
-    printWriter.println("<!DOCTYPE html>");
-    printWriter.println("<html lang='en'>");
-    printWriter.println("<head>");
-    printWriter.println("  <meta charset='UTF-8'>");
-    printWriter.println("  <title>비트캠프 데브옵스 5기</title>");
-    printWriter.println("</head>");
-    printWriter.println("<body>");
-    printWriter.println("<h1>회원</h1>");
-
     Member loginUser = (Member) servletRequest.getSession().getAttribute("loginUser");
     if (loginUser == null) {
-      printWriter.println("로그인 하세요");
-      servletResponse.sendRedirect("/auth/form.html");
-      printWriter.println("</body>");
-      printWriter.println("</html>");
+      servletResponse.sendRedirect("/auth/login");
       return;
     }
 
-    int key = Integer.parseInt(servletRequest.getParameter("no"));
+    try {
+      int key = Integer.parseInt(servletRequest.getParameter("no"));
 
-    Member member = memberDao.findBy(key);
-    if (member == null) {
-      printWriter.println("<p>회원 오류</p>");
-      printWriter.println("</body>");
-      printWriter.println("</html>");
-      return;
-    } else if (member.getNo() != loginUser.getNo()) {
-      printWriter.println("<p>접근 권한이 없습니다</p>");
-      servletResponse.setHeader("refresh", "2;url=list");
-      printWriter.println("</body>");
-      printWriter.println("</html>");
-      return;
+      Member member = memberDao.findBy(key);
+      if (member == null) {
+        throw new Exception("회원 오류");
+      } else if (member.getNo() != loginUser.getNo()) {
+        throw new Exception("접근 권한이 없습니다.");
+      }
+
+      memberDao.delete(key);
+
+      String filename = member.getPhoto();
+
+      if (filename != null) {
+        new File(this.uploadDir + "/" + filename).delete();
+      }
+
+      servletResponse.sendRedirect("list");
+
+    } catch (Exception e) {
+      servletRequest.setAttribute("message", "삭제 오류!");
+      servletRequest.setAttribute("exception", e);
+      servletRequest.getRequestDispatcher("/error").forward(servletRequest, servletResponse);
     }
 
-    memberDao.delete(key);
-
-    printWriter.println("<script>");
-    printWriter.println("  location.href = '/member/list'");
-    printWriter.println("</script>");
-    printWriter.println("</body>");
-    printWriter.println("</html>");
   }
 }

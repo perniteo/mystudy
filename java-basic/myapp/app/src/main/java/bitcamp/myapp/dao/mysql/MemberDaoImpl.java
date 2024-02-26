@@ -23,12 +23,13 @@ public class MemberDaoImpl implements MemberDao {
 
     try (Connection connection = dbConnectionPool.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(
-            "insert into members(email, name, password)"
-                + "values(?, ?, sha2(?, 256))"
+            "insert into members(email, name, password, photo)"
+                + "values(?, ?, sha2(?, 256), ?)"
         )) {
       preparedStatement.setString(1, member.getEmail());
       preparedStatement.setString(2, member.getName());
       preparedStatement.setString(3, member.getPassword());
+      preparedStatement.setString(4, member.getPhoto());
 
       preparedStatement.executeUpdate();
     } catch (Exception e) {
@@ -58,13 +59,14 @@ public class MemberDaoImpl implements MemberDao {
 
     try (Connection connection = dbConnectionPool.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(
-            "update members set email = ?, name = ?, password = sha2(?, 256)"
+            "update members set email = ?, name = ?, password = sha2(?, 256), photo = ? "
                 + "where member_no = ?"
         )) {
       preparedStatement.setString(1, member.getEmail());
       preparedStatement.setString(2, member.getName());
       preparedStatement.setString(3, member.getPassword());
-      preparedStatement.setInt(4, member.getNo());
+      preparedStatement.setString(4, member.getPhoto());
+      preparedStatement.setInt(5, member.getNo());
 
       return preparedStatement.executeUpdate();
 
@@ -90,6 +92,7 @@ public class MemberDaoImpl implements MemberDao {
         member.setEmail(resultSet.getString("email"));
         member.setName(resultSet.getString("name"));
         member.setPassword(resultSet.getString("password"));
+        member.setPhoto(resultSet.getString("photo"));
         member.setCreatedDate(resultSet.getDate("join_date"));
 
         members.add(member);
@@ -119,6 +122,7 @@ public class MemberDaoImpl implements MemberDao {
         member.setEmail(resultSet.getString("email"));
         member.setName(resultSet.getString("name"));
         member.setPassword(resultSet.getString("password"));
+        member.setPhoto(resultSet.getString("photo"));
         member.setCreatedDate(resultSet.getDate("join_date"));
 
         return member;
