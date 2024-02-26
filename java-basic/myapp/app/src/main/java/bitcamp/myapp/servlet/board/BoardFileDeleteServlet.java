@@ -5,7 +5,6 @@ import bitcamp.myapp.dao.BoardDao;
 import bitcamp.myapp.vo.AttachedFile;
 import bitcamp.myapp.vo.Member;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -25,88 +24,44 @@ public class BoardFileDeleteServlet extends HttpServlet {
   }
 
   @Override
-  protected void service(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
+  protected void doGet(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
       throws ServletException, IOException {
 
     System.out.println("service() 호출");
-    int category = Integer.parseInt(servletRequest.getParameter("category"));
 
-    String title = category == 1 ? "게시글" : "가입인사";
-
-    servletResponse.setContentType("text/html;charset=UTF-8");
-
-    PrintWriter printWriter = servletResponse.getWriter();
-
-    printWriter.println("<!DOCTYPE html>");
-    printWriter.println("<html lang='en'>");
-    printWriter.println("<head>");
-    printWriter.println("  <meta charset='UTF-8'>");
-    printWriter.println("  <title>비트캠프 데브옵스 5기</title>");
-    printWriter.println("</head>");
-    printWriter.println("<body>");
-    printWriter.printf("<h1>%s</h1>", title);
+    String title = null;
 
     Member loginUser = (Member) servletRequest.getSession().getAttribute("loginUser");
     if (loginUser == null) {
-      printWriter.println("로그인 하세요");
-      printWriter.println("</body>");
-      printWriter.println("</html>");
+      servletResponse.sendRedirect("/auth/login");
       return;
     }
+    try {
+      int category = Integer.parseInt(servletRequest.getParameter("category"));
 
-    int fileNo = Integer.parseInt(servletRequest.getParameter("no"));
+      title = category == 1 ? "게시글" : "가입인사";
 
-    AttachedFile file = attachedFileDao.findByNo(fileNo);
+      int fileNo = Integer.parseInt(servletRequest.getParameter("no"));
 
-    if (file == null) {
-      printWriter.println("<p>파일 번호 오류</p>");
-      printWriter.println("</body>");
-      printWriter.println("</html>");
-      return;
+      AttachedFile file = attachedFileDao.findByNo(fileNo);
+
+      if (file == null) {
+        throw new Exception("파일 오류");
+      }
+
+      Member writer = boardDao.findBy(file.getBoardNo()).getWriter();
+
+      if (writer.getNo() != loginUser.getNo()) {
+        throw new Exception("접근 권한 오류");
+      }
+
+      attachedFileDao.delete(fileNo);
+    } catch (Exception e) {
+      servletRequest.setAttribute("message", String.format("%s 첨부파일 삭제 오류!", title));
+      servletRequest.setAttribute("exception", e);
+      servletRequest.getRequestDispatcher("/error").forward(servletRequest, servletResponse);
     }
 
-    Member writer = boardDao.findBy(file.getBoardNo()).getWriter();
-
-    if (writer.getNo() != loginUser.getNo()) {
-      printWriter.println("<p>접근 권한이 없습니다</p>");
-      printWriter.println("</body>");
-      printWriter.println("</html>");
-      return;
-    }
-
-    attachedFileDao.delete(fileNo);
-    printWriter.println("<script>");
-    printWriter.println(" location.href = document.referrer;");
-    printWriter.println("</script>");
-
-//    List<AttachedFile> list = attachedFileDao.findAllByBoardNo(key);
-//
-//    printWriter.println("<form action='/board/add'>");
-//    printWriter.println("<div>");
-//    printWriter.println("<label>");
-//    printWriter.printf("     제목: <input name='title' type='text' value='%s'>\n", board.getTitle());
-//    printWriter.println("  </label>");
-//    printWriter.println("</div>");
-//    printWriter.println("<div>");
-//    printWriter.println("<label>");
-//    printWriter.printf(" 내용: <textarea name='content'>%s</textarea>\n", board.getContent());
-//    printWriter.println(" </label>");
-//    printWriter.println(" </div>");
-//    printWriter.println("<div>");
-//    printWriter.println("첨부파일: <input multiple name='files' type='file'>");
-//    printWriter.println("</div>");
-//    printWriter.println("<ul>");
-//    for (AttachedFile file : list) {
-//      printWriter.printf(" <li>%s<a href = ></li>\n", file.getFilePath());
-//    }
-//    printWriter.println("</ul>");
-//    printWriter.println("<div>");
-//    printWriter.println("  <button>변경</button>");
-//    printWriter.println("</div>");
-//    printWriter.println("</form>");
-
-    printWriter.println("</body>");
-    printWriter.println("</html>");
 
   }
 }

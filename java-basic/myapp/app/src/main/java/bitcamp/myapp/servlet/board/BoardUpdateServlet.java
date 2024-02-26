@@ -7,7 +7,6 @@ import bitcamp.myapp.vo.Board;
 import bitcamp.myapp.vo.Member;
 import bitcamp.util.TransactionManager;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -30,65 +29,45 @@ public class BoardUpdateServlet extends HttpServlet {
   }
 
   @Override
-  protected void service(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
+  protected void doPost(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
       throws ServletException, IOException {
 
     System.out.println("service() 호출");
 
-    int category = Integer.parseInt(servletRequest.getParameter("category"));
-
-    String title = category == 1 ? "게시글" : "가입인사";
-
-    servletResponse.setContentType("text/html;charset=UTF-8");
-
-    PrintWriter printWriter = servletResponse.getWriter();
-
-    printWriter.println("<!DOCTYPE html>");
-    printWriter.println("<html lang='en'>");
-    printWriter.println("<head>");
-    printWriter.println("  <meta charset='UTF-8'>");
-    printWriter.println("  <title>비트캠프 데브옵스 5기</title>");
-    printWriter.println("</head>");
-    printWriter.println("<body>");
-    printWriter.printf("<h1>%s</h1>\n", title);
-
-    Member loginUser = (Member) servletRequest.getSession().getAttribute("loginUser");
-    if (loginUser == null) {
-      printWriter.println("로그인 하세요");
-      printWriter.println("</body>");
-      printWriter.println("</html>");
-      return;
-    }
-
-    int key = Integer.parseInt(servletRequest.getParameter("no"));
-
-    Board board = boardDao.findBy(key);
-    if (board == null) {
-      printWriter.println("<p>게시글 오류</p>");
-      printWriter.println("</body>");
-      printWriter.println("</html>");
-      return;
-    } else if (board.getWriter().getNo() != loginUser.getNo()) {
-      printWriter.println("<p>접근 권한이 없습니다</p>");
-      printWriter.println("</body>");
-      printWriter.println("</html>");
-      return;
-    }
-
-    board.setTitle(servletRequest.getParameter("title"));
-    board.setContent(servletRequest.getParameter("content"));
-
-    ArrayList<AttachedFile> attachedFiles = new ArrayList<>();
-    String[] files = servletRequest.getParameterValues("files");
-    if (files != null) {
-      for (String file : files) {
-        if (file.isEmpty()) {
-          continue;
-        }
-        attachedFiles.add(new AttachedFile().filePath(file));
-      }
-    }
+    String title = null;
     try {
+      int category = Integer.parseInt(servletRequest.getParameter("category"));
+
+      title = category == 1 ? "게시글" : "가입인사";
+
+      Member loginUser = (Member) servletRequest.getSession().getAttribute("loginUser");
+      if (loginUser == null) {
+        servletResponse.sendRedirect("/auth/login");
+        return;
+      }
+
+      int key = Integer.parseInt(servletRequest.getParameter("no"));
+
+      Board board = boardDao.findBy(key);
+      if (board == null) {
+        throw new Exception("게시글 오류");
+      } else if (board.getWriter().getNo() != loginUser.getNo()) {
+        throw new Exception("접근 권한이 없습니다.");
+      }
+
+      board.setTitle(servletRequest.getParameter("title"));
+      board.setContent(servletRequest.getParameter("content"));
+
+      ArrayList<AttachedFile> attachedFiles = new ArrayList<>();
+      String[] files = servletRequest.getParameterValues("files");
+      if (files != null) {
+        for (String file : files) {
+          if (file.isEmpty()) {
+            continue;
+          }
+          attachedFiles.add(new AttachedFile().filePath(file));
+        }
+      }
       txManager.startTransaction();
 
       boardDao.update(board);
@@ -102,12 +81,15 @@ public class BoardUpdateServlet extends HttpServlet {
 
       txManager.commit();
 
-      printWriter.println("<p>변경했습니다.</p>");
+      servletResponse.sendRedirect("/board/list?category=" + category);
     } catch (Exception e) {
-      printWriter.println("<p>변경 오류!</p>");
-      printWriter.println("<pre>");
-      e.printStackTrace(printWriter);
-      printWriter.println("</pre>");
+      try {
+        txManager.rollback();
+      } catch (Exception e1) {
+        servletRequest.setAttribute("message", String.format("%s 변경 오류!", title));
+        servletRequest.setAttribute("exception", e);
+        servletRequest.getRequestDispatcher("/error").forward(servletRequest, servletResponse);
+      }
     }
   }
 }

@@ -30,8 +30,10 @@ public class BoardAddServlet extends HttpServlet {
   }
 
   @Override
-  protected void service(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
+  protected void doGet(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
       throws ServletException, IOException {
+
+    System.out.println("service() 호출");
 
     int category = Integer.parseInt(servletRequest.getParameter("category"));
 
@@ -48,33 +50,67 @@ public class BoardAddServlet extends HttpServlet {
     printWriter.println("  <title>비트캠프 데브옵스 5기</title>");
     printWriter.println("</head>");
     printWriter.println("<body>");
+    servletRequest.getRequestDispatcher("/header").include(servletRequest, servletResponse);
     printWriter.printf("<h1>%s</h1>\n", title);
 
+    printWriter.printf("<form action='/board/add?category=%d' method='post'>\n", category);
+    printWriter.println("<div>");
+    printWriter.println("<label>");
+    printWriter.printf("카테고리: <input readonly name='category' type='text' value='%d'>\n", category);
+    printWriter.println(" </label>");
+    printWriter.println("</div>");
+    printWriter.println("<div>");
+    printWriter.println("<label>");
+    printWriter.println("제목: <input name='title' type='text'>");
+    printWriter.println(" </label>");
+    printWriter.println("</div>");
+    printWriter.println("  <div>");
+    printWriter.println(" <label>");
+    printWriter.println("   내용: <textarea name='content'></textarea>");
+    printWriter.println(" </label>");
+    printWriter.println("  </div>");
+    printWriter.println("  <div>");
+    printWriter.println("       첨부파일: <input multiple name='files' type='file'>");
+    printWriter.println(" </div>");
+    printWriter.println("   <button>등록</button>");
+    printWriter.println("</form>");
+
+    servletRequest.getRequestDispatcher("/footer").include(servletRequest, servletResponse);
+    printWriter.println("</body>");
+    printWriter.println("</html>");
+
+  }
+
+  @Override
+  protected void doPost(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
+      throws ServletException, IOException {
     Member loginUser = (Member) servletRequest.getSession().getAttribute("loginUser");
+    String title = null;
     if (loginUser == null) {
-      printWriter.println("로그인 후 사용 가능");
-      printWriter.println("</body>");
-      printWriter.println("</html>");
+      servletResponse.sendRedirect("/auth/login");
       return;
     }
+    try {
+      int category = Integer.parseInt(servletRequest.getParameter("category"));
 
-    Board board = new Board();
-    board.setCategory(category);
-    board.setTitle(servletRequest.getParameter("title"));
-    board.setContent(servletRequest.getParameter("content"));
-    board.setWriter(loginUser);
+      title = category == 1 ? "게시글" : "가입인사";
 
-    ArrayList<AttachedFile> attachedFiles = new ArrayList<>();
+      Board board = new Board();
+      board.setCategory(category);
+      board.setTitle(servletRequest.getParameter("title"));
+      board.setContent(servletRequest.getParameter("content"));
+      board.setWriter(loginUser);
 
-    String[] files = servletRequest.getParameterValues("files");
-    if (files != null) {
-      for (String file : files) {
-        if (file.isEmpty()) {
-          continue;
+      ArrayList<AttachedFile> attachedFiles = new ArrayList<>();
+
+      String[] files = servletRequest.getParameterValues("files");
+      if (files != null) {
+        for (String file : files) {
+          if (file.isEmpty()) {
+            continue;
+          }
+          attachedFiles.add(new AttachedFile().filePath(file));
         }
-        attachedFiles.add(new AttachedFile().filePath(file));
-      }
-      try {
         txManager.startTransaction();
 
         boardDao.add(board);
@@ -88,17 +124,17 @@ public class BoardAddServlet extends HttpServlet {
         }
         txManager.commit();
 
-        printWriter.println("<p>등록 완료</p>");
-
-      } catch (Exception e) {
-        try {
-          txManager.rollback();
-        } catch (Exception e1) {
-          printWriter.println("<p>등록 실패</p>");
-        }
+        servletResponse.sendRedirect("/board/list?category=" + category);
       }
-      printWriter.println("</body>");
-      printWriter.println("</html>");
+
+    } catch (Exception e) {
+      try {
+        txManager.rollback();
+      } catch (Exception e1) {
+        servletRequest.setAttribute("message", String.format("%s 등록 오류!", title));
+        servletRequest.setAttribute("exception", e);
+        servletRequest.getRequestDispatcher("/error").forward(servletRequest, servletResponse);
+      }
     }
   }
 }

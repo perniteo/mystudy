@@ -104,7 +104,7 @@ public class AssignmentDaoImpl implements AssignmentDao {
   public int update(Assignment assignment) {
     try (Connection connection = dbConnectionPool.getConnection();
         PreparedStatement preparedstatement = connection.prepareStatement(
-            "update assignments set title = ?, content = ?, deadline = ?"
+            "update assignments set title = ?, content = ?, deadline = ? "
                 + "where assignment_no = ?"
         )) {
       preparedstatement.setString(1, assignment.getTitle());

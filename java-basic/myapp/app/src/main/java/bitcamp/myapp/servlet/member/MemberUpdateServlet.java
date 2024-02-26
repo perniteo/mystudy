@@ -24,8 +24,9 @@ public class MemberUpdateServlet extends HttpServlet {
   }
 
   @Override
-  protected void service(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
+  protected void doPost(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
       throws ServletException, IOException {
+    servletRequest.setCharacterEncoding("UTF-8");
 
     System.out.println("service() 호출");
 
@@ -45,6 +46,7 @@ public class MemberUpdateServlet extends HttpServlet {
     Member loginUser = (Member) servletRequest.getSession().getAttribute("loginUser");
     if (loginUser == null) {
       printWriter.println("로그인 하세요");
+      servletResponse.sendRedirect("/auth/form.html");
       printWriter.println("</body>");
       printWriter.println("</html>");
       return;
@@ -60,6 +62,7 @@ public class MemberUpdateServlet extends HttpServlet {
       return;
     } else if (member.getNo() != loginUser.getNo()) {
       printWriter.println("<p>접근 권한이 없습니다</p>");
+      servletResponse.setHeader("refresh", "2;url=list");
       printWriter.println("</body>");
       printWriter.println("</html>");
       return;
@@ -69,31 +72,15 @@ public class MemberUpdateServlet extends HttpServlet {
     member.setEmail(servletRequest.getParameter("email"));
     member.setPassword(servletRequest.getParameter("password"));
 
-//    ArrayList<AttachedFile> attachedFiles = new ArrayList<>();
-//    String[] files = servletRequest.getParameterValues("files");
-//    if (files != null) {
-//      for (String file : files) {
-//        if (file.isEmpty()) {
-//          continue;
-//        }
-//        attachedFiles.add(new AttachedFile().filePath(file));
-//      }
-//    }
     try {
       txManager.startTransaction();
 
       memberDao.update(member);
 
-//      if (!attachedFiles.isEmpty()) {
-//        for (AttachedFile attachedFile : attachedFiles) {
-//          attachedFile.setBoardNo(board.getNo());
-//        }
-//        attachedFileDao.addAll(attachedFiles);
-//      }
-
       txManager.commit();
 
       printWriter.println("<p>회원 정보를 변경했습니다.</p>");
+      servletResponse.setHeader("refresh", "2;url=list");
     } catch (Exception e) {
       printWriter.println("<p>회원 변경 오류!</p>");
       printWriter.println("<pre>");

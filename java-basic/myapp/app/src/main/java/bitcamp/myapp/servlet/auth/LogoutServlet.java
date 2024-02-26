@@ -12,10 +12,12 @@ import javax.servlet.http.HttpServletResponse;
 public class LogoutServlet extends HttpServlet {
 
   @Override
-  protected void service(HttpServletRequest request, HttpServletResponse response)
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
     request.getSession().invalidate();
+
+    response.sendRedirect("/index.html");
 
     response.setContentType("text/html;charset=UTF-8");
 
@@ -24,7 +26,8 @@ public class LogoutServlet extends HttpServlet {
     printWriter.println("<!DOCTYPE html>");
     printWriter.println("<html lang='en'>");
     printWriter.println("<head>");
-    printWriter.println("  <meta charset='UTF-8'>");
+    printWriter.println("  <meta charset='UTF-8' "
+        + "http-equiv='refresh' content='3;url=http://192.168.0.53:7777/'>");
     printWriter.println("  <title>비트캠프 데브옵스 5기</title>");
     printWriter.println("</head>");
     printWriter.println("<body>");

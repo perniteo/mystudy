@@ -5,14 +5,14 @@ import bitcamp.myapp.vo.Member;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-import javax.servlet.GenericServlet;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/member/list")
-public class MemberListServlet extends GenericServlet {
+public class MemberListServlet extends HttpServlet {
 
   private MemberDao memberDao;
 
@@ -23,7 +23,7 @@ public class MemberListServlet extends GenericServlet {
 
 
   @Override
-  public void service(ServletRequest servletRequest, ServletResponse servletResponse)
+  protected void doGet(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
       throws ServletException, IOException {
     System.out.println("service() 호출");
 

@@ -21,66 +21,72 @@ public class AssignmentViewServlet extends HttpServlet {
   }
 
   @Override
-  protected void service(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
+  protected void doGet(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
       throws ServletException, IOException {
 
     System.out.println("service() 호출");
+    try {
 
-    servletResponse.setContentType("text/html;charset=UTF-8");
+      int key = Integer.parseInt(servletRequest.getParameter("no"));
 
-    PrintWriter printWriter = servletResponse.getWriter();
+      Assignment assignment = assignmentDao.findBy(key);
+      if (assignment == null) {
+        throw new Exception("과제 번호 오류");
+      }
 
-    printWriter.println("<!DOCTYPE html>");
-    printWriter.println("<html lang='en'>");
-    printWriter.println("<head>");
-    printWriter.println("  <meta charset='UTF-8'>");
-    printWriter.println("  <title>비트캠프 데브옵스 5기</title>");
-    printWriter.println("</head>");
-    printWriter.println("<body>");
-    printWriter.println("<h1>과제</h1>");
+      servletResponse.setContentType("text/html;charset=UTF-8");
 
-    int key = Integer.parseInt(servletRequest.getParameter("no"));
+      PrintWriter printWriter = servletResponse.getWriter();
 
-    Assignment assignment = assignmentDao.findBy(key);
-    if (assignment == null) {
-      printWriter.println("<p>과제 번호 오류</p>");
+      printWriter.println("<!DOCTYPE html>");
+      printWriter.println("<html lang='en'>");
+      printWriter.println("<head>");
+      printWriter.println("  <meta charset='UTF-8'>");
+      printWriter.println("  <title>비트캠프 데브옵스 5기</title>");
+      printWriter.println("</head>");
+      printWriter.println("<body>");
+      servletRequest.getRequestDispatcher("/header").include(servletRequest, servletResponse);
+      printWriter.println("<h1>과제</h1>");
+
+      printWriter.println("<form action='/assignment/update' method='post'>");
+      printWriter.println("<div>");
+      printWriter.println("<label>");
+      printWriter.printf("  번호: <input readonly name='no' type='text' value='%d'>\n",
+          assignment.getNo());
+      printWriter.println("  </label>");
+      printWriter.println("</div>");
+      printWriter.println("<div>");
+      printWriter.println("<label>");
+      printWriter.printf("  제목: <input name='title' type='text' value='%s'>\n",
+          assignment.getTitle());
+      printWriter.println("  </label>");
+      printWriter.println("</div>");
+      printWriter.println("<div>");
+      printWriter.println("<label>");
+      printWriter.printf(" 내용: <textarea name = 'content'>%s</textarea>\n",
+          assignment.getContent());
+      printWriter.println(" </label>");
+      printWriter.println(" </div>");
+      printWriter.println("<div>");
+      printWriter.printf(" 마감기한: <input name = 'deadline' type = 'date' value = '%s'>\n",
+          assignment.getDeadline());
+      printWriter.println(" </div>");
+      printWriter.println("<div>");
+      printWriter.println("  <button>변경</button>");
+      printWriter.printf("<a href = '/assignment/delete?no=%d'>[삭제]</a>\n", key);
+      printWriter.println("</div>");
+      printWriter.println("</form>");
+
+      servletRequest.getRequestDispatcher("/footer").include(servletRequest, servletResponse);
       printWriter.println("</body>");
       printWriter.println("</html>");
-      return;
+
+    } catch (Exception e) {
+      servletRequest.setAttribute("message", "번호 오류");
+      servletRequest.setAttribute("error", e);
+      servletRequest.getRequestDispatcher("/error").forward(servletRequest, servletResponse);
     }
 
-//    List<AttachedFile> list = attachedFileDao.findAllByBoardNo(key);
-
-    printWriter.println("<form action='/assignment/update'>");
-    printWriter.println("<div>");
-    printWriter.println("<label>");
-    printWriter.printf("  번호: <input readonly name='no' type='text' value='%d'>\n",
-        assignment.getNo());
-    printWriter.println("  </label>");
-    printWriter.println("</div>");
-    printWriter.println("<div>");
-    printWriter.println("<label>");
-    printWriter.printf("  제목: <input name='title' type='text' value='%s'>\n",
-        assignment.getTitle());
-    printWriter.println("  </label>");
-    printWriter.println("</div>");
-    printWriter.println("<div>");
-    printWriter.println("<label>");
-    printWriter.printf(" 내용: <textarea name = 'content'>%s</textarea>\n", assignment.getContent());
-    printWriter.println(" </label>");
-    printWriter.println(" </div>");
-    printWriter.println("<div>");
-    printWriter.printf(" 마감기한: <input name = 'deadline' type = 'date' value = '%s'>\n",
-        assignment.getDeadline());
-    printWriter.println(" </div>");
-    printWriter.println("<div>");
-    printWriter.println("  <button>변경</button>");
-    printWriter.printf("<a href = '/assignment/delete?no=%d'>[삭제]</a>\n", key);
-    printWriter.println("</div>");
-    printWriter.println("</form>");
-
-    printWriter.println("</body>");
-    printWriter.println("</html>");
 
   }
 }

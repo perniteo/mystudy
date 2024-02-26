@@ -5,7 +5,6 @@ import bitcamp.myapp.dao.BoardDao;
 import bitcamp.myapp.vo.Board;
 import bitcamp.myapp.vo.Member;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -25,58 +24,40 @@ public class BoardDeleteServlet extends HttpServlet {
   }
 
   @Override
-  protected void service(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
+  protected void doGet(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
       throws ServletException, IOException {
 
+    String title = null;
+
     System.out.println("service() 호출");
+    try {
 
-    int category = Integer.parseInt(servletRequest.getParameter("category"));
+      int category = Integer.parseInt(servletRequest.getParameter("category"));
 
-    String title = category == 1 ? "게시글" : "가입인사";
+      title = category == 1 ? "게시글" : "가입인사";
 
-    servletResponse.setContentType("text/html;charset=UTF-8");
+      Member loginUser = (Member) servletRequest.getSession().getAttribute("loginUser");
+      if (loginUser == null) {
+        servletResponse.sendRedirect("/auth/login");
+        return;
+      }
+      int key = Integer.parseInt(servletRequest.getParameter("no"));
 
-    PrintWriter printWriter = servletResponse.getWriter();
+      Board board = boardDao.findBy(key);
+      if (board == null) {
+        throw new Exception("게시글 번호 오류");
+      } else if (board.getWriter().getNo() != loginUser.getNo()) {
+        throw new Exception("접근 권한이 없습니다.");
+      }
 
-    printWriter.println("<!DOCTYPE html>");
-    printWriter.println("<html lang='en'>");
-    printWriter.println("<head>");
-    printWriter.println("  <meta charset='UTF-8'>");
-    printWriter.println("  <title>비트캠프 데브옵스 5기</title>");
-    printWriter.println("</head>");
-    printWriter.println("<body>");
-    printWriter.printf("<h1>%s</h1>\n", title);
-
-    Member loginUser = (Member) servletRequest.getSession().getAttribute("loginUser");
-    if (loginUser == null) {
-      printWriter.println("로그인 하세요");
-      printWriter.println("</body>");
-      printWriter.println("</html>");
-      return;
+      attachedFileDao.deleteAll(key);
+      boardDao.delete(key);
+      servletResponse.sendRedirect("/board/list?category=" + category);
+    } catch (Exception e) {
+      servletRequest.setAttribute("message", String.format("%s 삭제 오류!", title));
+      servletRequest.setAttribute("exception", e);
+      servletRequest.getRequestDispatcher("/error").forward(servletRequest, servletResponse);
     }
 
-    int key = Integer.parseInt(servletRequest.getParameter("no"));
-
-    Board board = boardDao.findBy(key);
-    if (board == null) {
-      printWriter.println("<p>게시글 오류</p>");
-      printWriter.println("</body>");
-      printWriter.println("</html>");
-      return;
-    } else if (board.getWriter().getNo() != loginUser.getNo()) {
-      printWriter.println("<p>접근 권한이 없습니다</p>");
-      printWriter.println("</body>");
-      printWriter.println("</html>");
-      return;
-    }
-
-    attachedFileDao.deleteAll(key);
-    boardDao.delete(key);
-
-    printWriter.println("<script>");
-    printWriter.printf("  location.href = '/board/list?category=%d';\n", category);
-    printWriter.println("</script>");
-    printWriter.println("</body>");
-    printWriter.println("</html>");
   }
 }

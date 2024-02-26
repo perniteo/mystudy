@@ -21,7 +21,7 @@ public class MemberViewServlet extends HttpServlet {
   }
 
   @Override
-  protected void service(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
+  protected void doGet(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
       throws ServletException, IOException {
 
     System.out.println("service() 호출");
@@ -51,7 +51,7 @@ public class MemberViewServlet extends HttpServlet {
 
 //    List<AttachedFile> list = attachedFileDao.findAllByBoardNo(key);
 
-    printWriter.println("<form action='/member/update'>");
+    printWriter.println("<form action='/member/update' method='post'>");
     printWriter.println("<div>");
     printWriter.println("<label>");
     printWriter.printf("  번호: <input readonly name='no' type='text' value='%d'>\n",

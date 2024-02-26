@@ -21,7 +21,7 @@ public class MemberDeleteServlet extends HttpServlet {
   }
 
   @Override
-  protected void service(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
+  protected void doGet(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
       throws ServletException, IOException {
 
     System.out.println("service() 호출");
@@ -42,6 +42,7 @@ public class MemberDeleteServlet extends HttpServlet {
     Member loginUser = (Member) servletRequest.getSession().getAttribute("loginUser");
     if (loginUser == null) {
       printWriter.println("로그인 하세요");
+      servletResponse.sendRedirect("/auth/form.html");
       printWriter.println("</body>");
       printWriter.println("</html>");
       return;
@@ -57,6 +58,7 @@ public class MemberDeleteServlet extends HttpServlet {
       return;
     } else if (member.getNo() != loginUser.getNo()) {
       printWriter.println("<p>접근 권한이 없습니다</p>");
+      servletResponse.setHeader("refresh", "2;url=list");
       printWriter.println("</body>");
       printWriter.println("</html>");
       return;

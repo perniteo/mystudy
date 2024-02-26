@@ -5,14 +5,14 @@ import bitcamp.myapp.vo.Board;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-import javax.servlet.GenericServlet;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/board/list")
-public class BoardListServlet extends GenericServlet {
+public class BoardListServlet extends HttpServlet {
 
   private BoardDao boardDao;
 
@@ -23,7 +23,7 @@ public class BoardListServlet extends GenericServlet {
 
 
   @Override
-  public void service(ServletRequest servletRequest, ServletResponse servletResponse)
+  protected void doGet(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
       throws ServletException, IOException {
     System.out.println("service() 호출");
 
@@ -42,9 +42,11 @@ public class BoardListServlet extends GenericServlet {
     printWriter.println("  <title>비트캠프 데브옵스 5기</title>");
     printWriter.println("</head>");
     printWriter.println("<body>");
+    servletRequest.getRequestDispatcher("/header").include(servletRequest, servletResponse);
+
     printWriter.printf("<h1>%s</h1>\n", title);
 
-    printWriter.printf("<a href ='/board/form?category=%d'>새 글</a>\n", category);
+    printWriter.printf("<a href ='/board/add?category=%d'>새 글</a>\n", category);
 
     try {
       printWriter.println("<table border='1'>");
@@ -71,12 +73,12 @@ public class BoardListServlet extends GenericServlet {
       printWriter.println("</table>");
 
     } catch (Exception e) {
-      printWriter.println("<p>목록 오류!</p>");
-      printWriter.println("<pre>");
-      e.printStackTrace(printWriter);
-      printWriter.println("</pre>");
+      servletRequest.setAttribute("message", String.format("%s 목록 오류!", title));
+      servletRequest.setAttribute("exception", e);
+      servletRequest.getRequestDispatcher("/error").forward(servletRequest, servletResponse);
     }
 
+    servletRequest.getRequestDispatcher("/footer").include(servletRequest, servletResponse);
     printWriter.println("</body>");
     printWriter.println("</html>");
   }
