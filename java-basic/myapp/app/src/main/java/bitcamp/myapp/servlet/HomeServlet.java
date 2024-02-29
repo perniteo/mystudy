@@ -2,19 +2,18 @@ package bitcamp.myapp.servlet;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/index.html")
+//@WebServlet("/index.html")
 public class HomeServlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
       throws ServletException, IOException {
-    servletRequest.getRequestDispatcher("/home.jsp").forward(servletRequest, servletResponse);
-
+//    servletRequest.getRequestDispatcher("/home.jsp").forward(servletRequest, servletResponse);
+    servletRequest.setAttribute("viewUrl", "/home.jsp");
 //    servletResponse.setContentType("text/html;charset=UTF-8");
 //
 //    PrintWriter printWriter = servletResponse.getWriter();

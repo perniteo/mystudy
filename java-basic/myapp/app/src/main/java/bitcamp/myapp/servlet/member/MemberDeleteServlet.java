@@ -51,13 +51,15 @@ public class MemberDeleteServlet extends HttpServlet {
       if (filename != null) {
         new File(this.uploadDir + "/" + filename).delete();
       }
+      servletRequest.setAttribute("viewUrl", "redirect:list");
 
-      servletResponse.sendRedirect("list");
+//      servletResponse.sendRedirect("list");
 
     } catch (Exception e) {
-      servletRequest.setAttribute("message", "삭제 오류!");
       servletRequest.setAttribute("exception", e);
-      servletRequest.getRequestDispatcher("/error.jsp").forward(servletRequest, servletResponse);
+//      servletRequest.setAttribute("message", "삭제 오류!");
+//      servletRequest.setAttribute("exception", e);
+//      servletRequest.getRequestDispatcher("/error.jsp").forward(servletRequest, servletResponse);
     }
 
   }

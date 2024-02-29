@@ -49,7 +49,7 @@ public class MemberUpdateServlet extends HttpServlet {
     try {
       Member loginUser = (Member) servletRequest.getSession().getAttribute("loginUser");
       if (loginUser == null) {
-        servletRequest.setAttribute("viewUrl", "redirect:/app/auth/login");
+//        servletRequest.setAttribute("viewUrl", "redirect:/app/auth/login");
         throw new Exception("로그인 하세요");
       }
 

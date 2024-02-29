@@ -13,10 +13,10 @@
 
   <c:if test="${not empty loginUser}">
   <span>${loginUser.name}</span>
-    <a href='/auth/logout'>로그아웃</a>
+    <a href='/app/auth/logout'>로그아웃</a>
   </c:if>
   <c:if test="${empty loginUser}">
-    <a href='/auth/login'>로그인</a>
+    <a href='/app/auth/login'>로그인</a>
   </c:if>
 
    <a href = '/about.html'>소개</a>
