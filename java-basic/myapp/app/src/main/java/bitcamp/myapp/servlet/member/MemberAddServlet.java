@@ -4,7 +4,6 @@ import bitcamp.myapp.dao.MemberDao;
 import bitcamp.myapp.vo.Member;
 import bitcamp.util.TransactionManager;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -32,56 +31,11 @@ public class MemberAddServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-    request.setCharacterEncoding("UTF-8");
 
-    response.setContentType("text/html;charset=UTF-8");
+    request.setAttribute("viewUrl", "/member/form.jsp");
 
-    PrintWriter printWriter = response.getWriter();
+//    request.getRequestDispatcher("/member/form.jsp").forward(request, response);
 
-    printWriter.println(" <!DOCTYPE html>");
-    printWriter.println("<html lang='en'>");
-    printWriter.println("<head>");
-    printWriter.println(" <meta charset='UTF-8'>");
-    printWriter.println("<title>비트캠프 데브옵스 5기</title>");
-    printWriter.println("</head>");
-    printWriter.println("<body>");
-
-    request.getRequestDispatcher("/header").include(request, response);
-
-    printWriter.println("<h1>과제 관리 시스템</h1>");
-
-    printWriter.println("<h2>회원</h2>");
-
-    printWriter.println("<form action='/member/add' method='post' enctype='multipart/form-data'>");
-    printWriter.println("  <div>");
-    printWriter.println("  <label>");
-    printWriter.println("      이름: <input name='name' type='text'>");
-    printWriter.println("  </label>");
-    printWriter.println(" </div>");
-    printWriter.println(" <div>");
-    printWriter.println("  <label>");
-    printWriter.println("      이메일: <input name='email' type='text'>");
-    printWriter.println(" </label>");
-    printWriter.println(" </div>");
-    printWriter.println(" <div>");
-    printWriter.println("  <label>");
-    printWriter.println("   암호:");
-    printWriter.println("  <input name='password' type='password'>");
-    printWriter.println(" </label>");
-    printWriter.println("</div>");
-    printWriter.println("사진: <input name='photo' type='file'>");
-    printWriter.println("<div>");
-    printWriter.println("");
-    printWriter.println("</div>");
-    printWriter.println("<div>");
-    printWriter.println("<button>가입</button>");
-    printWriter.println("</div>");
-    printWriter.println("</form>");
-
-    request.getRequestDispatcher("/footer").include(request, response);
-
-    printWriter.println("</body>");
-    printWriter.println("</html>");
   }
 
   @Override
@@ -109,15 +63,18 @@ public class MemberAddServlet extends HttpServlet {
 
       txManager.commit();
 
-      servletResponse.setHeader("refresh", "1;url=index/html");
+      servletRequest.setAttribute("viewUrl", "redirect:list");
+
+//      servletResponse.setHeader("refresh", "1;url=index/html");
 
     } catch (Exception e) {
       try {
         txManager.rollback();
       } catch (Exception e1) {
-        servletRequest.setAttribute("message", "회원 등록 실패");
         servletRequest.setAttribute("exception", e);
-        servletRequest.getRequestDispatcher("/error").forward(servletRequest, servletResponse);
+//        servletRequest.setAttribute("message", "회원 등록 실패");
+//        servletRequest.setAttribute("exception", e);
+//        servletRequest.getRequestDispatcher("/error").forward(servletRequest, servletResponse);
       }
     }
 

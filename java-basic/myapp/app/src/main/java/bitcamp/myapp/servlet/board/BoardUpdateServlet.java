@@ -49,7 +49,7 @@ public class BoardUpdateServlet extends HttpServlet {
 
       Member loginUser = (Member) servletRequest.getSession().getAttribute("loginUser");
       if (loginUser == null) {
-        servletResponse.sendRedirect("/auth/login");
+        servletResponse.sendRedirect("/app/auth/login");
         return;
       }
 

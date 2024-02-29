@@ -7,7 +7,6 @@ import bitcamp.myapp.vo.Board;
 import bitcamp.myapp.vo.Member;
 import bitcamp.util.TransactionManager;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
@@ -40,53 +39,66 @@ public class BoardAddServlet extends HttpServlet {
   protected void doGet(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
       throws ServletException, IOException {
 
-    System.out.println("service() 호출");
+    String title = null;
+    try {
+      System.out.println("service() 호출");
 
-    int category = Integer.parseInt(servletRequest.getParameter("category"));
+      int category = Integer.parseInt(servletRequest.getParameter("category"));
 
-    String title = category == 1 ? "게시글" : "가입인사";
+      title = category == 1 ? "게시글" : "가입인사";
 
-    servletResponse.setContentType("text/html;charset=UTF-8");
+      servletRequest.setAttribute("title", title);
 
-    PrintWriter printWriter = servletResponse.getWriter();
+      servletRequest.getRequestDispatcher("/board/form.jsp")
+          .forward(servletRequest, servletResponse);
 
-    printWriter.println("<!DOCTYPE html>");
-    printWriter.println("<html lang='en'>");
-    printWriter.println("<head>");
-    printWriter.println("  <meta charset='UTF-8'>");
-    printWriter.println("  <title>비트캠프 데브옵스 5기</title>");
-    printWriter.println("</head>");
-    printWriter.println("<body>");
-    servletRequest.getRequestDispatcher("/header").include(servletRequest, servletResponse);
-    printWriter.printf("<h1>%s</h1>\n", title);
+    } catch (Exception e) {
+      servletRequest.setAttribute("message", String.format("%s 등록 오류!", title));
+      servletRequest.setAttribute("exception", e);
+      servletRequest.getRequestDispatcher("/error.jsp").forward(servletRequest, servletResponse);
+    }
 
-    printWriter.printf(
-        "<form action='/board/add?category=%d' method='post' enctype='multipart/form-data'>\n",
-        category);
-    printWriter.println("<div>");
-    printWriter.println("<label>");
-    printWriter.printf("카테고리: <input readonly name='category' type='text' value='%d'>\n", category);
-    printWriter.println(" </label>");
-    printWriter.println("</div>");
-    printWriter.println("<div>");
-    printWriter.println("<label>");
-    printWriter.println("제목: <input name='title' type='text'>");
-    printWriter.println(" </label>");
-    printWriter.println("</div>");
-    printWriter.println("  <div>");
-    printWriter.println(" <label>");
-    printWriter.println("   내용: <textarea name='content'></textarea>");
-    printWriter.println(" </label>");
-    printWriter.println("  </div>");
-    printWriter.println("  <div>");
-    printWriter.println("       첨부파일: <input multiple name='files' type='file'>");
-    printWriter.println(" </div>");
-    printWriter.println("   <button>등록</button>");
-    printWriter.println("</form>");
-
-    servletRequest.getRequestDispatcher("/footer").include(servletRequest, servletResponse);
-    printWriter.println("</body>");
-    printWriter.println("</html>");
+//    servletResponse.setContentType("text/html;charset=UTF-8");
+//
+//    PrintWriter printWriter = servletResponse.getWriter();
+//
+//    printWriter.println("<!DOCTYPE html>");
+//    printWriter.println("<html lang='en'>");
+//    printWriter.println("<head>");
+//    printWriter.println("  <meta charset='UTF-8'>");
+//    printWriter.println("  <title>비트캠프 데브옵스 5기</title>");
+//    printWriter.println("</head>");
+//    printWriter.println("<body>");
+//    servletRequest.getRequestDispatcher("/header").include(servletRequest, servletResponse);
+//    printWriter.printf("<h1>%s</h1>\n", title);
+//
+//    printWriter.printf(
+//        "<form action='/board/add?category=%d' method='post' enctype='multipart/form-data'>\n",
+//        category);
+//    printWriter.println("<div>");
+//    printWriter.println("<label>");
+//    printWriter.printf("카테고리: <input readonly name='category' type='text' value='%d'>\n", category);
+//    printWriter.println(" </label>");
+//    printWriter.println("</div>");
+//    printWriter.println("<div>");
+//    printWriter.println("<label>");
+//    printWriter.println("제목: <input name='title' type='text'>");
+//    printWriter.println(" </label>");
+//    printWriter.println("</div>");
+//    printWriter.println("  <div>");
+//    printWriter.println(" <label>");
+//    printWriter.println("   내용: <textarea name='content'></textarea>");
+//    printWriter.println(" </label>");
+//    printWriter.println("  </div>");
+//    printWriter.println("  <div>");
+//    printWriter.println("       첨부파일: <input multiple name='files' type='file'>");
+//    printWriter.println(" </div>");
+//    printWriter.println("   <button>등록</button>");
+//    printWriter.println("</form>");
+//
+//    servletRequest.getRequestDispatcher("/footer").include(servletRequest, servletResponse);
+//    printWriter.println("</body>");
+//    printWriter.println("</html>");
 
   }
 
@@ -143,7 +155,7 @@ public class BoardAddServlet extends HttpServlet {
       } catch (Exception e1) {
         servletRequest.setAttribute("message", String.format("%s 등록 오류!", title));
         servletRequest.setAttribute("exception", e);
-        servletRequest.getRequestDispatcher("/error").forward(servletRequest, servletResponse);
+        servletRequest.getRequestDispatcher("/error.jsp").forward(servletRequest, servletResponse);
       }
     }
   }

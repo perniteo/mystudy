@@ -2,9 +2,8 @@ package bitcamp.myapp.servlet.member;
 
 import bitcamp.myapp.dao.MemberDao;
 import bitcamp.myapp.vo.Member;
-import bitcamp.util.TransactionManager;
+import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -19,12 +18,10 @@ import javax.servlet.http.Part;
 public class MemberUpdateServlet extends HttpServlet {
 
   private MemberDao memberDao;
-  private TransactionManager txManager;
   private String uploadDir;
 
   @Override
   public void init() {
-    txManager = (TransactionManager) this.getServletContext().getAttribute("txManager");
     memberDao = (MemberDao) this.getServletContext().getAttribute("memberDao");
     uploadDir = this.getServletContext().getRealPath("/upload");
   }
@@ -32,71 +29,56 @@ public class MemberUpdateServlet extends HttpServlet {
   @Override
   protected void doPost(HttpServletRequest servletRequest, HttpServletResponse servletResponse)
       throws ServletException, IOException {
-    servletRequest.setCharacterEncoding("UTF-8");
-
-    System.out.println("service() 호출");
-
-    servletResponse.setContentType("text/html;charset=UTF-8");
-
-    PrintWriter printWriter = servletResponse.getWriter();
-
-    printWriter.println("<!DOCTYPE html>");
-    printWriter.println("<html lang='en'>");
-    printWriter.println("<head>");
-    printWriter.println("  <meta charset='UTF-8'>");
-    printWriter.println("  <title>비트캠프 데브옵스 5기</title>");
-    printWriter.println("</head>");
-    printWriter.println("<body>");
-    printWriter.println("<h1>회원</h1>");
-
-    Member loginUser = (Member) servletRequest.getSession().getAttribute("loginUser");
-    if (loginUser == null) {
-      printWriter.println("로그인 하세요");
-      servletResponse.sendRedirect("/auth/form.html");
-      printWriter.println("</body>");
-      printWriter.println("</html>");
-      return;
-    }
-
-    int key = Integer.parseInt(servletRequest.getParameter("no"));
-
-    Member member = memberDao.findBy(key);
-    if (member == null) {
-      printWriter.println("<p>회원 오류</p>");
-      printWriter.println("</body>");
-      printWriter.println("</html>");
-      return;
-    } else if (member.getNo() != loginUser.getNo()) {
-      printWriter.println("<p>접근 권한이 없습니다</p>");
-      servletResponse.setHeader("refresh", "2;url=list");
-      printWriter.println("</body>");
-      printWriter.println("</html>");
-      return;
-    }
-
-    member.setName(servletRequest.getParameter("name"));
-    member.setEmail(servletRequest.getParameter("email"));
-    member.setPassword(servletRequest.getParameter("password"));
-
-    Part photoPart = servletRequest.getPart("photo");
-    if (photoPart.getSize() > 0) {
-      String filename = UUID.randomUUID().toString();
-      member.setPhoto(filename);
-      photoPart.write(this.uploadDir + "/" + filename);
-    }
+//    servletRequest.setCharacterEncoding("UTF-8");
+//
+//    System.out.println("service() 호출");
+//
+//    servletResponse.setContentType("text/html;charset=UTF-8");
+//
+//    PrintWriter printWriter = servletResponse.getWriter();
+//
+//    printWriter.println("<!DOCTYPE html>");
+//    printWriter.println("<html lang='en'>");
+//    printWriter.println("<head>");
+//    printWriter.println("  <meta charset='UTF-8'>");
+//    printWriter.println("  <title>비트캠프 데브옵스 5기</title>");
+//    printWriter.println("</head>");
+//    printWriter.println("<body>");
+//    printWriter.println("<h1>회원</h1>");
 
     try {
-      txManager.startTransaction();
+      Member loginUser = (Member) servletRequest.getSession().getAttribute("loginUser");
+      if (loginUser == null) {
+        servletRequest.setAttribute("viewUrl", "redirect:/app/auth/login");
+        throw new Exception("로그인 하세요");
+      }
+
+      int key = Integer.parseInt(servletRequest.getParameter("no"));
+
+      Member member = memberDao.findBy(key);
+      if (member == null) {
+        throw new Exception("회원 오류");
+      } else if (member.getNo() != loginUser.getNo()) {
+        throw new Exception("접근 권한이 없습니다");
+      }
+
+      member.setName(servletRequest.getParameter("name"));
+      member.setEmail(servletRequest.getParameter("email"));
+      member.setPassword(servletRequest.getParameter("password"));
+
+      Part photoPart = servletRequest.getPart("photo");
+      if (photoPart.getSize() > 0) {
+        new File(this.uploadDir + "/" + member.getPhoto()).delete();
+        String filename = UUID.randomUUID().toString();
+        member.setPhoto(filename);
+        photoPart.write(this.uploadDir + "/" + filename);
+      }
 
       memberDao.update(member);
+      servletRequest.setAttribute("viewUrl", "redirect:list");
 
-      txManager.commit();
-      
-      servletResponse.sendRedirect("list");
     } catch (Exception e) {
-      servletRequest.setAttribute("message", "변경 오류!");
       servletRequest.setAttribute("exception", e);
-      servletRequest.getRequestDispatcher("/error").forward(servletRequest, servletResponse);
     }
   }
 }

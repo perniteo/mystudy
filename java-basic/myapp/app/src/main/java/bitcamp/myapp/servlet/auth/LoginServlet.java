@@ -3,7 +3,7 @@ package bitcamp.myapp.servlet.auth;
 import bitcamp.myapp.dao.MemberDao;
 import bitcamp.myapp.vo.Member;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
@@ -25,106 +25,59 @@ public class LoginServlet extends HttpServlet {
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
 
-    String email = "";
+//    String email = "";
     Cookie[] cookies = req.getCookies();
     for (Cookie cookie : cookies) {
       if (cookie.getName().equals("email")) {
-        email = cookie.getValue();
+        req.setAttribute("email", cookie.getValue());
+//        email = cookie.getValue();
+        break;
       }
     }
 
-    resp.setContentType("text/html;charset=UTF-8");
+    req.setAttribute("viewUrl", "/auth/form.jsp");
+//    req.getRequestDispatcher("/auth/form.jsp").forward(req, resp);
 
-    PrintWriter printWriter = resp.getWriter();
-
-    printWriter.println("<!DOCTYPE html>");
-    printWriter.println("<html lang='en'>");
-    printWriter.println("<head>");
-    printWriter.println(" <meta charset='UTF-8'>");
-    printWriter.println(" <title>비트캠프 데브옵스 5기</title>");
-    printWriter.println("<body>");
-
-    req.getRequestDispatcher("/header").include(req, resp);
-
-    printWriter.println("<h1>과제 관리 시스템</h1>");
-    printWriter.println("<h2>로그인</h2>");
-    printWriter.println("<form action='/auth/login' method='post'>");
-    printWriter.println(" <div>");
-    printWriter.printf("  이메일: <input name='email' type='text' value='%s'>\n", email);
-    printWriter.println(" </div>");
-    printWriter.println("<div>");
-    printWriter.println(" 암호: <input name='password' type='password'>");
-    printWriter.println(" </div>");
-    printWriter.println("<button>로그인</button>");
-    if (email != null) {
-      printWriter.println("<input name = 'saveEmail' type = 'checkbox' checked> 이메일 저장");
-    } else {
-      printWriter.println("<input name = 'saveEmail' type = 'checkbox'> 이메일 저장");
-    }
-    printWriter.println("</form>");
-
-    req.getRequestDispatcher("/footer").include(req, resp);
-
-    printWriter.println("</body>");
-    printWriter.println("</html>");
   }
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
-
-    resp.setContentType("text/html;charset=UTF-8");
-
-    String email = req.getParameter("email");
-    String password = req.getParameter("password");
-    String saveEmail = req.getParameter("saveEmail");
-
-    if (saveEmail != null) {
-      Cookie cookie = new Cookie("email", email);
-      int DAY_SECOND = 86400;
-      cookie.setMaxAge(DAY_SECOND);
-      resp.addCookie(cookie);
-    } else {
-      Cookie cookie = new Cookie("email", "");
-      resp.addCookie(cookie);
-    }
-
-    PrintWriter printWriter = resp.getWriter();
-
-    printWriter.println("<!DOCTYPE html>");
-    printWriter.println("<html lang='en'>");
-    printWriter.println("<head>");
-    printWriter.println("  <meta charset='UTF-8'>");
-    printWriter.println("  <title>비트캠프 데브옵스 5기</title>");
-    printWriter.println("</head>");
-    printWriter.println("<body>");
-
-    req.getRequestDispatcher("/header").include(req, resp);
-
-    printWriter.println("<h1>과제 관리 시스템</h1>");
-    printWriter.println("<h2>로그인</h2>");
-
     try {
+
+      String email = req.getParameter("email");
+      String password = req.getParameter("password");
+      String saveEmail = req.getParameter("saveEmail");
+
+      ArrayList<Cookie> cookies = new ArrayList<>();
+
+      if (saveEmail != null) {
+        Cookie cookie = new Cookie("email", email);
+        int DAY_SECOND = 86400;
+        cookie.setMaxAge(DAY_SECOND);
+        cookies.add(cookie);
+//        resp.addCookie(cookie);
+      } else {
+        Cookie cookie = new Cookie("email", "");
+        cookies.add(cookie);
+//        resp.addCookie(cookie);
+      }
+
       Member member = memberDao.findByEmailAndPassword(email, password);
       if (member != null) {
         req.getSession().setAttribute("loginUser", member);
-        printWriter.printf("<p>%s 님 환영합니다.</p>\n", member.getName());
-        resp.setHeader("refresh", "1;url=/index.html");
 
-      } else {
-        printWriter.println("<p>이메일 또는 암호가 맞지 않습니다.</p>");
-        resp.setHeader("refresh", "1;url=/auth/login");
       }
-    } catch (Exception e) {
-      printWriter.println("<p>목록 오류!</p>");
-      printWriter.println("<pre>");
-      e.printStackTrace(printWriter);
-      printWriter.println("</pre>");
-    }
-    req.getRequestDispatcher("/footer").include(req, resp);
 
-    printWriter.println("</body>");
-    printWriter.println("</html>");
+      req.setAttribute("viewUrl", "/auth/login.jsp");
+
+//      req.getRequestDispatcher("/auth/login.jsp").forward(req, resp);
+    } catch (Exception e) {
+      req.setAttribute("exception", e);
+//      req.setAttribute("message", "로그인 오류!");
+//      req.setAttribute("exception", e);
+//      req.getRequestDispatcher("/error.jsp").forward(req, resp);
+    }
   }
 
 }

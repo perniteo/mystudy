@@ -18,6 +18,8 @@ repositories {
 }
 
 dependencies {
+    implementation 'jstl:jstl:1.2'
+
     // Use JUnit Jupiter for testing.
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
 

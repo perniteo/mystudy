@@ -45,7 +45,7 @@ public class AssignmentUpdateServlet extends HttpServlet {
     } catch (Exception e) {
       servletRequest.setAttribute("message", "변경 오류");
       servletRequest.setAttribute("error", e);
-      servletRequest.getRequestDispatcher("/error").forward(servletRequest, servletResponse);
+      servletRequest.getRequestDispatcher("/error.jsp ").forward(servletRequest, servletResponse);
     }
 
 
