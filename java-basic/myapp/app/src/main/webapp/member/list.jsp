@@ -12,7 +12,7 @@
 <jsp:include page="/header"></jsp:include>
 
 <h1>회원</h1>
-<a href='/member/add'>회원 가입</a>
+<a href='/app/member/add'>회원 가입</a>
 <table border='1'>
     <thead>
     <tr> <th>번호</th> <th>이름</th> <th>이메일</th> <th>가입일</th> </tr>

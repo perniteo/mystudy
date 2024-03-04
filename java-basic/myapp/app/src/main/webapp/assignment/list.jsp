@@ -12,7 +12,7 @@
 <jsp:include page="/header"></jsp:include>
 
 <h1>과제</h1>
-<a href='/assignment/add'>과제 등록</a>
+<a href='/app/assignment/add'>과제 등록</a>
 <table border='1'>
     <thead>
     <tr> <th>번호</th> <th>제목</th> <th>내용</th> <th>마감기한</th> </tr>

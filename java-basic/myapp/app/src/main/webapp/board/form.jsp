@@ -2,6 +2,7 @@
     contentType="text/html;charset=UTF-8"
     pageEncoding="UTF-8"
     trimDirectiveWhitespaces = "true"%>
+
 <!DOCTYPE html>
  <html lang='en'>
   <head>
@@ -11,16 +12,13 @@
 
    <body>
 <jsp:include page = '/header'></jsp:include>
-<%
-      String title = (String) request.getAttribute("title");
-      int category = Integer.parseInt(request.getParameter("category"));
-%>
+
     <h1>과제 관리 시스템</h1>
-    <h2><%=title%></h2>
-    <form action='/board/add?category=<%=category%>' method='post' enctype='multipart/form-data'>
+    <h2>${title}</h2>
+    <form action='/app/board/add?category=${category}' method='post' enctype='multipart/form-data'>
       <div>
        <label>
-       카테고리: <input readonly name='category' type='text' value='<%=category%>'>
+       <input readonly name='category' type='hidden' value='${category}'>
        </label>
       </div>
       <div>

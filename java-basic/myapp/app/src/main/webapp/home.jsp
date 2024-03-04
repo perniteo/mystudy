@@ -1,7 +1,8 @@
-<%@ page language="java" import="bitcamp.myapp.vo.Member"
+<%@ page language="java"
     contentType="text/html;charset=UTF-8"
     pageEncoding="UTF-8"
     trimDirectiveWhitespaces = "true" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
   <html lang='en'>
@@ -12,14 +13,15 @@
     <body>
 <jsp:include page="/header"></jsp:include>
 
-    <h1>과제 관리 시스템</h1>
-<%Member loginUser = (Member) request.getSession().getAttribute("loginUser");%>
+<h1>과제 관리 시스템</h1>
 
-    <%if (loginUser == null) {%>
-      <p>환영합니다 ^^</p>
-<%} else {%>
-      <p>환영합니다 <%=loginUser.getName()%>님^^</p>
-<%}%>
+<c:if test="${empty loginUser}">
+<p>환영합니다 ^^</p>
+</c:if>
+
+<c:if test="${not empty loginUser}">
+<p>환영합니다 ${loginUser.name}님</p>
+</c:if>
 
 <jsp:include page="/footer"></jsp:include>
 
