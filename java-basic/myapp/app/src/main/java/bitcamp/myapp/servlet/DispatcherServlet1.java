@@ -16,22 +16,17 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@MultipartConfig(maxFileSize = 1024 * 1024 * 10)
-@WebServlet("/app/*")
-public class DispatcherServlet extends HttpServlet {
+//@MultipartConfig(maxFileSize = 1024 * 1024 * 10)
+//@WebServlet("/app/*")
+public class DispatcherServlet1 extends HttpServlet {
 
-  private Map<String, RequestHandler> requestHandlerMap = new HashMap<>();
   private List<Object> controllers = new ArrayList<>();
 
   @Override
@@ -52,28 +47,27 @@ public class DispatcherServlet extends HttpServlet {
     controllers.add(new BoardController(boardDao, attachedFileDao, txManager, boardUploadDir));
     controllers.add(new MemberController(memberDao, memberUploadDir));
 
-    prepareRequestHandlers(controllers);
-
 
   }
 
-  private void prepareRequestHandlers(List<Object> controllers) {
+  private RequestHandler findRequestHandler(String pathInfo) {
     for (Object controller : controllers) {
       Method[] methods = controller.getClass().getDeclaredMethods();
       for (Method m : methods) {
         RequestMapping requestMapping = m.getAnnotation(RequestMapping.class);
-        if (requestMapping != null) {
-          requestHandlerMap.put(requestMapping.value(), new RequestHandler(controller, m));
+        if (requestMapping != null && requestMapping.value().equals(pathInfo)) {
+          return new RequestHandler(controller, m);
         }
       }
     }
+    return null;
   }
 
   @Override
   protected void service(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
-    RequestHandler requestHandler = requestHandlerMap.get(request.getPathInfo());
+    RequestHandler requestHandler = findRequestHandler(request.getPathInfo());
 
     if (requestHandler == null) {
       throw new ServletException(request.getPathInfo() + "요청 페이지를 찾을 수 없습니다.");
