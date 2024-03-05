@@ -1,19 +1,6 @@
 package bitcamp.myapp;
 
-import bitcamp.menu.MenuGroup;
-import bitcamp.myapp.dao.AssignmentDao;
-import bitcamp.myapp.dao.AttachedFileDao;
-import bitcamp.myapp.dao.BoardDao;
-import bitcamp.myapp.dao.MemberDao;
-import bitcamp.myapp.dao.mysql.AssignmentDaoImpl;
-import bitcamp.myapp.dao.mysql.AttachedFileDaoImpl;
-import bitcamp.myapp.dao.mysql.BoardDaoImpl;
-import bitcamp.myapp.dao.mysql.MemberDaoImpl;
-import bitcamp.util.DBConnectionPool;
-import bitcamp.util.TransactionManager;
 import java.io.File;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import org.apache.catalina.WebResourceRoot;
 import org.apache.catalina.connector.Connector;
 import org.apache.catalina.core.StandardContext;
@@ -22,20 +9,6 @@ import org.apache.catalina.webresources.DirResourceSet;
 import org.apache.catalina.webresources.StandardRoot;
 
 public class App {
-
-  BoardDao boardDao;
-  AssignmentDao assignmentDao;
-  MemberDao memberDao;
-  BoardDao greetingDao;
-  MenuGroup mainMenu;
-  ExecutorService executorService = Executors.newCachedThreadPool();
-  DBConnectionPool dbConnectionPool;
-  TransactionManager txManager;
-  AttachedFileDao attachedFileDao;
-
-  App() throws Exception {
-    prepareDatabase();
-  }
 
   public static void main(String[] args) throws Exception {
 //    new App().run();
@@ -82,31 +55,6 @@ public class App {
     tomcat.getServer().await();
 
     System.out.println("서버 종료!");
-  }
-
-  void prepareDatabase() {
-    try {
-      dbConnectionPool = new DBConnectionPool(
-          "jdbc:mysql://db-ld250-kr.vpc-pub-cdb.ntruss.com/studydb",
-          "study", "bitcamp!@#123");
-
-      txManager = new TransactionManager(dbConnectionPool);
-
-      System.out.println("loading");
-      System.out.println("success");
-
-      boardDao = new BoardDaoImpl(dbConnectionPool);
-      assignmentDao = new AssignmentDaoImpl(dbConnectionPool);
-      memberDao = new MemberDaoImpl(dbConnectionPool);
-      greetingDao = new BoardDaoImpl(dbConnectionPool);
-      attachedFileDao = new AttachedFileDaoImpl(dbConnectionPool);
-
-
-    } catch (Exception e) {
-      System.out.println("Error");
-      e.printStackTrace();
-    }
-
   }
 
 }

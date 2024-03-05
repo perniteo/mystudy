@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public class HomeController {
 
-  @RequestMapping
+  @RequestMapping("/home")
   public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
     return "/home.jsp";
   }

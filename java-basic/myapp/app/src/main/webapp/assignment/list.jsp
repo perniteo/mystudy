@@ -9,7 +9,7 @@
 </head>
 <body>
 
-<jsp:include page="/header"></jsp:include>
+<jsp:include page="/header.jsp"></jsp:include>
 
 <h1>과제</h1>
 <a href='/app/assignment/add'>과제 등록</a>
@@ -29,7 +29,7 @@
     </tbody>
 </table>
 
-<jsp:include page="/footer"></jsp:include>
+<jsp:include page="/footer.jsp"></jsp:include>
 
 </body>
 </html>

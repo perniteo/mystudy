@@ -9,7 +9,7 @@
 </head>
 <body>
 
-<jsp:include page="/header"></jsp:include>
+<jsp:include page="/header.jsp"></jsp:include>
 
 
 <h1>${title}</h1>
@@ -42,7 +42,7 @@
   </div>
 </form>
 
-<jsp:include page="/footer"></jsp:include>
+<jsp:include page="/footer.jsp"></jsp:include>
 
 </body>
 </html>

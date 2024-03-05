@@ -10,7 +10,7 @@
   </head>
 
    <body>
-    <jsp:include page = '/header'></jsp:include>
+    <jsp:include page = '/header.jsp'></jsp:include>
     <h1>과제 관리 시스템</h1>
     <h2>회원</h2>
     <form action='/app/member/add' method='post' enctype='multipart/form-data'>
@@ -36,6 +36,6 @@
         <button>가입</button>
       </div>
     </form>
-    <jsp:include page = '/footer'></jsp:include>
+    <jsp:include page = '/footer.jsp'></jsp:include>
   </body>
  </html>
