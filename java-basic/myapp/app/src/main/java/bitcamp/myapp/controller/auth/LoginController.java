@@ -1,13 +1,13 @@
 package bitcamp.myapp.controller.auth;
 
-import bitcamp.myapp.controller.PageController;
+import bitcamp.myapp.controller.RequestMapping;
 import bitcamp.myapp.dao.MemberDao;
 import bitcamp.myapp.vo.Member;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class LoginController implements PageController {
+public class LoginController {
 
   MemberDao memberDao;
 
@@ -15,7 +15,7 @@ public class LoginController implements PageController {
     this.memberDao = memberDao;
   }
 
-  @Override
+  @RequestMapping
   public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     if (request.getMethod().equals("GET")) {

@@ -1,13 +1,13 @@
 package bitcamp.myapp.controller.board;
 
-import bitcamp.myapp.controller.PageController;
+import bitcamp.myapp.controller.RequestMapping;
 import bitcamp.myapp.dao.AttachedFileDao;
 import bitcamp.myapp.dao.BoardDao;
 import bitcamp.myapp.vo.Board;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class BoardViewController implements PageController {
+public class BoardViewController {
 
   BoardDao boardDao;
   AttachedFileDao attachedFileDao;
@@ -17,7 +17,7 @@ public class BoardViewController implements PageController {
     this.attachedFileDao = attachedFileDao;
   }
 
-  @Override
+  @RequestMapping
   public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     int category = Integer.parseInt(request.getParameter("category"));
