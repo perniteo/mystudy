@@ -4,7 +4,6 @@ import bitcamp.myapp.controller.AssignmentController;
 import bitcamp.myapp.controller.AuthController;
 import bitcamp.myapp.controller.BoardController;
 import bitcamp.myapp.controller.CookieValue;
-import bitcamp.myapp.controller.HomeController;
 import bitcamp.myapp.controller.MemberController;
 import bitcamp.myapp.controller.RequestMapping;
 import bitcamp.myapp.controller.RequestParam;
@@ -12,7 +11,9 @@ import bitcamp.myapp.dao.AssignmentDao;
 import bitcamp.myapp.dao.AttachedFileDao;
 import bitcamp.myapp.dao.BoardDao;
 import bitcamp.myapp.dao.MemberDao;
+import bitcamp.util.Component;
 import bitcamp.util.TransactionManager;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -47,24 +48,28 @@ public class DispatcherServlet extends HttpServlet {
 
   @Override
   public void init() throws ServletException {
-    ServletContext ctx = this.getServletContext();
-    BoardDao boardDao = (BoardDao) ctx.getAttribute("boardDao");
-    MemberDao memberDao = (MemberDao) ctx.getAttribute("memberDao");
-    AssignmentDao assignmentDao = (AssignmentDao) ctx.getAttribute("assignmentDao");
-    AttachedFileDao attachedFileDao = (AttachedFileDao) ctx.getAttribute("attachedFileDao");
-    TransactionManager txManager = (TransactionManager) ctx.getAttribute("txManager");
+    try {
+      System.setProperty("board.upload.dir", this.getServletContext().getRealPath("/upload/board"));
+      System.setProperty("member.upload.dir", this.getServletContext().getRealPath("/upload"));
 
-    String memberUploadDir = this.getServletContext().getRealPath("/upload");
-    String boardUploadDir = this.getServletContext().getRealPath("/upload/board");
+      ServletContext ctx = this.getServletContext();
+      BoardDao boardDao = (BoardDao) ctx.getAttribute("boardDao");
+      MemberDao memberDao = (MemberDao) ctx.getAttribute("memberDao");
+      AssignmentDao assignmentDao = (AssignmentDao) ctx.getAttribute("assignmentDao");
+      AttachedFileDao attachedFileDao = (AttachedFileDao) ctx.getAttribute("attachedFileDao");
+      TransactionManager txManager = (TransactionManager) ctx.getAttribute("txManager");
 
-    controllers.add(new HomeController());
-    controllers.add(new AuthController(memberDao));
-    controllers.add(new AssignmentController(assignmentDao));
-    controllers.add(new BoardController(boardDao, attachedFileDao, txManager, boardUploadDir));
-    controllers.add(new MemberController(memberDao, memberUploadDir));
+//      controllers.add(new HomeController());
+      controllers.add(new AuthController(memberDao));
+      controllers.add(new AssignmentController(assignmentDao));
+      controllers.add(new BoardController(boardDao, attachedFileDao, txManager));
+      controllers.add(new MemberController(memberDao));
 
-    prepareRequestHandlers(controllers);
-
+      preparePageControllers();
+      prepareRequestHandlers(controllers);
+    } catch (Exception e) {
+      throw new ServletException(e);
+    }
 
   }
 
@@ -76,6 +81,36 @@ public class DispatcherServlet extends HttpServlet {
         if (requestMapping != null) {
           requestHandlerMap.put(requestMapping.value(), new RequestHandler(controller, m));
         }
+      }
+    }
+  }
+
+  private void preparePageControllers() throws Exception {
+    File classpath = new File("./build/classes/java/main");
+    System.out.println(classpath.getCanonicalPath());
+    findComponents(classpath, "");
+  }
+
+  private void findComponents(File dir, String packageName) throws Exception {
+    File[] files = dir.listFiles(file ->
+        file.isDirectory() || (file.isFile()
+            && !file.getName().contains("$")
+            && file.getName().endsWith(".class")));
+
+    if (!packageName.isEmpty()) {
+      packageName += ".";
+    }
+    for (File file : files) {
+      if (file.isFile()) {
+        Class<?> clazz = Class.forName(packageName + file.getName().replace(".class", ""));
+        Component compAnno = clazz.getAnnotation(Component.class);
+        if (compAnno != null) {
+          Constructor<?> constructor = clazz.getConstructor();
+          controllers.add(constructor.newInstance());
+          System.out.println(clazz.getName() + " 객체 생성!");
+        }
+      } else {
+        findComponents(file, packageName + file.getName());
       }
     }
   }

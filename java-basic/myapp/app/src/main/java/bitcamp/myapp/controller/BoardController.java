@@ -19,14 +19,13 @@ public class BoardController {
   private BoardDao boardDao;
   private AttachedFileDao attachedFileDao;
   private TransactionManager txManager;
-  private String uploadDir;
+  private String uploadDir = System.getProperty("board.upload.dir");
 
   public BoardController(BoardDao boardDao, AttachedFileDao attachedFileDao,
-      TransactionManager txManager, String uploadDir) {
+      TransactionManager txManager) {
     this.boardDao = boardDao;
     this.attachedFileDao = attachedFileDao;
     this.txManager = txManager;
-    this.uploadDir = uploadDir;
   }
 
   @RequestMapping("/board/form")
