@@ -2,9 +2,7 @@ package bitcamp.myapp.controller;
 
 import bitcamp.myapp.dao.AssignmentDao;
 import bitcamp.myapp.vo.Assignment;
-import java.sql.Date;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 public class AssignmentController {
 
@@ -14,55 +12,41 @@ public class AssignmentController {
     this.assignmentDao = assignmentDao;
   }
 
+  @RequestMapping("/assignment/form")
+  public String form() throws Exception {
+    return "/assignment/form.jsp";
+  }
+
   @RequestMapping("/assignment/add")
-  public String add(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-    if (request.getMethod().equals("GET")) {
-      return "/assignment/form.jsp";
-    }
-
-    Assignment assignment = new Assignment();
-
-    assignment.setTitle(request.getParameter("title"));
-    assignment.setContent(request.getParameter("content"));
-    assignment.setDeadline(Date.valueOf(request.getParameter("deadline")));
-
+  public String add(Assignment assignment) throws Exception {
     assignmentDao.add(assignment);
 
     return "redirect:list";
   }
 
   @RequestMapping("/assignment/list")
-  public String list(HttpServletRequest request, HttpServletResponse response) throws Exception {
+  public String list(Map<String, Object> model) throws Exception {
 
-    request.setAttribute("list", assignmentDao.findAll());
+    model.put("list", assignmentDao.findAll());
 
     return "/assignment/list.jsp";
   }
 
   @RequestMapping("/assignment/view")
-  public String view(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-    int no = Integer.parseInt(request.getParameter("no"));
+  public String view(@RequestParam("no") int no, Map<String, Object> model) throws Exception {
 
     Assignment assignment = assignmentDao.findBy(no);
 
     if (assignment == null) {
       throw new Exception("과제 번호가 유효하지 않습니다.");
     }
-    request.setAttribute("assignment", assignment);
+    model.put("assignment", assignment);
 
     return "/assignment/view.jsp";
   }
 
   @RequestMapping("/assignment/update")
-  public String update(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-    Assignment assignment = assignmentDao.findBy(Integer.parseInt(request.getParameter("no")));
-
-    assignment.setTitle(request.getParameter("title"));
-    assignment.setContent(request.getParameter("content"));
-    assignment.setDeadline(Date.valueOf(request.getParameter("deadline")));
+  public String update(Assignment assignment) throws Exception {
 
     assignmentDao.update(assignment);
 
@@ -70,9 +54,9 @@ public class AssignmentController {
   }
 
   @RequestMapping("/assignment/delete")
-  public String delete(HttpServletRequest request, HttpServletResponse response) throws Exception {
+  public String delete(@RequestParam("no") int no) throws Exception {
 
-    assignmentDao.delete(Integer.parseInt(request.getParameter("no")));
+    assignmentDao.delete(no);
 
     return "redirect:list";
   }

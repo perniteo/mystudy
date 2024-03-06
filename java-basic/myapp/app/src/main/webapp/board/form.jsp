@@ -12,7 +12,6 @@
 
    <body>
 <jsp:include page = '/header.jsp'></jsp:include>
-
     <h1>과제 관리 시스템</h1>
     <h2>${title}</h2>
     <form action='/app/board/add?category=${category}' method='post' enctype='multipart/form-data'>

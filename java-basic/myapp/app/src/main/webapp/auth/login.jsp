@@ -16,7 +16,7 @@
 </head>
 <body>
 
-<jsp:include page="/header"></jsp:include>
+<jsp:include page="/header.jsp"></jsp:include>
 
 <h1>로그인</h1>
 
@@ -30,7 +30,7 @@
   </c:choose>
 
 
-<jsp:include page="/footer"></jsp:include>
+<jsp:include page="/footer.jsp"></jsp:include>
 
 </body>
 </html>

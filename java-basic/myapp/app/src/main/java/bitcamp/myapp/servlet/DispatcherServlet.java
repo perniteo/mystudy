@@ -3,9 +3,11 @@ package bitcamp.myapp.servlet;
 import bitcamp.myapp.controller.AssignmentController;
 import bitcamp.myapp.controller.AuthController;
 import bitcamp.myapp.controller.BoardController;
+import bitcamp.myapp.controller.CookieValue;
 import bitcamp.myapp.controller.HomeController;
 import bitcamp.myapp.controller.MemberController;
 import bitcamp.myapp.controller.RequestMapping;
+import bitcamp.myapp.controller.RequestParam;
 import bitcamp.myapp.dao.AssignmentDao;
 import bitcamp.myapp.dao.AttachedFileDao;
 import bitcamp.myapp.dao.BoardDao;
@@ -14,18 +16,27 @@ import bitcamp.util.TransactionManager;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 @MultipartConfig(maxFileSize = 1024 * 1024 * 10)
 @WebServlet("/app/*")
@@ -69,6 +80,119 @@ public class DispatcherServlet extends HttpServlet {
     }
   }
 
+  private Object valueOf(String value, Class<?> type) {
+    if (type == byte.class) {
+      return Byte.parseByte(value);
+    } else if (type == short.class) {
+      return Short.parseShort(value);
+    } else if (type == int.class) {
+      return Integer.parseInt(value);
+    } else if (type == long.class) {
+      return Long.parseLong(value);
+    } else if (type == float.class) {
+      return Float.parseFloat(value);
+    } else if (type == double.class) {
+      return Double.parseDouble(value);
+    } else if (type == boolean.class) {
+      return Boolean.parseBoolean(value);
+    } else if (type == char.class) {
+      return value.charAt(0);
+    } else if (type == Date.class) {
+      return Date.valueOf(value);
+    } else if (type == String.class) {
+      return value;
+    }
+    return null;
+  }
+
+  private Object createValueObject(Class<?> type, HttpServletRequest request) throws Exception {
+    Constructor<?> constructor = type.getConstructor();
+
+    Object object = constructor.newInstance();
+
+    Method[] methods = type.getDeclaredMethods();
+
+    for (Method method : methods) {
+      if (!method.getName().startsWith("set")) {
+        continue;
+      }
+      String propName =
+          Character.toLowerCase(method.getName().charAt(3)) + method.getName().substring(4);
+
+      String requestParamValue = request.getParameter(propName);
+
+      if (requestParamValue != null) {
+        method.invoke(object, valueOf(requestParamValue, method.getParameters()[0].getType()));
+      }
+    }
+    return object;
+  }
+
+  private String getCookieValue(String name, HttpServletRequest request) {
+    Cookie[] cookies = request.getCookies();
+    for (Cookie cookie : cookies) {
+      if (cookie.getName().equals(name)) {
+        return cookie.getValue();
+      }
+    }
+    return null;
+  }
+
+  private Object[] prepareRequestHandlerArguments(Method m, HttpServletRequest request,
+      HttpServletResponse response, Map<String, Object> map) throws Exception {
+    Parameter[] params = m.getParameters();
+    Object[] args = new Object[params.length];
+
+    for (int i = 0; i < args.length; i++) {
+      Parameter param = params[i];
+      if (param.getType() == HttpServletRequest.class
+          || param.getType() == ServletRequest.class) {
+        args[i] = request;
+      } else if (param.getType() == HttpServletResponse.class
+          || param.getType() == ServletResponse.class) {
+        args[i] = response;
+      } else if (param.getType() == HttpSession.class) {
+        args[i] = request.getSession();
+      } else if (param.getType() == Map.class) {
+        args[i] = map;
+      } else {
+        CookieValue cookieValue = param.getAnnotation(CookieValue.class);
+        if (cookieValue != null) {
+          String cookie = getCookieValue(cookieValue.value(), request);
+          if (cookie != null) {
+            args[i] = valueOf(cookie, param.getType());
+          }
+          continue;
+        }
+
+        RequestParam requestParam = param.getAnnotation(RequestParam.class);
+        if (requestParam != null) {
+          String paramName = requestParam.value();
+
+          if (param.getType() == Part.class) {
+            Part part = request.getPart(paramName);
+            args[i] = part;
+          } else if (param.getType() == Part[].class) {
+            Collection<Part> parts = request.getParts();
+            List<Part> fileParts = new ArrayList<>();
+            for (Part part : parts) {
+              if (part.getName().equals(paramName)) {
+                fileParts.add(part);
+              }
+            }
+            args[i] = fileParts.toArray(new Part[0]);
+          } else {
+            String paramValue = request.getParameter(paramName);
+            args[i] = valueOf(paramValue, param.getType());
+          }
+          continue;
+        }
+        args[i] = createValueObject(param.getType(), request);
+      }
+    }
+    return args;
+  }
+
   @Override
   protected void service(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
@@ -83,7 +207,13 @@ public class DispatcherServlet extends HttpServlet {
     Object controller = requestHandler.controller;
 
     try {
-      String viewUrl = (String) method.invoke(controller, request, response);
+      Map<String, Object> map = new HashMap<>();
+
+      Object[] args = prepareRequestHandlerArguments(method, request, response, map);
+
+      String viewUrl = (String) method.invoke(controller, args);
+
+      map.forEach(request::setAttribute);
 
       // 페이지 컨트롤러가 알려준 JSP로 포워딩 한다.
       if (viewUrl.startsWith("redirect:")) {
