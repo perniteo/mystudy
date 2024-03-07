@@ -1,11 +1,7 @@
 package bitcamp.myapp.listener;
 
-import bitcamp.myapp.dao.mysql.AssignmentDaoImpl;
-import bitcamp.myapp.dao.mysql.AttachedFileDaoImpl;
-import bitcamp.myapp.dao.mysql.BoardDaoImpl;
-import bitcamp.myapp.dao.mysql.MemberDaoImpl;
+import bitcamp.context.ApplicationContext;
 import bitcamp.util.DBConnectionPool;
-import bitcamp.util.TransactionManager;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.ServletContext;
@@ -19,24 +15,29 @@ public class ContextLoaderListener implements ServletContextListener {
   @Override
   public void contextInitialized(ServletContextEvent sce) {
     System.out.println("allocate");
+    try {
+      DBConnectionPool connectionPool = new DBConnectionPool(
+          "jdbc:mysql://db-ld250-kr.vpc-pub-cdb.ntruss.com/studydb",
+          "study", "bitcamp!@#123");
 
-    DBConnectionPool connectionPool = new DBConnectionPool(
-        "jdbc:mysql://db-ld250-kr.vpc-pub-cdb.ntruss.com/studydb",
-        "study", "bitcamp!@#123");
+      Map<String, Object> beanMap = new HashMap<>();
+      beanMap.put("connectionPool", connectionPool);
 
-    Map<String, Object> beanMap = new HashMap<>();
+      ApplicationContext applicationContext = new ApplicationContext(beanMap, "bitcamp.myapp.dao",
+          "bitcamp.util");
+//
+//      beanMap.put("assignmentDao", new AssignmentDaoImpl(connectionPool));
+//      beanMap.put("memberDao", new MemberDaoImpl(connectionPool));
+//      beanMap.put("boardDao", new BoardDaoImpl(connectionPool));
+//      beanMap.put("attachedFileDao", new AttachedFileDaoImpl(connectionPool));
+//      beanMap.put("txManager", new TransactionManager(connectionPool));
 
-    beanMap.put("connectionPool", connectionPool);
+      ServletContext webAppStorage = sce.getServletContext();
 
-    beanMap.put("assignmentDao", new AssignmentDaoImpl(connectionPool));
-    beanMap.put("memberDao", new MemberDaoImpl(connectionPool));
-    beanMap.put("boardDao", new BoardDaoImpl(connectionPool));
-    beanMap.put("attachedFileDao", new AttachedFileDaoImpl(connectionPool));
-    beanMap.put("txManager", new TransactionManager(connectionPool));
-
-    ServletContext webAppStorage = sce.getServletContext();
-
-    webAppStorage.setAttribute("beanMap", beanMap);
+      webAppStorage.setAttribute("applicationContext", applicationContext);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   @Override

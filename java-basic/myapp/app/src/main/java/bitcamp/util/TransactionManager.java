@@ -2,6 +2,7 @@ package bitcamp.util;
 
 import java.sql.Connection;
 
+@Component
 public class TransactionManager {
 
   ConnectionPool connectionPool;
