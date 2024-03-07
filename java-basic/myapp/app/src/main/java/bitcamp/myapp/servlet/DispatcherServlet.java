@@ -1,16 +1,9 @@
 package bitcamp.myapp.servlet;
 
-import bitcamp.myapp.controller.AuthController;
-import bitcamp.myapp.controller.BoardController;
 import bitcamp.myapp.controller.CookieValue;
-import bitcamp.myapp.controller.MemberController;
 import bitcamp.myapp.controller.RequestMapping;
 import bitcamp.myapp.controller.RequestParam;
-import bitcamp.myapp.dao.AttachedFileDao;
-import bitcamp.myapp.dao.BoardDao;
-import bitcamp.myapp.dao.MemberDao;
 import bitcamp.util.Component;
-import bitcamp.util.TransactionManager;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -24,7 +17,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -51,20 +43,20 @@ public class DispatcherServlet extends HttpServlet {
       System.setProperty("member.upload.dir", this.getServletContext().getRealPath("/upload"));
       System.setProperty("board.upload.dir", this.getServletContext().getRealPath("/upload/board"));
 
-      ServletContext ctx = this.getServletContext();
+//      ServletContext ctx = this.getServletContext();
 
       beanMap = (Map<String, Object>) this.getServletContext().getAttribute("beanMap");
-      BoardDao boardDao = (BoardDao) ctx.getAttribute("boardDao");
-      MemberDao memberDao = (MemberDao) ctx.getAttribute("memberDao");
+//      BoardDao boardDao = (BoardDao) ctx.getAttribute("boardDao");
+//      MemberDao memberDao = (MemberDao) ctx.getAttribute("memberDao");
 //      AssignmentDao assignmentDao = (AssignmentDao) ctx.getAttribute("assignmentDao");
-      AttachedFileDao attachedFileDao = (AttachedFileDao) ctx.getAttribute("attachedFileDao");
-      TransactionManager txManager = (TransactionManager) ctx.getAttribute("txManager");
+//      AttachedFileDao attachedFileDao = (AttachedFileDao) ctx.getAttribute("attachedFileDao");
+//      TransactionManager txManager = (TransactionManager) ctx.getAttribute("txManager");
 
 //      controllers.add(new HomeController());
 //      controllers.add(new AssignmentController(assignmentDao));
-      controllers.add(new AuthController(memberDao));
-      controllers.add(new BoardController(boardDao, attachedFileDao, txManager));
-      controllers.add(new MemberController(memberDao));
+//      controllers.add(new AuthController(memberDao));
+//      controllers.add(new BoardController(boardDao, attachedFileDao, txManager));
+//      controllers.add(new MemberController(memberDao));
 
       preparePageControllers();
       prepareRequestHandlers(controllers);
