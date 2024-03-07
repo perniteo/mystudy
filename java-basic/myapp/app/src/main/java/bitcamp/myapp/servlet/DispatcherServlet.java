@@ -1,13 +1,11 @@
 package bitcamp.myapp.servlet;
 
-import bitcamp.myapp.controller.AssignmentController;
 import bitcamp.myapp.controller.AuthController;
 import bitcamp.myapp.controller.BoardController;
 import bitcamp.myapp.controller.CookieValue;
 import bitcamp.myapp.controller.MemberController;
 import bitcamp.myapp.controller.RequestMapping;
 import bitcamp.myapp.controller.RequestParam;
-import bitcamp.myapp.dao.AssignmentDao;
 import bitcamp.myapp.dao.AttachedFileDao;
 import bitcamp.myapp.dao.BoardDao;
 import bitcamp.myapp.dao.MemberDao;
@@ -45,23 +43,26 @@ public class DispatcherServlet extends HttpServlet {
 
   private Map<String, RequestHandler> requestHandlerMap = new HashMap<>();
   private List<Object> controllers = new ArrayList<>();
+  private Map<String, Object> beanMap;
 
   @Override
   public void init() throws ServletException {
     try {
-      System.setProperty("board.upload.dir", this.getServletContext().getRealPath("/upload/board"));
       System.setProperty("member.upload.dir", this.getServletContext().getRealPath("/upload"));
+      System.setProperty("board.upload.dir", this.getServletContext().getRealPath("/upload/board"));
 
       ServletContext ctx = this.getServletContext();
+
+      beanMap = (Map<String, Object>) this.getServletContext().getAttribute("beanMap");
       BoardDao boardDao = (BoardDao) ctx.getAttribute("boardDao");
       MemberDao memberDao = (MemberDao) ctx.getAttribute("memberDao");
-      AssignmentDao assignmentDao = (AssignmentDao) ctx.getAttribute("assignmentDao");
+//      AssignmentDao assignmentDao = (AssignmentDao) ctx.getAttribute("assignmentDao");
       AttachedFileDao attachedFileDao = (AttachedFileDao) ctx.getAttribute("attachedFileDao");
       TransactionManager txManager = (TransactionManager) ctx.getAttribute("txManager");
 
 //      controllers.add(new HomeController());
+//      controllers.add(new AssignmentController(assignmentDao));
       controllers.add(new AuthController(memberDao));
-      controllers.add(new AssignmentController(assignmentDao));
       controllers.add(new BoardController(boardDao, attachedFileDao, txManager));
       controllers.add(new MemberController(memberDao));
 
@@ -105,14 +106,35 @@ public class DispatcherServlet extends HttpServlet {
         Class<?> clazz = Class.forName(packageName + file.getName().replace(".class", ""));
         Component compAnno = clazz.getAnnotation(Component.class);
         if (compAnno != null) {
-          Constructor<?> constructor = clazz.getConstructor();
-          controllers.add(constructor.newInstance());
+          Constructor<?> constructor = clazz.getConstructors()[0];
+
+          Parameter[] params = constructor.getParameters();
+          Object[] args = getArguments(params);
+          controllers.add(constructor.newInstance(args));
           System.out.println(clazz.getName() + " 객체 생성!");
         }
       } else {
         findComponents(file, packageName + file.getName());
       }
     }
+  }
+
+  private Object[] getArguments(Parameter[] params) {
+    Object[] args = new Object[params.length];
+    for (int i = 0; i < params.length; i++) {
+      args[i] = findBean(params[i].getType());
+    }
+    return args;
+  }
+
+  private Object findBean(Class<?> type) {
+    Collection<Object> objs = beanMap.values();
+    for (Object obj : objs) {
+      if (type.isInstance(obj)) {
+        return obj;
+      }
+    }
+    return null;
   }
 
   private Object valueOf(String value, Class<?> type) {
