@@ -1,13 +1,11 @@
 package bitcamp.myapp.listener;
 
-import bitcamp.context.ApplicationContext;
-import bitcamp.util.DBConnectionPool;
-import java.util.HashMap;
-import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 @WebListener
 public class ContextLoaderListener implements ServletContextListener {
@@ -16,15 +14,15 @@ public class ContextLoaderListener implements ServletContextListener {
   public void contextInitialized(ServletContextEvent sce) {
     System.out.println("allocate");
     try {
-      DBConnectionPool connectionPool = new DBConnectionPool(
-          "jdbc:mysql://db-ld250-kr.vpc-pub-cdb.ntruss.com/studydb",
-          "study", "bitcamp!@#123");
+//      DBConnectionPool connectionPool = new DBConnectionPool(
+//          "jdbc:mysql://db-ld250-kr.vpc-pub-cdb.ntruss.com/studydb",
+//          "study", "bitcamp!@#123");
+//
+//      Map<String, Object> beanMap = new HashMap<>();
+//      beanMap.put("connectionPool", connectionPool);
 
-      Map<String, Object> beanMap = new HashMap<>();
-      beanMap.put("connectionPool", connectionPool);
-
-      ApplicationContext applicationContext = new ApplicationContext(beanMap, "bitcamp.myapp.dao",
-          "bitcamp.util");
+      ApplicationContext applicationContext = new ClassPathXmlApplicationContext(
+          "/config/application-context.xml");
 //
 //      beanMap.put("assignmentDao", new AssignmentDaoImpl(connectionPool));
 //      beanMap.put("memberDao", new MemberDaoImpl(connectionPool));

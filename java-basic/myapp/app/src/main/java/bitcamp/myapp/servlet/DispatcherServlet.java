@@ -1,6 +1,5 @@
 package bitcamp.myapp.servlet;
 
-import bitcamp.context.ApplicationContext;
 import bitcamp.myapp.controller.CookieValue;
 import bitcamp.myapp.controller.RequestMapping;
 import bitcamp.myapp.controller.RequestParam;
@@ -12,6 +11,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -27,14 +27,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 @MultipartConfig(maxFileSize = 1024 * 1024 * 10)
-@WebServlet("/app/*")
+@WebServlet(value = "/app/*", loadOnStartup = 1)
 public class DispatcherServlet extends HttpServlet {
 
   private Map<String, RequestHandler> requestHandlerMap = new HashMap<>();
-  private List<Object> controllers = new ArrayList<>();
-  private Map<String, Object> beanMap;
+  //  private List<Object> controllers = new ArrayList<>();
+//  private Map<String, Object> beanMap;
   private ApplicationContext applicationContext;
 
   @Override
@@ -42,14 +44,28 @@ public class DispatcherServlet extends HttpServlet {
     try {
       System.setProperty("member.upload.dir", this.getServletContext().getRealPath("/upload"));
       System.setProperty("board.upload.dir", this.getServletContext().getRealPath("/upload/board"));
+      ApplicationContext parent = (ApplicationContext) this.getServletContext()
+          .getAttribute("applicationContext");
+      applicationContext = new ClassPathXmlApplicationContext(
+          new String[]{"config/app-servlet.xml"}, parent);
+
+      System.out.println(Arrays.toString(applicationContext.getBeanDefinitionNames()));
+      String[] beans = applicationContext.getBeanDefinitionNames();
+
+      List<Object> controllers = new ArrayList<>();
+
+      for (String bean : beans) {
+        if (bean.endsWith("Controller")) {
+          controllers.add(applicationContext.getBean(bean));
+        }
+      }
+      prepareRequestHandlers(controllers);
 
 //      ServletContext ctx = this.getServletContext();
 
 //      beanMap = (Map<String, Object>) this.getServletContext().getAttribute("beanMap");
 
-      applicationContext = new ApplicationContext(
-          (ApplicationContext) this.getServletContext().getAttribute("applicationContext"),
-          "bitcamp.myapp.controller");
+//      applicationContext = new ClassPathXmlApplicationContext("bitcamp.myapp.controller");
 //      BoardDao boardDao = (BoardDao) ctx.getAttribute("boardDao");
 //      MemberDao memberDao = (MemberDao) ctx.getAttribute("memberDao");
 //      AssignmentDao assignmentDao = (AssignmentDao) ctx.getAttribute("assignmentDao");
@@ -62,7 +78,7 @@ public class DispatcherServlet extends HttpServlet {
 //      controllers.add(new BoardController(boardDao, attachedFileDao, txManager));
 //      controllers.add(new MemberController(memberDao));
 //      preparePageControllers();
-      prepareRequestHandlers(applicationContext.getBeans());
+//      prepareRequestHandlers(applicationContext.getBeans());
     } catch (Exception e) {
       throw new ServletException(e);
     }
