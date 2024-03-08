@@ -30,7 +30,7 @@
        </label>
       </div>
       <div>
-        사진: <input name='photo' type='file'>
+        사진: <input name='file' type='file'>
       </div>
       <div>
         <button>가입</button>

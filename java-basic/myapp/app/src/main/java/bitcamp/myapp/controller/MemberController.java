@@ -5,18 +5,22 @@ import bitcamp.myapp.vo.Member;
 import java.io.File;
 import java.util.Map;
 import java.util.UUID;
+import javax.servlet.ServletContext;
 import javax.servlet.http.Part;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-@Component
+@Controller
 public class MemberController {
 
   private MemberDao memberDao;
-  private String uploadDir = System.getProperty("member.upload.dir");
+  private String uploadDir;
 
-  public MemberController(MemberDao memberDao) {
+  public MemberController(MemberDao memberDao, ServletContext servletContext) {
     System.out.println("member Controller");
     this.memberDao = memberDao;
+    this.uploadDir = servletContext.getRealPath("/upload");
   }
 
   @RequestMapping("/member/form")
@@ -26,7 +30,7 @@ public class MemberController {
 
 
   @RequestMapping("/member/add")
-  public String add(Member member, @RequestParam("photo") Part part) throws Exception {
+  public String add(Member member, @RequestParam("file") Part part) throws Exception {
     if (part.getSize() > 0) {
       String fileName = UUID.randomUUID().toString();
       member.setPhoto(fileName);
@@ -60,7 +64,7 @@ public class MemberController {
   }
 
   @RequestMapping("/member/update")
-  public String update(Member member, @RequestParam("photo") Part part) throws Exception {
+  public String update(Member member, @RequestParam("file") Part part) throws Exception {
 
     if (part.getSize() > 0) {
       new File(this.uploadDir + "/" + member.getPhoto()).delete();

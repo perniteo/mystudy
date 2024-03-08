@@ -11,24 +11,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-@Component
+@Controller
 public class BoardController {
 
   private BoardDao boardDao;
   private AttachedFileDao attachedFileDao;
   private TransactionManager txManager;
-  private String uploadDir = System.getProperty("board.upload.dir");
+  private String uploadDir;
 
   public BoardController(BoardDao boardDao, AttachedFileDao attachedFileDao,
-      TransactionManager txManager) {
+      TransactionManager txManager, ServletContext servletContext) {
     System.out.println("board Controller");
     this.boardDao = boardDao;
     this.attachedFileDao = attachedFileDao;
     this.txManager = txManager;
+    this.uploadDir = servletContext.getRealPath("/upload/board");
   }
 
   @RequestMapping("/board/form")
@@ -41,7 +45,9 @@ public class BoardController {
 
 
   @RequestMapping("/board/add")
-  public String add(Board board, @RequestParam("files") Part[] files, Map<String, Object> map,
+  public String add(Board board,
+      @RequestParam(value = "attachedFiles", required = false) Part[] files,
+      Map<String, Object> map,
       HttpSession session) throws Exception {
 
     int category = board.getCategory();
@@ -131,7 +137,7 @@ public class BoardController {
 
   @RequestMapping("/board/file/delete")
   public String fileDelete(@RequestParam("category") int category, @RequestParam("no") int fileNo,
-      @RequestParam("files") Part[] files, HttpSession session)
+      HttpSession session)
       throws Exception {
     Member loginUser = (Member) session.getAttribute("loginUser");
     if (loginUser == null) {
@@ -167,7 +173,9 @@ public class BoardController {
   }
 
   @RequestMapping("/board/update")
-  public String update(Board board, @RequestParam("files") Part[] files, HttpSession session)
+  public String update(Board board,
+      @RequestParam(value = "attachedFiles", required = false) Part[] files,
+      HttpSession session)
       throws Exception {
 
     try {
