@@ -13,11 +13,12 @@ public class Exam0110 {
     // => 단 별명은 클래스 이름이다.
     //
     // <typeAliases>
-    //   <package name="com.eomcs.mybatis.ex01.e"/>
+    // <package name="com.eomcs.mybatis.ex01.e"/>
     // </typeAliases>
     //
-    SqlSession sqlSession = new SqlSessionFactoryBuilder().build(Resources.getResourceAsStream(
-        "com/eomcs/mybatis/ex01/e/mybatis-config.xml")).openSession();
+    SqlSession sqlSession = new SqlSessionFactoryBuilder()
+        .build(Resources.getResourceAsStream("com/eomcs/mybatis/ex01/e/mybatis-config.xml"))
+        .openSession();
 
     List<Board> boards = sqlSession.selectList("BoardMapper.selectBoard");
 

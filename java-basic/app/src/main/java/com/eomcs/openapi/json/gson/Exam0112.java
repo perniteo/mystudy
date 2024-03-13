@@ -49,7 +49,7 @@ public class Exam0112 {
         new GsonDateFormatAdapter() // Date 형식의 데이터를 JSON 문자열로 바꿔줄 변환기
         );
 
-    Gson gson = builder.create();j
+    Gson gson = builder.create();
 
     // 3) 객체의 값을 JSON 문자열로 얻기
     String jsonStr = gson.toJson(m);

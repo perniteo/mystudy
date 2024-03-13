@@ -5,6 +5,10 @@
 <configuration>
 
   <properties resource="com/eomcs/mybatis/ex01/c/jdbc.properties"></properties>
+  
+  <typeAliases>
+    <package name = "com.eomcs.mybatis.ex01.c"/>
+  </typeAliases>
 
   <environments default="development">
     <environment id="development">

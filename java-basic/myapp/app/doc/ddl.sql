@@ -5,6 +5,14 @@ drop table if exists board_files restrict;
 drop table if exists assignments restrict;
 drop table if exists members restrict;
 
+
+숙소 (
+숙소 번호, 숙소 이름, 위치, 호스트, 가격(1박), 날짜, 평점, 숙소 옵션,
+)
+게시글 (
+게시글 번호, 제목, 내용, 첨부파일, 작성자, 조회 수, 추천 수, 분류, 댓글 수
+)
+
 create table assignments(
 assignment_no int primary key auto_increment,
 title varchar(255) not null,

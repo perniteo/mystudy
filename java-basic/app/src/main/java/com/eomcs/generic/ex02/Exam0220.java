@@ -19,7 +19,7 @@ public class Exam0220 {
    *   C
    */
 
-  public static void main(String[] args) {z
+  public static void main(String[] args) {
 
     // m1(ArrayList)
     // => 제네릭의 타입을 지정하지 않으면, 

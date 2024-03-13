@@ -2,19 +2,20 @@ package com.eomcs.web;
 
 import java.io.IOException;
 import javax.servlet.GenericServlet;
-import javax.servlet.Servlet;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/hello2")
-public class HelloServlet2 extends GenericServlet {
+@WebServlet("/hello3")
+public class HelloServlet3 extends HttpServlet {
 
   @Override
-  public void service(ServletRequest req, ServletResponse res)
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
-    res.getWriter().println("Hello2");
+    resp.getWriter().println("Hello3");
   }
 }

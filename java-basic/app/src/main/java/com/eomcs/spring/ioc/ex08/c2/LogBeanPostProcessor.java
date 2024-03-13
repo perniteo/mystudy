@@ -1,6 +1,5 @@
-package com.eomcs.spring.ioc.ex08.c2;
+package spring.ioc.ex08.c2;
 
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
 // 역할:
@@ -17,10 +16,8 @@ public class LogBeanPostProcessor implements BeanPostProcessor {
   }
 
   @Override
-  public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-    System.out.printf("===> %s:%s\n",
-        beanName,
-        bean.getClass().getName());
+  public Object postProcessAfterInitialization(Object bean, String beanName) {
+    System.out.printf("===> %s:%s\n", beanName, bean.getClass().getName());
     return null;
   }
 }

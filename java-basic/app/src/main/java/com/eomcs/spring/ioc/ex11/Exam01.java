@@ -11,6 +11,12 @@ public class Exam01 {
     ApplicationContext iocContainer = //
         new AnnotationConfigApplicationContext(AppConfig.class);
 
+    String car2 = iocContainer.getBean("car2").toString();
+    String engine2 = iocContainer.getBean("engine2").toString();
+    System.out.println(car2);
+    System.out.println(engine2);
+
+
     SpringUtils.printBeanList(iocContainer);
 
   }

@@ -6,6 +6,7 @@
   <properties resource="com/eomcs/spring/ioc/ex12/jdbc.properties"></properties>
 
   <typeAliases>
+    <package name = "com.eomcs.spring.ioc.ex12"/>
     <typeAlias type="com.eomcs.spring.ioc.ex12.Board" alias="Board"/>
   </typeAliases>
 

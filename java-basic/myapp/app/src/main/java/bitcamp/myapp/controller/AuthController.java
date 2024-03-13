@@ -51,6 +51,7 @@ public class AuthController {
     if (member != null) {
       session.setAttribute("loginUser", member);
     }
+
     return "/auth/login.jsp";
   }
 
