@@ -14,7 +14,6 @@
     id="multipartResolver">
   </bean>
 
-  <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
   <context:component-scan base-package="bitcamp.myapp.controller"/>
   <mvc:annotation-driven/>
 </beans>

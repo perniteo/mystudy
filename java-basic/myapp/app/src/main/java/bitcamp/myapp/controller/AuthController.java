@@ -33,7 +33,7 @@ public class AuthController {
   public String login(
       @RequestParam(value = "email", required = false) String email,
       @RequestParam("password") String password,
-      @RequestParam("saveEmail") String saveEmail, HttpSession session,
+      @RequestParam(value = "saveEmail", required = false) String saveEmail, HttpSession session,
       HttpServletResponse response) throws Exception {
 
     if (saveEmail != null) {
