@@ -3,18 +3,25 @@ package bitcamp.util;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.ArrayList;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
 public class DBConnectionPool implements ConnectionPool {
 
   // 개별 스레드용 DB 커넥션 저장소
   private static final ThreadLocal<Connection> connectionThreadLocal = new ThreadLocal<>();
   // DB 커넥션 목록
   ArrayList<Connection> connections = new ArrayList<>();
+
+  @Value("${jdbc.url}")
   private String jdbcUrl;
+  @Value("${jdbc.username}")
   private String username;
+  @Value("${jdbc.password}")
   private String password;
 
-  public DBConnectionPool(String jdbcUrl, String username, String password) {
+  public DBConnectionPool() {
     this.jdbcUrl = jdbcUrl;
     this.username = username;
     this.password = password;
@@ -27,7 +34,7 @@ public class DBConnectionPool implements ConnectionPool {
     if (con == null) {
       // 스레드에 보관된 Connection 이 없다면,
 
-      if (connections.size() > 0) {
+      if (!connections.isEmpty()) {
         // 스레드풀에 놀고 있는 Connection이 있다면,
         con = connections.remove(0); // 목록에서 맨 처음 객체를 꺼낸다.
         System.out.printf("%s: DB 커넥션풀에서 꺼냄\n", Thread.currentThread().getName());
