@@ -15,7 +15,6 @@ public class AboutController {
   }
 
   @GetMapping("/about")
-  public String execute() throws Exception {
-    return "/about.jsp";
+  public void execute() {
   }
 }

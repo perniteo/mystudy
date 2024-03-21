@@ -15,7 +15,6 @@ public class HomeController {
   }
 
   @GetMapping("/home")
-  public String execute() throws Exception {
-    return "/home.jsp";
+  public void home() {
   }
 }

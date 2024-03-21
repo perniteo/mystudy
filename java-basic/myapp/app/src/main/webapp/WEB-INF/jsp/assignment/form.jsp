@@ -2,7 +2,6 @@
     contentType="text/html;charset=UTF-8"
     pageEncoding="UTF-8"
     trimDirectiveWhitespaces = "true"%>
-
 <!DOCTYPE html>
  <html lang='en'>
   <head>
@@ -11,32 +10,30 @@
   </head>
 
    <body>
-<jsp:include page = '/header.jsp'></jsp:include>
+    <jsp:include page = '../header.jsp'></jsp:include>
     <h1>과제 관리 시스템</h1>
-    <h2>${title}</h2>
-    <form action='/app/board/add?category=${category}' method='post' enctype='multipart/form-data'>
+    <h2>회원</h2>
+    <form action='/app/assignment/add' method='post'>
       <div>
        <label>
-       <input readonly name='category' type='hidden' value='${category}'>
+       제목: <input name='title' type='text' required>
        </label>
       </div>
       <div>
        <label>
-       제목: <input name='title' type='text'>
+       내용: <textarea name='content' required></textarea>
        </label>
       </div>
       <div>
        <label>
-       내용: <textarea name='content'></textarea>
+       마감기한: <input name='deadline' type='date' required>
        </label>
       </div>
-      <div>
-        첨부파일: <input multiple name='attachedFiles' type='file'>
-      </div>
+
       <div>
         <button>등록</button>
       </div>
     </form>
-<jsp:include page = '/footer.jsp'></jsp:include>
+    <jsp:include page = '../footer.jsp'></jsp:include>
   </body>
  </html>

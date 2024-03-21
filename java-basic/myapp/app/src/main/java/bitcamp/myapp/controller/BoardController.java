@@ -9,7 +9,6 @@ import bitcamp.util.TransactionManager;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
@@ -20,7 +19,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
@@ -43,23 +41,22 @@ public class BoardController {
   }
 
   @GetMapping("form")
-  public String form(int category, Model model)
+  public void form(int category, Model model)
       throws Exception {
     model.addAttribute("category", category);
     model.addAttribute("title", category == 1 ? "게시글" : "가입 인사");
-    return "/board/form.jsp";
   }
 
 
   @PostMapping("add")
   public String add(Board board,
       MultipartFile[] attachedFiles,
-      Map<String, Object> map,
+      Model model,
       HttpSession session) throws Exception {
 
     int category = board.getCategory();
-    map.put("category", category);
-    map.put("title", category == 1 ? "게시글" : "가입 인사");
+    log.debug(category);
+    model.addAttribute("category", category);
 
     try {
       Member member = (Member) session.getAttribute("loginUser");
@@ -92,7 +89,7 @@ public class BoardController {
 
       txManager.commit();
 
-      return "redirect:list?category=" + category;
+      return "redirect:list";
 
     } catch (Exception e) {
       try {
@@ -143,7 +140,7 @@ public class BoardController {
   }
 
   @GetMapping("file/delete")
-  public String fileDelete(int category, @RequestParam("no") int fileNo,
+  public String fileDelete(int category, int no,
       HttpSession session)
       throws Exception {
     Member loginUser = (Member) session.getAttribute("loginUser");
@@ -151,7 +148,7 @@ public class BoardController {
       throw new Exception("로그인하시기 바랍니다!");
     }
 
-    AttachedFile file = attachedFileDao.findByNo(fileNo);
+    AttachedFile file = attachedFileDao.findByNo(no);
     if (file == null) {
       throw new Exception("첨부파일 번호가 유효하지 않습니다.");
     }
@@ -161,7 +158,7 @@ public class BoardController {
       throw new Exception("권한이 없습니다.");
     }
 
-    attachedFileDao.delete(fileNo);
+    attachedFileDao.delete(no);
     new File(this.uploadDir + "/" + file.getFilePath()).delete();
 
     return "redirect:../view?category=" + category + "&no=" + file.getBoardNo();
@@ -169,23 +166,24 @@ public class BoardController {
   }
 
   @GetMapping("list")
-  public String list(int category, Model model)
+  public void list(int category, Model model)
       throws Exception {
 
     model.addAttribute("title", category == 1 ? "게시글" : "가입 인사");
     model.addAttribute("category", category);
     model.addAttribute("list", boardDao.findAll(category));
-
-    return "/board/list.jsp";
   }
 
   @PostMapping("update")
   public String update(Board board,
       MultipartFile[] attachedFiles,
-      HttpSession session)
+      HttpSession session,
+      Model model)
       throws Exception {
 
     try {
+      model.addAttribute("category", board.getCategory());
+
       Member loginUser = (Member) session.getAttribute("loginUser");
       if (loginUser == null) {
         throw new Exception("로그인하시기 바랍니다!");
@@ -218,7 +216,7 @@ public class BoardController {
         attachedFileDao.addAll(files);
       }
       txManager.commit();
-      return "redirect:list?category=" + board.getCategory();
+      return "redirect:list";
 
     } catch (Exception e) {
       try {
@@ -230,7 +228,7 @@ public class BoardController {
   }
 
   @GetMapping("view")
-  public String view(int category, int no,
+  public void view(int category, int no,
       Model model) throws Exception {
 
     Board board = boardDao.findBy(no);
@@ -243,7 +241,5 @@ public class BoardController {
     model.addAttribute("category", category);
     model.addAttribute("board", board);
     model.addAttribute("files", attachedFileDao.findAllByBoardNo(no));
-
-    return "/board/view.jsp";
   }
 }

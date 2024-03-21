@@ -29,8 +29,7 @@ public class MemberController {
   }
 
   @GetMapping("form")
-  public String form() {
-    return "/member/form.jsp";
+  public void form() {
   }
 
 
@@ -63,19 +62,26 @@ public class MemberController {
   }
 
   @GetMapping("list")
-  public String list(Model model) throws Exception {
+  public void list(Model model) throws Exception {
     model.addAttribute("list", memberDao.findAll());
-    return "/member/list.jsp";
   }
 
   @PostMapping("update")
   public String update(Member member, MultipartFile file) throws Exception {
+
+    Member old = memberDao.findBy(member.getNo());
+    if (old == null) {
+      throw new Exception("회원 번호가 유효하지 않습니다.");
+    }
+    member.setCreatedDate(old.getCreatedDate());
 
     if (file.getSize() > 0) {
       new File(this.uploadDir + "/" + member.getPhoto()).delete();
       String fileName = UUID.randomUUID().toString();
       member.setPhoto(fileName);
       file.transferTo(new File(this.uploadDir + "/" + fileName));
+    } else {
+      member.setPhoto(old.getPhoto());
     }
 
     memberDao.update(member);
@@ -84,8 +90,7 @@ public class MemberController {
   }
 
   @GetMapping("view")
-  public String view(int no, Model model) throws Exception {
+  public void view(int no, Model model) throws Exception {
     model.addAttribute("member", memberDao.findBy(no));
-    return "/member/view.jsp";
   }
 }

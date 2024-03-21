@@ -10,30 +10,32 @@
   </head>
 
    <body>
-    <jsp:include page = '/header.jsp'></jsp:include>
+    <jsp:include page = '../header.jsp'></jsp:include>
     <h1>과제 관리 시스템</h1>
     <h2>회원</h2>
-    <form action='/app/assignment/add' method='post'>
+    <form action='/app/member/add' method='post' enctype='multipart/form-data'>
       <div>
        <label>
-       제목: <input name='title' type='text' required>
+       이름: <input name='name' type='text'>
        </label>
       </div>
       <div>
        <label>
-       내용: <textarea name='content' required></textarea>
+       이메일: <input name='email' type='text'>
        </label>
       </div>
       <div>
        <label>
-       마감기한: <input name='deadline' type='date' required>
+       암호: <input name='password' type='password'>
        </label>
       </div>
-
       <div>
-        <button>등록</button>
+        사진: <input name='file' type='file'>
+      </div>
+      <div>
+        <button>가입</button>
       </div>
     </form>
-    <jsp:include page = '/footer.jsp'></jsp:include>
+    <jsp:include page = '../footer.jsp'></jsp:include>
   </body>
  </html>
