@@ -7,10 +7,11 @@ import bitcamp.util.DBConnectionPool;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,10 +19,12 @@ public class MemberDaoImpl implements MemberDao {
 
   private final Log log = LogFactory.getLog(this.getClass());
   DBConnectionPool dbConnectionPool;
+  SqlSessionFactory sqlSessionFactory;
 
-  public MemberDaoImpl(DBConnectionPool dbConnectionPool) {
+  public MemberDaoImpl(DBConnectionPool dbConnectionPool, SqlSessionFactory sqlSessionFactory) {
     log.debug("MemberDaoImpl 생성자");
     this.dbConnectionPool = dbConnectionPool;
+    this.sqlSessionFactory = sqlSessionFactory;
   }
 
   @Override
@@ -84,27 +87,29 @@ public class MemberDaoImpl implements MemberDao {
   @Override
   public List<Member> findAll() {
 
-    List<Member> members = new ArrayList<>();
+//    List<Member> members = new ArrayList<>();
 
-    try (Connection connection = dbConnectionPool.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(
-            "select * from members order by member_no desc"
-        )) {
-      ResultSet resultSet = preparedStatement.executeQuery();
+    try (
+        SqlSession sqlSession = sqlSessionFactory.openSession()) {
+//        Connection connection = dbConnectionPool.getConnection();
+//        PreparedStatement preparedStatement = connection.prepareStatement(
+//            ""
+//        )) {
+//      ResultSet resultSet = preparedStatement.executeQuery();
+//
+//      while (resultSet.next()) {
+//        Member member = new Member();
+//        member.setNo(resultSet.getInt("member_no"));
+//        member.setEmail(resultSet.getString("email"));
+//        member.setName(resultSet.getString("name"));
+//        member.setPassword(resultSet.getString("password"));
+//        member.setPhoto(resultSet.getString("photo"));
+//        member.setCreatedDate(resultSet.getDate("join_date"));
+//
+//        members.add(member);
+//      }
 
-      while (resultSet.next()) {
-        Member member = new Member();
-        member.setNo(resultSet.getInt("member_no"));
-        member.setEmail(resultSet.getString("email"));
-        member.setName(resultSet.getString("name"));
-        member.setPassword(resultSet.getString("password"));
-        member.setPhoto(resultSet.getString("photo"));
-        member.setCreatedDate(resultSet.getDate("join_date"));
-
-        members.add(member);
-      }
-
-      return members;
+      return sqlSession.selectList("MemberDao.list");
 
     } catch (Exception e) {
       throw new DaoException("Data loading error", e);
