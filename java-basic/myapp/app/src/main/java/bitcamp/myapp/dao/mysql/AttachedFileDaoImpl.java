@@ -9,15 +9,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AttachedFileDaoImpl implements AttachedFileDao {
 
+  private final Log log = LogFactory.getLog(this.getClass());
   DBConnectionPool dbConnectionPool;
 
   public AttachedFileDaoImpl(DBConnectionPool dbConnectionPool) {
-    System.out.println("AttachedFileDao");
+    log.debug("AttachedFileDaoImpl 생성자");
     this.dbConnectionPool = dbConnectionPool;
   }
 

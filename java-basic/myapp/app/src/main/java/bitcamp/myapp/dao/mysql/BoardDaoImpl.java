@@ -10,15 +10,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class BoardDaoImpl implements BoardDao {
 
+  private final Log log = LogFactory.getLog(this.getClass());
   DBConnectionPool dbConnectionPool;
 
   public BoardDaoImpl(DBConnectionPool dbConnectionPool) {
-    System.out.println("BoardDaoImpl");
+    log.debug("BoardDaoImpl 생성자");
     this.dbConnectionPool = dbConnectionPool;
   }
 

@@ -13,14 +13,21 @@ import java.util.Map;
 import java.util.UUID;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.Part;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
+@RequestMapping("/board")
 public class BoardController {
 
+  private final Log log = LogFactory.getLog(this.getClass());
   private BoardDao boardDao;
   private AttachedFileDao attachedFileDao;
   private TransactionManager txManager;
@@ -28,25 +35,25 @@ public class BoardController {
 
   public BoardController(BoardDao boardDao, AttachedFileDao attachedFileDao,
       TransactionManager txManager, ServletContext servletContext) {
-    System.out.println("board Controller");
+    log.debug("BoardController 생성자");
     this.boardDao = boardDao;
     this.attachedFileDao = attachedFileDao;
     this.txManager = txManager;
     this.uploadDir = servletContext.getRealPath("/upload/board");
   }
 
-  @RequestMapping("/board/form")
-  public String form(@RequestParam("category") int category, Map<String, Object> map)
+  @GetMapping("form")
+  public String form(int category, Model model)
       throws Exception {
-    map.put("category", category);
-    map.put("title", category == 1 ? "게시글" : "가입 인사");
+    model.addAttribute("category", category);
+    model.addAttribute("title", category == 1 ? "게시글" : "가입 인사");
     return "/board/form.jsp";
   }
 
 
-  @RequestMapping("/board/add")
+  @PostMapping("add")
   public String add(Board board,
-      @RequestParam(value = "attachedFiles", required = false) Part[] files,
+      MultipartFile[] attachedFiles,
       Map<String, Object> map,
       HttpSession session) throws Exception {
 
@@ -60,15 +67,15 @@ public class BoardController {
         throw new Exception("로그인 하세요");
       }
 
-      ArrayList<AttachedFile> attachedFiles = new ArrayList<>();
+      ArrayList<AttachedFile> files = new ArrayList<>();
 
-      for (Part part : files) {
+      for (MultipartFile part : attachedFiles) {
         if (part.getSize() == 0) {
           continue;
         }
         String fileName = UUID.randomUUID().toString();
-        part.write(this.uploadDir + "/" + fileName);
-        attachedFiles.add(new AttachedFile().filePath(fileName));
+        part.transferTo(new File(this.uploadDir + "/" + fileName));
+        files.add(new AttachedFile().filePath(fileName));
       }
       board.setWriter(member);
 
@@ -76,11 +83,11 @@ public class BoardController {
 
       boardDao.add(board);
 
-      if (!attachedFiles.isEmpty()) {
-        for (AttachedFile file : attachedFiles) {
+      if (!files.isEmpty()) {
+        for (AttachedFile file : files) {
           file.setBoardNo(board.getNo());
         }
-        attachedFileDao.addAll(attachedFiles);
+        attachedFileDao.addAll(files);
       }
 
       txManager.commit();
@@ -96,9 +103,9 @@ public class BoardController {
     }
   }
 
-  @RequestMapping("/board/delete")
-  public String delete(@RequestParam("category") int category, HttpSession session,
-      @RequestParam("no") int no) throws Exception {
+  @GetMapping("delete")
+  public String delete(int category, HttpSession session,
+      int no) throws Exception {
 
     try {
       Member loginUser = (Member) session.getAttribute("loginUser");
@@ -135,8 +142,8 @@ public class BoardController {
     }
   }
 
-  @RequestMapping("/board/file/delete")
-  public String fileDelete(@RequestParam("category") int category, @RequestParam("no") int fileNo,
+  @GetMapping("file/delete")
+  public String fileDelete(int category, @RequestParam("no") int fileNo,
       HttpSession session)
       throws Exception {
     Member loginUser = (Member) session.getAttribute("loginUser");
@@ -161,20 +168,20 @@ public class BoardController {
 
   }
 
-  @RequestMapping("/board/list")
-  public String list(@RequestParam("category") int category, Map<String, Object> map)
+  @GetMapping("list")
+  public String list(int category, Model model)
       throws Exception {
 
-    map.put("title", category == 1 ? "게시글" : "가입 인사");
-    map.put("category", category);
-    map.put("list", boardDao.findAll(category));
+    model.addAttribute("title", category == 1 ? "게시글" : "가입 인사");
+    model.addAttribute("category", category);
+    model.addAttribute("list", boardDao.findAll(category));
 
     return "/board/list.jsp";
   }
 
-  @RequestMapping("/board/update")
+  @PostMapping("update")
   public String update(Board board,
-      @RequestParam(value = "attachedFiles", required = false) Part[] files,
+      MultipartFile[] attachedFiles,
       HttpSession session)
       throws Exception {
 
@@ -191,24 +198,24 @@ public class BoardController {
         throw new Exception("권한이 없습니다.");
       }
 
-      ArrayList<AttachedFile> attachedFiles = new ArrayList<>();
+      ArrayList<AttachedFile> files = new ArrayList<>();
 
-      for (Part part : files) {
+      for (MultipartFile part : attachedFiles) {
         if (part.getSize() == 0) {
           continue;
         }
         String filename = UUID.randomUUID().toString();
-        part.write(this.uploadDir + "/" + filename);
-        attachedFiles.add(new AttachedFile().filePath(filename));
+        part.transferTo(new File(this.uploadDir + "/" + filename));
+        files.add(new AttachedFile().filePath(filename));
       }
 
       txManager.startTransaction();
       boardDao.update(board);
-      if (!attachedFiles.isEmpty()) {
-        for (AttachedFile attachedFile : attachedFiles) {
+      if (!files.isEmpty()) {
+        for (AttachedFile attachedFile : files) {
           attachedFile.setBoardNo(board.getNo());
         }
-        attachedFileDao.addAll(attachedFiles);
+        attachedFileDao.addAll(files);
       }
       txManager.commit();
       return "redirect:list?category=" + board.getCategory();
@@ -222,9 +229,9 @@ public class BoardController {
     }
   }
 
-  @RequestMapping("/board/view")
-  public String view(@RequestParam("category") int category, @RequestParam("no") int no,
-      Map<String, Object> map) throws Exception {
+  @GetMapping("view")
+  public String view(int category, int no,
+      Model model) throws Exception {
 
     Board board = boardDao.findBy(no);
 
@@ -232,10 +239,10 @@ public class BoardController {
       throw new Exception("번호 오류");
     }
 
-    map.put("title", category == 1 ? "게시글" : "가입인사");
-    map.put("category", category);
-    map.put("board", board);
-    map.put("files", attachedFileDao.findAllByBoardNo(no));
+    model.addAttribute("title", category == 1 ? "게시글" : "가입인사");
+    model.addAttribute("category", category);
+    model.addAttribute("board", board);
+    model.addAttribute("files", attachedFileDao.findAllByBoardNo(no));
 
     return "/board/view.jsp";
   }
