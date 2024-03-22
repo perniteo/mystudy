@@ -22,14 +22,14 @@
     </foreach>
   </insert>
 
-  <select id="findAllByBoardNo" parameterType="int" resultType="bitcamp.myapp.vo.AttachedFile">
-    select file_no as no, file_path as filePath, board_no as boardNo
+  <select id="findAllByBoardNo" parameterType="int" resultMap="AttachedFileMap">
+    select file_no, file_path, board_no
     from board_files
     where board_no = #{no} order by file_no asc
   </select>
 
-  <select id="findByNo" parameterType="int" resultType="bitcamp.myapp.vo.AttachedFile">
-    select file_no as no, file_path as filePath, board_no as boardNo
+  <select id="findByNo" parameterType="int" resultMap="AttachedFileMap">
+    select file_no, file_path, board_no
     from board_files
     where file_no = #{no}
   </select>
