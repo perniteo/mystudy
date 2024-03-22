@@ -2,7 +2,6 @@ package bitcamp.myapp.dao.mysql;
 
 import bitcamp.myapp.dao.AttachedFileDao;
 import bitcamp.myapp.vo.AttachedFile;
-import bitcamp.util.DBConnectionPool;
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,20 +13,18 @@ import org.springframework.stereotype.Component;
 public class AttachedFileDaoImpl implements AttachedFileDao {
 
   private final Log log = LogFactory.getLog(this.getClass());
-  DBConnectionPool dbConnectionPool;
   SqlSessionFactory sqlSessionFactory;
 
-  public AttachedFileDaoImpl(DBConnectionPool dbConnectionPool,
+  public AttachedFileDaoImpl(
       SqlSessionFactory sqlSessionFactory) {
     log.debug("AttachedFileDaoImpl 생성자");
-    this.dbConnectionPool = dbConnectionPool;
     this.sqlSessionFactory = sqlSessionFactory;
   }
 
 
   @Override
   public void add(AttachedFile file) {
-    try (SqlSession sqlSession = sqlSessionFactory.openSession(true)
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()
 //        Connection connection = dbConnectionPool.getConnection();
 //        PreparedStatement preparedStatement = connection.prepareStatement(
 //            "insert into board_files(file_path, board_no) "
@@ -48,7 +45,7 @@ public class AttachedFileDaoImpl implements AttachedFileDao {
 
   @Override
   public int addAll(List<AttachedFile> files) {
-    try (SqlSession sqlSession = sqlSessionFactory.openSession(true)
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()
 //        Connection connection = dbConnectionPool.getConnection();
 //        PreparedStatement preparedStatement = connection.prepareStatement(
 //            "insert into board_files(file_path, board_no) "
@@ -73,7 +70,7 @@ public class AttachedFileDaoImpl implements AttachedFileDao {
 
   @Override
   public int delete(int fileNo) {
-    try (SqlSession sqlSession = sqlSessionFactory.openSession(true)
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()
 //        Connection connection = dbConnectionPool.getConnection();
 //        PreparedStatement preparedStatement = connection.prepareStatement(
 //            "delete from board_files where file_no = ?"
@@ -92,7 +89,7 @@ public class AttachedFileDaoImpl implements AttachedFileDao {
 
   @Override
   public int deleteAll(int boardNo) {
-    try (SqlSession sqlSession = sqlSessionFactory.openSession(true)
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()
 //        Connection connection = dbConnectionPool.getConnection();
 //        PreparedStatement preparedStatement = connection.prepareStatement(
 //            "delete from board_files where board_no = ?"

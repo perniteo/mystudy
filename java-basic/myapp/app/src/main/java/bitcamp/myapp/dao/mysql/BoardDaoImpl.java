@@ -2,7 +2,6 @@ package bitcamp.myapp.dao.mysql;
 
 import bitcamp.myapp.dao.BoardDao;
 import bitcamp.myapp.vo.Board;
-import bitcamp.util.DBConnectionPool;
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -15,18 +14,16 @@ public class BoardDaoImpl implements BoardDao {
 
   private final Log log = LogFactory.getLog(this.getClass());
 
-  DBConnectionPool dbConnectionPool;
   SqlSessionFactory sqlSessionFactory;
 
-  public BoardDaoImpl(DBConnectionPool dbConnectionPool, SqlSessionFactory sqlSessionFactory) {
+  public BoardDaoImpl(SqlSessionFactory sqlSessionFactory) {
     log.debug("BoardDaoImpl 생성자");
-    this.dbConnectionPool = dbConnectionPool;
     this.sqlSessionFactory = sqlSessionFactory;
   }
 
   @Override
   public void add(Board board) {
-    try (SqlSession sqlSession = sqlSessionFactory.openSession(true)
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()
 //        Connection connection = dbConnectionPool.getConnection();
 //        PreparedStatement preparedStatement = connection.prepareStatement(
 //            "insert into boards(title, content, writer, category) "
@@ -60,7 +57,7 @@ public class BoardDaoImpl implements BoardDao {
 
   @Override
   public int update(Board board) {
-    try (SqlSession sqlSession = sqlSessionFactory.openSession(true)
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()
 //        Connection connection = dbConnectionPool.getConnection();
 //        PreparedStatement preparedStatement = connection.prepareStatement(
 //            "update boards set title = ?, content = ? "
@@ -81,7 +78,7 @@ public class BoardDaoImpl implements BoardDao {
 
   @Override
   public int delete(int key) {
-    try (SqlSession sqlSession = sqlSessionFactory.openSession(true)
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()
 //        Connection connection = dbConnectionPool.getConnection();
 //        PreparedStatement preparedStatement = connection.prepareStatement(
 //            "delete from boards where board_no = ?"

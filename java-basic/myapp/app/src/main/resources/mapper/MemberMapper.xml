@@ -5,20 +5,20 @@
 
 <mapper namespace="MemberDao">
 
-  <resultMap id="MemberMap" type="bitcamp.myapp.vo.Member">
+  <resultMap id="MemberMap" type="Member">
     <id column="member_no" property="no"/>
     <result column="email" property="email"/>
     <result column="name" property="name"/>
     <result column="photo" property="photo"/>
-    <result column="join_date" property="createdDate"/>
+    <result column="join_date" property="joinDate"/>
   </resultMap>
 
-  <insert id="add" parameterType="bitcamp.myapp.vo.Member">
+  <insert id="add" parameterType="Member">
     insert into members(email, name, password, photo)
     values(#{email}, #{name}, sha2(#{password}, 256), #{photo})
   </insert>
 
-  <update id="update" parameterType="bitcamp.myapp.vo.Member">
+  <update id="update" parameterType="Member">
     update members
       set email = #{email}, name = #{name}
       <if test="password != ''">, password = sha2(#{password}, 256)</if>
@@ -57,6 +57,6 @@
       photo,
       join_date
       from members
-      order by no desc
+      order by member_no desc
   </select>
 </mapper>

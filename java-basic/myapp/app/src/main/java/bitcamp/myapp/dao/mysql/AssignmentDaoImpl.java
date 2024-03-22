@@ -2,7 +2,6 @@ package bitcamp.myapp.dao.mysql;
 
 import bitcamp.myapp.dao.AssignmentDao;
 import bitcamp.myapp.vo.Assignment;
-import bitcamp.util.DBConnectionPool;
 import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,18 +13,16 @@ import org.springframework.stereotype.Repository;
 public class AssignmentDaoImpl implements AssignmentDao {
 
   private final Log log = LogFactory.getLog(this.getClass());
-  DBConnectionPool dbConnectionPool;
   SqlSessionFactory sqlSessionFactory;
 
-  public AssignmentDaoImpl(DBConnectionPool dbConnectionPool, SqlSessionFactory sqlSessionFactory) {
+  public AssignmentDaoImpl(SqlSessionFactory sqlSessionFactory) {
     log.debug("AssignmentDaoImpl 생성자");
-    this.dbConnectionPool = dbConnectionPool;
     this.sqlSessionFactory = sqlSessionFactory;
   }
 
   @Override
   public void add(Assignment assignment) {
-    try (SqlSession sqlSession = sqlSessionFactory.openSession(true)
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()
 //        Connection connection = dbConnectionPool.getConnection();
 //        PreparedStatement preparedstatement = connection.prepareStatement(
 //            "insert into assignments(title, content, deadline) "
@@ -48,7 +45,7 @@ public class AssignmentDaoImpl implements AssignmentDao {
 
   @Override
   public int delete(int key) {
-    try (SqlSession sqlSession = sqlSessionFactory.openSession(true)
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()
 //        Connection connection = dbConnectionPool.getConnection();
 //        PreparedStatement preparedstatement = connection.prepareStatement(
 //            "delete from assignments where assignment_no = ?"
@@ -121,7 +118,7 @@ public class AssignmentDaoImpl implements AssignmentDao {
 
   @Override
   public int update(Assignment assignment) {
-    try (SqlSession sqlSession = sqlSessionFactory.openSession(true)
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()
 //        Connection connection = dbConnectionPool.getConnection();
 //        PreparedStatement preparedstatement = connection.prepareStatement(
 //            "update assignments set title = ?, content = ?, deadline = ? "

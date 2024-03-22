@@ -5,7 +5,6 @@ import bitcamp.myapp.dao.BoardDao;
 import bitcamp.myapp.vo.AttachedFile;
 import bitcamp.myapp.vo.Board;
 import bitcamp.myapp.vo.Member;
-import bitcamp.util.TransactionManager;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,15 +27,13 @@ public class BoardController {
   private final Log log = LogFactory.getLog(this.getClass());
   private BoardDao boardDao;
   private AttachedFileDao attachedFileDao;
-  private TransactionManager txManager;
   private String uploadDir;
 
   public BoardController(BoardDao boardDao, AttachedFileDao attachedFileDao,
-      TransactionManager txManager, ServletContext servletContext) {
+      ServletContext servletContext) {
     log.debug("BoardController 생성자");
     this.boardDao = boardDao;
     this.attachedFileDao = attachedFileDao;
-    this.txManager = txManager;
     this.uploadDir = servletContext.getRealPath("/upload/board");
   }
 
@@ -58,87 +55,66 @@ public class BoardController {
     log.debug(category);
     model.addAttribute("category", category);
 
-    try {
-      Member member = (Member) session.getAttribute("loginUser");
-      if (member == null) {
-        throw new Exception("로그인 하세요");
-      }
-
-      ArrayList<AttachedFile> files = new ArrayList<>();
-
-      for (MultipartFile part : attachedFiles) {
-        if (part.getSize() == 0) {
-          continue;
-        }
-        String fileName = UUID.randomUUID().toString();
-        part.transferTo(new File(this.uploadDir + "/" + fileName));
-        files.add(new AttachedFile().filePath(fileName));
-      }
-      board.setWriter(member);
-
-      txManager.startTransaction();
-
-      boardDao.add(board);
-
-      if (!files.isEmpty()) {
-        for (AttachedFile file : files) {
-          file.setBoardNo(board.getNo());
-        }
-        attachedFileDao.addAll(files);
-      }
-
-      txManager.commit();
-
-      return "redirect:list";
-
-    } catch (Exception e) {
-      try {
-        txManager.rollback();
-      } catch (Exception e1) {
-      }
-      throw e;
+    Member member = (Member) session.getAttribute("loginUser");
+    if (member == null) {
+      throw new Exception("로그인 하세요");
     }
+
+    ArrayList<AttachedFile> files = new ArrayList<>();
+
+    for (MultipartFile part : attachedFiles) {
+      if (part.getSize() == 0) {
+        continue;
+      }
+      String fileName = UUID.randomUUID().toString();
+      part.transferTo(new File(this.uploadDir + "/" + fileName));
+      files.add(new AttachedFile().filePath(fileName));
+    }
+    board.setWriter(member);
+
+    boardDao.add(board);
+
+    if (!files.isEmpty()) {
+      for (AttachedFile file : files) {
+        file.setBoardNo(board.getNo());
+      }
+      attachedFileDao.addAll(files);
+    }
+
+    return "redirect:list";
+
   }
+
 
   @GetMapping("delete")
   public String delete(int category, HttpSession session,
       int no) throws Exception {
 
-    try {
-      Member loginUser = (Member) session.getAttribute("loginUser");
-      if (loginUser == null) {
-        throw new Exception("로그인하시기 바랍니다!");
-      }
-
-      Board board = boardDao.findBy(no);
-      if (board == null) {
-        throw new Exception("번호가 유효하지 않습니다.");
-
-      } else if (board.getWriter().getNo() != loginUser.getNo()) {
-        throw new Exception("권한이 없습니다.");
-      }
-      log.debug(no);
-
-      List<AttachedFile> files = attachedFileDao.findAllByBoardNo(no);
-
-      txManager.startTransaction();
-      attachedFileDao.deleteAll(no);
-      boardDao.delete(no);
-      txManager.commit();
-      for (AttachedFile file : files) {
-        new File(this.uploadDir + "/" + file.getFilePath()).delete();
-      }
-
-      return "redirect:list?category=" + category;
-
-    } catch (Exception e) {
-      try {
-        txManager.rollback();
-      } catch (Exception e2) {
-      }
-      throw e;
+    Member loginUser = (Member) session.getAttribute("loginUser");
+    if (loginUser == null) {
+      throw new Exception("로그인하시기 바랍니다!");
     }
+
+    Board board = boardDao.findBy(no);
+    if (board == null) {
+      throw new Exception("번호가 유효하지 않습니다.");
+
+    } else if (board.getWriter().getNo() != loginUser.getNo()) {
+      throw new Exception("권한이 없습니다.");
+    }
+    log.debug(no);
+
+    List<AttachedFile> files = attachedFileDao.findAllByBoardNo(no);
+
+    attachedFileDao.deleteAll(no);
+    boardDao.delete(no);
+    for (AttachedFile file : files) {
+      new File(this.uploadDir + "/" + file.getFilePath()).delete();
+    }
+
+    return "redirect:list?category=" + category;
   }
+
 
   @GetMapping("file/delete")
   public String fileDelete(int category, int no,
@@ -182,50 +158,40 @@ public class BoardController {
       Model model)
       throws Exception {
 
-    try {
-      model.addAttribute("category", board.getCategory());
+    model.addAttribute("category", board.getCategory());
 
-      Member loginUser = (Member) session.getAttribute("loginUser");
-      if (loginUser == null) {
-        throw new Exception("로그인하시기 바랍니다!");
-      }
-      Board old = boardDao.findBy(board.getNo());
-      if (old == null) {
-        throw new Exception("번호가 유효하지 않습니다.");
-
-      } else if (old.getWriter().getNo() != loginUser.getNo()) {
-        throw new Exception("권한이 없습니다.");
-      }
-
-      ArrayList<AttachedFile> files = new ArrayList<>();
-
-      for (MultipartFile part : attachedFiles) {
-        if (part.getSize() == 0) {
-          continue;
-        }
-        String filename = UUID.randomUUID().toString();
-        part.transferTo(new File(this.uploadDir + "/" + filename));
-        files.add(new AttachedFile().filePath(filename));
-      }
-
-      txManager.startTransaction();
-      boardDao.update(board);
-      if (!files.isEmpty()) {
-        for (AttachedFile attachedFile : files) {
-          attachedFile.setBoardNo(board.getNo());
-        }
-        attachedFileDao.addAll(files);
-      }
-      txManager.commit();
-      return "redirect:list";
-
-    } catch (Exception e) {
-      try {
-        txManager.rollback();
-      } catch (Exception e2) {
-      }
-      throw e;
+    Member loginUser = (Member) session.getAttribute("loginUser");
+    if (loginUser == null) {
+      throw new Exception("로그인하시기 바랍니다!");
     }
+    Board old = boardDao.findBy(board.getNo());
+    if (old == null) {
+      throw new Exception("번호가 유효하지 않습니다.");
+
+    } else if (old.getWriter().getNo() != loginUser.getNo()) {
+      throw new Exception("권한이 없습니다.");
+    }
+
+    ArrayList<AttachedFile> files = new ArrayList<>();
+
+    for (MultipartFile part : attachedFiles) {
+      if (part.getSize() == 0) {
+        continue;
+      }
+      String filename = UUID.randomUUID().toString();
+      part.transferTo(new File(this.uploadDir + "/" + filename));
+      files.add(new AttachedFile().filePath(filename));
+    }
+
+    boardDao.update(board);
+    if (!files.isEmpty()) {
+      for (AttachedFile attachedFile : files) {
+        attachedFile.setBoardNo(board.getNo());
+      }
+      attachedFileDao.addAll(files);
+    }
+    return "redirect:list";
+
   }
 
   @GetMapping("view")

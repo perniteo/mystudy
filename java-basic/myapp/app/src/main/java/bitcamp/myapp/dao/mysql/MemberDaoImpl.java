@@ -2,7 +2,6 @@ package bitcamp.myapp.dao.mysql;
 
 import bitcamp.myapp.dao.MemberDao;
 import bitcamp.myapp.vo.Member;
-import bitcamp.util.DBConnectionPool;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,19 +15,17 @@ import org.springframework.stereotype.Component;
 public class MemberDaoImpl implements MemberDao {
 
   private final Log log = LogFactory.getLog(this.getClass());
-  DBConnectionPool dbConnectionPool;
   SqlSessionFactory sqlSessionFactory;
 
-  public MemberDaoImpl(DBConnectionPool dbConnectionPool, SqlSessionFactory sqlSessionFactory) {
+  public MemberDaoImpl(SqlSessionFactory sqlSessionFactory) {
     log.debug("MemberDaoImpl 생성자");
-    this.dbConnectionPool = dbConnectionPool;
     this.sqlSessionFactory = sqlSessionFactory;
   }
 
   @Override
   public void add(Member member) {
 
-    try (SqlSession sqlSession = sqlSessionFactory.openSession(true);
+    try (SqlSession sqlSession = sqlSessionFactory.openSession();
 //        Connection connection = dbConnectionPool.getConnection();
 //        PreparedStatement preparedStatement = connection.prepareStatement(
 //            "insert into members(email, name, password, photo)"
@@ -51,7 +48,7 @@ public class MemberDaoImpl implements MemberDao {
   @Override
   public int delete(int key) {
 
-    try (SqlSession sqlSession = sqlSessionFactory.openSession(true)
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()
 //        Connection connection = dbConnectionPool.getConnection();
 //        PreparedStatement preparedStatement = connection.prepareStatement(
 //            "delete from members where member_no = ?"
@@ -71,7 +68,7 @@ public class MemberDaoImpl implements MemberDao {
   @Override
   public int update(Member member) {
 
-    try (SqlSession sqlSession = sqlSessionFactory.openSession(true)
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()
 //        Connection connection = dbConnectionPool.getConnection();
 //        PreparedStatement preparedStatement = connection.prepareStatement(
 //            "update members set email = ?, name = ?, password = sha2(?, 256), photo = ? "
