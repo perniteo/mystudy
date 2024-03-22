@@ -117,6 +117,7 @@ public class BoardController {
       } else if (board.getWriter().getNo() != loginUser.getNo()) {
         throw new Exception("권한이 없습니다.");
       }
+      log.debug(no);
 
       List<AttachedFile> files = attachedFileDao.findAllByBoardNo(no);
 
