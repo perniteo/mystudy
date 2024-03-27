@@ -1,7 +1,6 @@
 package bitcamp.myapp.controller;
 
-import bitcamp.myapp.dao.AttachedFileDao;
-import bitcamp.myapp.dao.BoardDao;
+import bitcamp.myapp.service.BoardService;
 import bitcamp.myapp.vo.AttachedFile;
 import bitcamp.myapp.vo.Board;
 import bitcamp.myapp.vo.Member;
@@ -11,8 +10,10 @@ import java.util.List;
 import java.util.UUID;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,20 +21,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
+@RequiredArgsConstructor
 @Controller
 @RequestMapping("/board")
-public class BoardController {
+public class BoardController implements InitializingBean {
 
   private final Log log = LogFactory.getLog(this.getClass());
-  private BoardDao boardDao;
-  private AttachedFileDao attachedFileDao;
+  private final ServletContext servletContext;
+  private final BoardService boardService;
   private String uploadDir;
 
-  public BoardController(BoardDao boardDao, AttachedFileDao attachedFileDao,
-      ServletContext servletContext) {
-    log.debug("BoardController 생성자");
-    this.boardDao = boardDao;
-    this.attachedFileDao = attachedFileDao;
+
+  @Override
+  public void afterPropertiesSet() throws Exception {
     this.uploadDir = servletContext.getRealPath("/upload/board");
   }
 
@@ -68,18 +68,14 @@ public class BoardController {
       }
       String fileName = UUID.randomUUID().toString();
       part.transferTo(new File(this.uploadDir + "/" + fileName));
-      files.add(new AttachedFile().filePath(fileName));
+      files.add(AttachedFile.builder().filePath(fileName).build());
     }
     board.setWriter(member);
 
-    boardDao.add(board);
-
     if (!files.isEmpty()) {
-      for (AttachedFile file : files) {
-        file.setBoardNo(board.getNo());
-      }
-      attachedFileDao.addAll(files);
+      board.setFiles(files);
     }
+    boardService.add(board);
 
     return "redirect:list";
 
@@ -95,7 +91,7 @@ public class BoardController {
       throw new Exception("로그인하시기 바랍니다!");
     }
 
-    Board board = boardDao.findBy(no);
+    Board board = boardService.get(no);
     if (board == null) {
       throw new Exception("번호가 유효하지 않습니다.");
 
@@ -104,10 +100,10 @@ public class BoardController {
     }
     log.debug(no);
 
-    List<AttachedFile> files = attachedFileDao.findAllByBoardNo(no);
+    List<AttachedFile> files = boardService.getAttachedFiles(no);
 
-    attachedFileDao.deleteAll(no);
-    boardDao.delete(no);
+    boardService.delete(no);
+
     for (AttachedFile file : files) {
       new File(this.uploadDir + "/" + file.getFilePath()).delete();
     }
@@ -125,17 +121,17 @@ public class BoardController {
       throw new Exception("로그인하시기 바랍니다!");
     }
 
-    AttachedFile file = attachedFileDao.findByNo(no);
+    AttachedFile file = boardService.getAttachedFile(no);
     if (file == null) {
       throw new Exception("첨부파일 번호가 유효하지 않습니다.");
     }
 
-    Member writer = boardDao.findBy(file.getBoardNo()).getWriter();
+    Member writer = boardService.get(file.getBoardNo()).getWriter();
     if (writer.getNo() != loginUser.getNo()) {
       throw new Exception("권한이 없습니다.");
     }
 
-    attachedFileDao.delete(no);
+    boardService.deleteAttachedFile(no);
     new File(this.uploadDir + "/" + file.getFilePath()).delete();
 
     return "redirect:../view?category=" + category + "&no=" + file.getBoardNo();
@@ -148,7 +144,7 @@ public class BoardController {
 
     model.addAttribute("title", category == 1 ? "게시글" : "가입 인사");
     model.addAttribute("category", category);
-    model.addAttribute("list", boardDao.findAll(category));
+    model.addAttribute("list", boardService.list(category));
   }
 
   @PostMapping("update")
@@ -164,7 +160,7 @@ public class BoardController {
     if (loginUser == null) {
       throw new Exception("로그인하시기 바랍니다!");
     }
-    Board old = boardDao.findBy(board.getNo());
+    Board old = boardService.get(board.getNo());
     if (old == null) {
       throw new Exception("번호가 유효하지 않습니다.");
 
@@ -180,16 +176,13 @@ public class BoardController {
       }
       String filename = UUID.randomUUID().toString();
       part.transferTo(new File(this.uploadDir + "/" + filename));
-      files.add(new AttachedFile().filePath(filename));
+      files.add(AttachedFile.builder().filePath(filename).build());
     }
 
-    boardDao.update(board);
     if (!files.isEmpty()) {
-      for (AttachedFile attachedFile : files) {
-        attachedFile.setBoardNo(board.getNo());
-      }
-      attachedFileDao.addAll(files);
+      board.setFiles(files);
     }
+    boardService.update(board);
     return "redirect:list";
 
   }
@@ -198,7 +191,7 @@ public class BoardController {
   public void view(int category, int no,
       Model model) throws Exception {
 
-    Board board = boardDao.findBy(no);
+    Board board = boardService.get(no);
 
     if (board == null) {
       throw new Exception("번호 오류");
@@ -207,6 +200,6 @@ public class BoardController {
     model.addAttribute("title", category == 1 ? "게시글" : "가입인사");
     model.addAttribute("category", category);
     model.addAttribute("board", board);
-    model.addAttribute("files", attachedFileDao.findAllByBoardNo(no));
+//    model.addAttribute("files", boardService.getAttachedFiles(no));
   }
 }

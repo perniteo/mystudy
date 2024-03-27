@@ -58,6 +58,20 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.1'
 
     implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:9.0.85'
+
+
+    // Lombok 라이브러리
+    // => 컴파일 할 때만 이 라이브러리를 사용한다.
+    //    컴파일이 완료된 후에는 이 라이브러리가 필요없다.
+    //    따라서 배포 파일에 포함시키지 않는다.
+    compileOnly 'org.projectlombok:lombok:1.18.32'
+    // => lombok 애노테이션을 처리할 라이브러리를 지정한다.
+    annotationProcessor 'org.projectlombok:lombok:1.18.32'
+
+    // => 단위 테스트 소스를 컴파일 할 때만 사용한다.
+    testCompileOnly 'org.projectlombok:lombok:1.18.32'
+    // => 단위 테스트 소스에 삽입된 lombok 애노테이션을 처리할 라이브러리를 지정한다.
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.32'
 }
 
 // Apply a specific Java toolchain to ease working on different environments.

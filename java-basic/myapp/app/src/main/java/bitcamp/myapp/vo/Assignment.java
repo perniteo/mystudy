@@ -3,7 +3,9 @@ package bitcamp.myapp.vo;
 import java.io.Serial;
 import java.io.Serializable;
 import java.sql.Date;
+import lombok.Data;
 
+@Data
 public class Assignment implements Serializable {
 
   @Serial
@@ -13,37 +15,5 @@ public class Assignment implements Serializable {
   private String title;
   private String content;
   private Date deadline;
-
-  public String getTitle() {
-    return title;
-  }
-
-  public void setTitle(String title) {
-    this.title = title;
-  }
-
-  public String getContent() {
-    return content;
-  }
-
-  public void setContent(String content) {
-    this.content = content;
-  }
-
-  public Date getDeadline() {
-    return deadline;
-  }
-
-  public void setDeadline(Date deadline) {
-    this.deadline = deadline;
-  }
-
-  public int getNo() {
-    return no;
-  }
-
-  public void setNo(int no) {
-    this.no = no;
-  }
 
 }

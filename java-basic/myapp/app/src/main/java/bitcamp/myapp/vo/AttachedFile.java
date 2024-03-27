@@ -1,42 +1,51 @@
 package bitcamp.myapp.vo;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor // Mybatis 가 사용할 기본 생성자를 만들어야 한다.
+@AllArgsConstructor
+@Builder
+@Data
 public class AttachedFile {
 
   private int boardNo;
   private int no;
   private String filePath;
 
-  public int getNo() {
-    return no;
-  }
-
-  public void setNo(int no) {
-    this.no = no;
-  }
-
-  public AttachedFile filePath(String filePath) {
-    this.filePath = filePath;
-    return this;
-  }
-
-  public String getFilePath() {
-    return filePath;
-  }
-
-  public void setFilePath(String filePath) {
-    this.filePath = filePath;
-  }
-
-  public int getBoardNo() {
-    return boardNo;
-  }
-
-  public void setBoardNo(int boardNo) {
-    this.boardNo = boardNo;
-  }
-
-  public AttachedFile boardNo(int boardNo) {
-    this.boardNo = boardNo;
-    return this;
-  }
+//  public int getNo() {
+//    return no;
+//  }
+//
+//  public void setNo(int no) {
+//    this.no = no;
+//  }
+//
+//  public AttachedFile filePath(String filePath) {
+//    this.filePath = filePath;
+//    return this;
+//  }
+//
+//  public String getFilePath() {
+//    return filePath;
+//  }
+//
+//  public void setFilePath(String filePath) {
+//    this.filePath = filePath;
+//  }
+//
+//  public int getBoardNo() {
+//    return boardNo;
+//  }
+//
+//  public void setBoardNo(int boardNo) {
+//    this.boardNo = boardNo;
+//  }
+//
+//  public AttachedFile boardNo(int boardNo) {
+//    this.boardNo = boardNo;
+//    return this;
+//  }
 }
