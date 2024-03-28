@@ -28,7 +28,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 )
 
 @PropertySource({
-    "classpath:config/jdbc.properties"
+    "classpath:config/ncp.properties",
+    "classpath:config/ncp-secret.properties"
 })
 
 public class RootConfig {

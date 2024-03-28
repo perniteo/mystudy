@@ -1,6 +1,7 @@
 package bitcamp.myapp.controller;
 
 import bitcamp.myapp.service.BoardService;
+import bitcamp.myapp.service.StorageService;
 import bitcamp.myapp.vo.AttachedFile;
 import bitcamp.myapp.vo.Board;
 import bitcamp.myapp.vo.Member;
@@ -8,12 +9,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,18 +24,16 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/board")
-public class BoardController implements InitializingBean {
+public class BoardController {
 
   private final Log log = LogFactory.getLog(this.getClass());
-  private final ServletContext servletContext;
   private final BoardService boardService;
-  private String uploadDir;
+  private final StorageService storageService;
+  private String uploadDir = "board/";
 
+  @Value("${ncp.ss.bucketname}")
+  private String bucketName;
 
-  @Override
-  public void afterPropertiesSet() throws Exception {
-    this.uploadDir = servletContext.getRealPath("/upload/board");
-  }
 
   @GetMapping("form")
   public void form(int category, Model model)
@@ -66,9 +64,8 @@ public class BoardController implements InitializingBean {
       if (part.getSize() == 0) {
         continue;
       }
-      String fileName = UUID.randomUUID().toString();
-      part.transferTo(new File(this.uploadDir + "/" + fileName));
-      files.add(AttachedFile.builder().filePath(fileName).build());
+      String filename = storageService.upload(this.bucketName, this.uploadDir, part);
+      files.add(AttachedFile.builder().filePath(filename).build());
     }
     board.setWriter(member);
 
