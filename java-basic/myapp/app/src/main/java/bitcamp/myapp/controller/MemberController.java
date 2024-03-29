@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
@@ -21,7 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class MemberController implements InitializingBean {
 
   private final Log log = LogFactory.getLog(this.getClass());
-  
+
   private final MemberService memberService;
   private final StorageService storageService;
   private String uploadDir;
@@ -73,8 +74,29 @@ public class MemberController implements InitializingBean {
   }
 
   @GetMapping("list")
-  public void list(Model model) throws Exception {
-    model.addAttribute("list", memberService.list());
+  public void list(
+      @RequestParam(defaultValue = "1") int pageNo,
+      @RequestParam(defaultValue = "3") int pageSize,
+      Model model) throws Exception {
+    if (pageSize < 3 || pageSize > 20) {
+      pageSize = 3;
+    }
+
+    if (pageNo < 1) {
+      pageNo = 1;
+    }
+
+    int numOfRecord = memberService.countAll();
+    int numOfPage = numOfRecord / pageSize + ((numOfRecord % pageSize) > 0 ? 1 : 0);
+
+    if (pageNo > numOfPage) {
+      pageNo = numOfPage;
+    }
+
+    model.addAttribute("list", memberService.list(pageNo, pageSize));
+    model.addAttribute("pageNo", pageNo);
+    model.addAttribute("pageSize", pageSize);
+    model.addAttribute("numOfPage", numOfPage);
   }
 
   @PostMapping("update")

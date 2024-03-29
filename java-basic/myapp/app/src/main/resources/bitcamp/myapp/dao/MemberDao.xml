@@ -58,5 +58,10 @@
       join_date
       from members
       order by member_no desc
+    limit #{rowCount} offset #{offset}
+  </select>
+
+  <select id="countAll" resultType="int">
+    select count(*) from members;
   </select>
 </mapper>

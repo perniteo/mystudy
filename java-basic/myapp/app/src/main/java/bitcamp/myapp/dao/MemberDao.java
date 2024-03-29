@@ -12,7 +12,10 @@ public interface MemberDao {
 
   int delete(int no);
 
-  List<Member> findAll();
+  List<Member> findAll(
+      @Param("offset") int offset,
+      @Param("rowCount") int rowCount
+  );
 
   Member findBy(int no);
 
@@ -21,4 +24,6 @@ public interface MemberDao {
   Member findByEmailAndPassword(
       @Param("email") String email,
       @Param("password") String password);
+
+  int countAll();
 }

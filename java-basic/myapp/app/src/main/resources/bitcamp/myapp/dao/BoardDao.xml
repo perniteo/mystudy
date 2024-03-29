@@ -73,5 +73,11 @@
     where b.category = #{category}
       group by b.board_no
       order by b.board_no desc
+    limit #{rowCount} offset #{offset}
   </select>
+
+  <select id="countAll" resultType="int" parameterType="int">
+    select count(*) from boards where category=#{value}
+  </select>
+
 </mapper>

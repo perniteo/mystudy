@@ -37,8 +37,12 @@
     select assignment_no, title, content, deadline
     from assignments
     order by assignment_no desc
+    limit #{rowCount} offset #{offset}
   </select>
 
 
+  <select id="countAll" resultType="int">
+    select count(*) from assignments;
+  </select>
 
 </mapper>
