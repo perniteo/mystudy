@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="bitcamp.myapp.dao.AttachedFileDao">
+<mapper namespace="bitcamp.myapp.dao.AttachedFile2Dao">
 
   <resultMap id="AttachedFileMap" type="AttachedFile">
     <id column="file_no" property="no"/>
@@ -12,12 +12,12 @@
   </resultMap>
 
   <insert id="add" parameterType="AttachedFile">
-    insert into board_files (file_path,board_no)
+    insert into board_files2 (file_path,board_no)
     values (#{filePath},#{boardNo})
   </insert>
 
   <insert id="addAll" parameterType="list">
-    insert into board_files (file_path,board_no)
+    insert into board_files2 (file_path,board_no)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.filePath}, #{item.boardNo})
@@ -25,12 +25,12 @@
   </insert>
 
   <delete id="delete" parameterType="int">
-    delete from board_files
+    delete from board_files2
     where file_no=#{value}
   </delete>
 
   <delete id="deleteAll" parameterType="int">
-    delete from board_files
+    delete from board_files2
     where board_no=#{value}
   </delete>
 
@@ -40,7 +40,7 @@
       file_path,
       board_no
     from
-      board_files
+      board_files2
     where
       board_no=#{value}
     order by
@@ -53,7 +53,7 @@
       file_path,
       board_no
     from
-      board_files
+      board_files2
     where
       file_no=#{value}
   </select>

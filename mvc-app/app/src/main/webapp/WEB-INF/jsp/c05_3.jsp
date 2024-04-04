@@ -7,6 +7,9 @@
 <title>jsp</title>
 </head>
 <body>
-<h1>/jsp/c05_2.jsp</h1>
+<h1>/jsp/c05_3.jsp</h1>
+<h1>name : ${name}</h1>
+<h1>age : ${age}</h1>
+<h1>working : ${working}</h1>
 </body>
 </html>

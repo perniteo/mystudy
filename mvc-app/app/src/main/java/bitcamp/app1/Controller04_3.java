@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/c04_3")
-public class Controller04_3 {
+public class  Controller04_3 {
 
   // 클라이언트가 보낸 요청 파라미터 값을 값 객체에 받을 수 있다.
 

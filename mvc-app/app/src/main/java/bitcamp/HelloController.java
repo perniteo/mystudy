@@ -18,6 +18,7 @@ public class HelloController {
   //    @RequestMapping(path="/hello")
   @RequestMapping({"/hello", "/hello2", "/okok"})
 
+
   // 리턴하는 String 값이 뷰 컴포넌트(예: JSP)의 URL이 아닌 경우
   // 애노테이션으로 표시한다.
   // => @ResponseBody : 리턴하는 문자열이 클라이언트에게 보낼 콘텐트임을 표시한다.

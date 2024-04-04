@@ -21,7 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/member")
 public class MemberController implements InitializingBean {
 
-  private final Log log = LogFactory.getLog(this.getClass());
+  private static final Log log = LogFactory.getLog(MemberController.class);
 
   private final MemberService memberService;
   private final StorageService storageService;
@@ -42,16 +42,73 @@ public class MemberController implements InitializingBean {
   public void form() throws Exception {
   }
 
-
   @PostMapping("add")
   public String add(Member member, MultipartFile file) throws Exception {
     if (file.getSize() > 0) {
       String filename = storageService.upload(this.bucketName, this.uploadDir, file);
       member.setPhoto(filename);
     }
-
     memberService.add(member);
+    return "redirect:list";
+  }
 
+  @GetMapping("list")
+  public void list(
+      @RequestParam(defaultValue = "1") int pageNo,
+      @RequestParam(defaultValue = "3") int pageSize,
+      Model model) throws Exception {
+
+    if (pageSize < 3 || pageSize > 20) {
+      pageSize = 3;
+    }
+
+    if (pageNo < 1) {
+      pageNo = 1;
+    }
+
+    int numOfRecord = memberService.countAll();
+    int numOfPage = numOfRecord / pageSize + ((numOfRecord % pageSize) > 0 ? 1 : 0);
+
+    log.debug(String.format("numOfRecord: %s", numOfRecord));
+    log.debug(String.format("numOfPage: %s", numOfPage));
+
+    if (pageNo > numOfPage) {
+      pageNo = numOfPage;
+    }
+
+    model.addAttribute("list", memberService.list(pageNo, pageSize));
+    model.addAttribute("pageNo", pageNo);
+    model.addAttribute("pageSize", pageSize);
+    model.addAttribute("numOfPage", numOfPage);
+  }
+
+  @GetMapping("view")
+  public void view(int no, Model model) throws Exception {
+    Member member = memberService.get(no);
+    if (member == null) {
+      throw new Exception("회원 번호가 유효하지 않습니다.");
+    }
+    model.addAttribute("member", member);
+  }
+
+  @PostMapping("update")
+  public String update(Member member, MultipartFile file) throws Exception {
+
+    Member old = memberService.get(member.getNo());
+    if (old == null) {
+      throw new Exception("회원 번호가 유효하지 않습니다.");
+    }
+    member.setCreatedDate(old.getCreatedDate());
+
+    if (file.getSize() > 0) {
+      String filename = storageService.upload(this.bucketName, this.uploadDir, file);
+      member.setPhoto(filename);
+      storageService.delete(this.bucketName, this.uploadDir, old.getPhoto());
+    } else {
+      member.setPhoto(old.getPhoto());
+    }
+
+    memberService.update(member);
     return "redirect:list";
   }
 
@@ -65,64 +122,9 @@ public class MemberController implements InitializingBean {
     memberService.delete(no);
 
     String filename = member.getPhoto();
-
     if (filename != null) {
       storageService.delete(this.bucketName, this.uploadDir, member.getPhoto());
     }
-
     return "redirect:list";
-  }
-
-  @GetMapping("list")
-  public void list(
-      @RequestParam(defaultValue = "1") int pageNo,
-      @RequestParam(defaultValue = "3") int pageSize,
-      Model model) throws Exception {
-    if (pageSize < 3 || pageSize > 20) {
-      pageSize = 3;
-    }
-
-    if (pageNo < 1) {
-      pageNo = 1;
-    }
-
-    int numOfRecord = memberService.countAll();
-    int numOfPage = numOfRecord / pageSize + ((numOfRecord % pageSize) > 0 ? 1 : 0);
-
-    if (pageNo > numOfPage) {
-      pageNo = numOfPage;
-    }
-
-    model.addAttribute("list", memberService.list(pageNo, pageSize));
-    model.addAttribute("pageNo", pageNo);
-    model.addAttribute("pageSize", pageSize);
-    model.addAttribute("numOfPage", numOfPage);
-  }
-
-  @PostMapping("update")
-  public String update(Member member, MultipartFile file) throws Exception {
-
-    Member old = memberService.get(member.getNo());
-    if (old == null) {
-      throw new Exception("회원 번호가 유효하지 않습니다.");
-    }
-    member.setJoinDate(old.getJoinDate());
-
-    if (file.getSize() > 0) {
-      String filename = storageService.upload(this.bucketName, this.uploadDir, file);
-      member.setPhoto(filename);
-      storageService.delete(this.bucketName, this.uploadDir, old.getPhoto());
-    } else {
-      member.setPhoto(old.getPhoto());
-    }
-
-    memberService.update(member);
-
-    return "redirect:list";
-  }
-
-  @GetMapping("view")
-  public void view(int no, Model model) throws Exception {
-    model.addAttribute("member", memberService.get(no));
   }
 }

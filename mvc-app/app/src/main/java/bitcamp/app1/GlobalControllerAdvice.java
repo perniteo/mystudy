@@ -67,7 +67,7 @@ public class GlobalControllerAdvice {
       Engine engine = new Engine();
       engine.setModel(values[0]);
       engine.setCc(Integer.parseInt(values[1]));
-      engine.setValve(Integer.parseInt(values[1]));
+      engine.setValve(Integer.parseInt(values[2]));
 
       setValue(engine);
     }

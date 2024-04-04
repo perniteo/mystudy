@@ -39,7 +39,7 @@ public class Controller05_3 {
   public Object handler3(@RequestBody String content) throws Exception {
     System.out.println(content);
     System.out.println(URLDecoder.decode(content, "UTF-8"));
-    return "OK!";
+    return "OK!!!";
   }
 
   // 4) JSON 형식의 요청 파라미터 값을 맵 객체로 받기

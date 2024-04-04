@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/assignment")
 public class AssignmentController {
 
-  private final Log log = LogFactory.getLog(this.getClass());
+  private static final Log log = LogFactory.getLog(AssignmentController.class);
   private final AssignmentService assignmentService;
 
   @GetMapping("form")
@@ -26,8 +26,8 @@ public class AssignmentController {
 
   @PostMapping("add")
   public String add(Assignment assignment) throws Exception {
+    System.out.println(assignment);
     assignmentService.add(assignment);
-
     return "redirect:list";
   }
 
@@ -60,9 +60,7 @@ public class AssignmentController {
 
   @GetMapping("view")
   public void view(int no, Model model) throws Exception {
-
     Assignment assignment = assignmentService.get(no);
-
     if (assignment == null) {
       throw new Exception("과제 번호가 유효하지 않습니다.");
     }
@@ -71,17 +69,19 @@ public class AssignmentController {
 
   @PostMapping("update")
   public String update(Assignment assignment) throws Exception {
-
+    Assignment old = assignmentService.get(assignment.getNo());
+    if (old == null) {
+      throw new Exception("과제 번호가 유효하지 않습니다.");
+    }
     assignmentService.update(assignment);
-
     return "redirect:list";
   }
 
   @GetMapping("delete")
   public String delete(int no) throws Exception {
-
-    assignmentService.delete(no);
-
+    if (assignmentService.delete(no) == 0) {
+      throw new Exception("과제 번호가 유효하지 않습니다.");
+    }
     return "redirect:list";
   }
 }

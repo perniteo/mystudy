@@ -7,7 +7,7 @@
 <title>c01_1</title>
 </head>
 <body>
-<h1>/jsp/c01_2/h3.jsp</h1>
+<h1>/jsp/c01_2/h5.jsp</h1>
 이름 = ${name}<br>
 나이 = ${age}<br>
 </body>

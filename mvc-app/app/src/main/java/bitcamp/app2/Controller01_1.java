@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.context.WebApplicationContext;
 
 @Controller
 @RequestMapping("/c01_1")
@@ -20,7 +21,8 @@ public class Controller01_1 {
     model.addAttribute("name", "홍길동");
     model.addAttribute("age", 20);
 
-    return "/jsp/c01_1.jsp";
+    return "/jsp/c01_1";
+    // return "c01_1";
     // 기본 ViewResolver는 리턴 값으로 URL을 받아
     // 웹 애플리케이션 디렉토리에서 JSP를 찾는다.
     // 웹 애플리케이션이 경로가 /eomcs-spring-webmvc 라면,
@@ -57,7 +59,8 @@ public class Controller01_1 {
     map.put("name", "홍길동3");
     map.put("age", 40);
 
-    return "/WEB-INF/jsp/c01_1.jsp";
+//    return "/WEB-INF/jsp/c01_1.jsp";
+    return "c01_1";
     // MVC 모델에서는 JSP는 뷰 콤포넌트로서 출력이라는 역할을 담당한다.
     // 출력할 데이터를 준비하는 일은 페이지 컨트롤러가 담당한다.
     // 그래서 JSP를 실행할 때는 항상 페이지 컨트롤러를 통해 실행해야 한다.

@@ -14,13 +14,12 @@
       method='post'>
   <div>
     사진:
-    <a data-th-href="@{'https://kr.object.ncloudstorage.com/bitcamp-devops5-135/member/' + *{photo}}"
+    <a data-th-href="@{'https://kr.object.ncloudstorage.com/bitcamp-devops5-118/member/' + *{photo}}"
        data-th-if="*{photo}">
       <img
-          data-th-src="@{'https://djovn7yn2699.edge.naverncp.com/0DLQ0gtk02/member/' + *{photo}(type=f,w=150,h=150)}"
-          height='150px'></a><br>
-    <a data-th-unless="*{photo}" href='/upload/img/default-photo.jpeg'>
-      <img height='150px' src='/upload/img/default-photo.jpeg'></a><br>
+          data-th-src="@{'https://rljiyddk2675.edge.naverncp.com/68i0l8DhXa/member/' + *{photo}(type=f,w=80,h=80,ttype=jpg)}"></a><br>
+    <a data-th-unless="*{photo}" href='/img/default-photo.jpeg'>
+      <img height='80px' src='/img/default-photo.jpeg'></a><br>
     <input name='file' type='file'>
   </div>
   <div>
@@ -36,7 +35,7 @@
     암호: <input name='password' type='password'>
   </div>
   <div>
-    가입일: <input data-th-value="${#dates.format(member.joinDate,'yyyy-MM-dd')}" readonly
+    가입일: <input data-th-value="${#dates.format(member.createdDate,'yyyy-MM-dd')}" readonly
                 type='text' value="2024-03-27">
   </div>
   <div>

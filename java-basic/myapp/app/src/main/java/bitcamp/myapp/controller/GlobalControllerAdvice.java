@@ -14,8 +14,8 @@ import org.springframework.web.servlet.ModelAndView;
 public class GlobalControllerAdvice {
 
   @InitBinder
-  public void initBinder(WebDataBinder binder) {
-    binder.registerCustomEditor(Date.class, new PropertyEditorSupport() {
+  public void initBinder(WebDataBinder webDataBinder) {
+    webDataBinder.registerCustomEditor(Date.class, new PropertyEditorSupport() {
       public void setAsText(String text) throws IllegalArgumentException {
         this.setValue(Date.valueOf(text));
       }
@@ -28,13 +28,12 @@ public class GlobalControllerAdvice {
     mv.addObject("message", e.getMessage());
 
     StringWriter stringWriter = new StringWriter();
-    PrintWriter printWriter = new PrintWriter(stringWriter);
-    e.printStackTrace(printWriter);
+    PrintWriter out = new PrintWriter(stringWriter);
+    e.printStackTrace(out);
 
     mv.addObject("detail", stringWriter.toString());
 
     mv.setViewName("error");
-
     return mv;
   }
 }

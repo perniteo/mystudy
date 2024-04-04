@@ -8,20 +8,19 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface MemberDao {
 
-  void add(Member member);
+  public void add(Member member);
 
-  int delete(int no);
+  public int delete(int no);
 
-  List<Member> findAll(
+  public List<Member> findAll(
       @Param("offset") int offset,
-      @Param("rowCount") int rowCount
-  );
+      @Param("rowCount") int rowCount);
 
-  Member findBy(int no);
+  public Member findBy(int no);
 
-  int update(Member member);
+  public int update(Member member);
 
-  Member findByEmailAndPassword(
+  public Member findByEmailAndPassword(
       @Param("email") String email,
       @Param("password") String password);
 

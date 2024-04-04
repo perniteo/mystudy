@@ -20,26 +20,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/auth")
 public class AuthController {
 
-  private final Log log = LogFactory.getLog(this.getClass());
+  private static final Log log = LogFactory.getLog(AuthController.class);
   private final MemberService memberService;
 
   @GetMapping("form")
-  public void form(@CookieValue(required = false) String email,
-      Model model) {
+  public void form(@CookieValue(required = false) String email, Model model) {
     model.addAttribute("email", email);
   }
-
 
   @PostMapping("login")
   public String login(
       String email,
       String password,
-      String saveEmail, HttpSession session,
-      HttpServletResponse response) throws Exception {
+      String saveEmail,
+      HttpServletResponse response,
+      HttpSession session) throws Exception {
 
     if (saveEmail != null) {
       Cookie cookie = new Cookie("email", email);
-      cookie.setMaxAge(86400);
+      cookie.setMaxAge(60 * 60 * 24 * 7);
       response.addCookie(cookie);
     } else {
       Cookie cookie = new Cookie("email", "");
@@ -48,10 +47,10 @@ public class AuthController {
     }
 
     Member member = memberService.get(email, password);
-
     if (member != null) {
       session.setAttribute("loginUser", member);
     }
+
     return "auth/login";
   }
 

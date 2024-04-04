@@ -104,7 +104,7 @@ public class Controller05_1 {
     // 이 클래스의 경우 응답 상태 코드를 추가하기 편하다.
 
     HttpHeaders headers = new HttpHeaders();
-    headers.add("Content-Type", "text/html;charset=UTF-8");
+    headers.set("Content-Type", "text/html;charset=UTF-8");
 
     // 이렇게 응답 헤더를 따로 설정하는 방법이 존재하는 이유는
     // 다음과 같이 임의의 응답 헤더를 추가하는 경우가 있기 때문이다.

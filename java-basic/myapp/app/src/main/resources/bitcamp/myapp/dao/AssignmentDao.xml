@@ -4,6 +4,7 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="bitcamp.myapp.dao.AssignmentDao">
+
   <resultMap id="AssignmentMap" type="Assignment">
     <id column="assignment_no" property="no"/>
     <result column="title" property="title"/>
@@ -12,37 +13,49 @@
   </resultMap>
 
   <insert id="add" parameterType="Assignment">
-    insert into assignments(title, content, deadline)
+    insert into assignments(title,content,deadline)
     values(#{title}, #{content}, #{deadline})
   </insert>
 
-  <update id="update" parameterType="Assignment">
-    update assignments
-    set title = #{title}, content = #{content}, deadline = #{deadline}
-    where assignment_no = #{no}
-  </update>
-
   <delete id="delete" parameterType="int">
     delete from assignments
-    where assignment_no = #{no}
+    where assignment_no=#{value}
   </delete>
 
-  <select id="findBy" parameterType="int" resultMap="AssignmentMap">
-    select assignment_no, title, content, deadline
-    from assignments
-    where assignment_no = #{no}
-  </select>
-
   <select id="findAll" resultMap="AssignmentMap">
-    select assignment_no, title, content, deadline
-    from assignments
-    order by assignment_no desc
+    select
+      assignment_no,
+      title,
+      deadline
+    from
+      assignments
+    order by
+      assignment_no desc
     limit #{rowCount} offset #{offset}
   </select>
 
+  <select id="findBy" resultMap="AssignmentMap" parameterType="int">
+    select
+      assignment_no,
+      title,
+      content,
+      deadline
+    from
+      assignments
+    where
+      assignment_no=#{value}
+  </select>
+
+  <update id="update" parameterType="Assignment">
+    update assignments set
+      title=#{title},
+      content=#{content},
+      deadline=#{deadline}
+    where
+      assignment_no=#{no}
+  </update>
 
   <select id="countAll" resultType="int">
     select count(*) from assignments;
   </select>
-
 </mapper>
