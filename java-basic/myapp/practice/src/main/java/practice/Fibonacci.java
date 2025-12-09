@@ -15,9 +15,12 @@ public class Fibonacci {
     return dp[n];
   }
 
+
   public static void main(String[] args) throws Exception {
+    System.out.println("입력");
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     int T = Integer.parseInt(br.readLine());
+    System.out.println(T);
 //    System.out.println(dp[0][0]);
     dp[0][0] = 1;
     dp[0][1] = 0;

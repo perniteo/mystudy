@@ -6,6 +6,10 @@ import java.util.stream.IntStream;
 
 public class StudyString {
 
+  public static String MinMax(String str) {
+    return "";
+  }
+
   public static boolean isPalindrome(String str) {
     return str.contentEquals(new StringBuilder(str).reverse());
     // return str.equals(new StringBuilder(str).reverse().toString());

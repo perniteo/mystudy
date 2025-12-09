@@ -1,4 +1,4 @@
-//package bitcamp.myapp;
+package practice;//package bitcamp.myapp;
 //
 //import java.io.BufferedReader;
 //import java.io.InputStreamReader;
